@@ -20,9 +20,19 @@ namespace CryptoGetter
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        DataBaseConnector dbc;
+
         public MainWindow()
         {
             InitializeComponent();
+            dbc = new DataBaseConnector();
+        }
+
+        private void GetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GtinBox.Text.Length != 14) ResultBox.Text += "Некорректная длина кода GTIN!";
+            if (SerialBox.Text.Length != 14) ResultBox.Text += "Некорректная длина серийного номера!";
         }
     }
 }
