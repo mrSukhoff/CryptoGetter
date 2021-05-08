@@ -38,11 +38,18 @@ namespace CryptoGetter
         public string GetCrypto(string GTIN, string Serial)
         {
             //Получаем по GTIN его идентификатор.
-            int GTINid = GetGtinId(GTIN);
+            string GTINid = GetGtinId(GTIN);
+
+            //Проверяем найден ли GTIN
+            if (GTINid.Length != 4) return "GTIN не найден!";
 
             string CryptoKey, CryptoCode;
             // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
             GetCryptoData(GTINid, Serial,out CryptoCode, out CryptoKey);
+
+            //Проверяем найдены ли криптоданныу
+            if (CryptoCode.Length == 0 ) return "Криптоданные не найдены!";
+            if (CryptoKey.Length == 0) return "Криптоданные не найдены!";
 
             //Формируем строку с результатом
             string result = String.Format("01<<{0}>>21<<{1}>><<GS1Separator>>91<<{2}>><<GS1Separator>>92<<{3}>>{4}",GTIN,Serial,CryptoKey,CryptoCode,GTINid);
@@ -55,10 +62,10 @@ namespace CryptoGetter
         /// </summary>
         /// <param name="GTIN">GTIN, для которого ищем идентификатор</param>
         /// <returns></returns>
-        private int GetGtinId(string GTIN) 
+        private string GetGtinId(string GTIN) 
         {
             //Результат по умолчанию
-            string results = "1234";
+            string result = "";
 
             //Если соединение не открыто, то открываем его
             if (connection.State != System.Data.ConnectionState.Open) connection.Open();
@@ -73,7 +80,7 @@ namespace CryptoGetter
             while (reader.Read())
                 {
                     //но запоминаем последний :)
-                    results = reader.GetValue(0).ToString();
+                    result = reader.GetValue(0).ToString();
                 }
             
             //Всё закрываем
@@ -83,7 +90,7 @@ namespace CryptoGetter
             //И проверяем
             if (!reader.IsClosed) throw new Exception();
                         
-            return Int32.Parse(results);
+            return result;
         }
 
         /// <summary>
@@ -93,11 +100,11 @@ namespace CryptoGetter
         /// <param name="serial">Серийный номер</param>
         /// <param name="cryptoCode">Криптокод</param>
         /// <param name="cryptoKey">Криптоключь</param>
-        private void GetCryptoData(int gtinId, string serial, out string cryptoCode, out string cryptoKey)
+        private void GetCryptoData(string gtinId, string serial, out string cryptoCode, out string cryptoKey)
         {
             //Устанавливаем значения, возвращаемые по умолчанию.
-            cryptoCode = "123";
-            cryptoKey = "123";
+            cryptoCode = "";
+            cryptoKey = "";
             
             Dictionary<string, string> results = new Dictionary<string, string>();
 
