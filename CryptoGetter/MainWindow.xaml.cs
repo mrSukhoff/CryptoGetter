@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace CryptoGetter
 {
@@ -31,8 +18,13 @@ namespace CryptoGetter
 
         private void GetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (GtinBox.Text.Length != 14) ResultBox.Text += "Некорректная длина кода GTIN!";
-            if (SerialBox.Text.Length != 14) ResultBox.Text += "Некорректная длина серийного номера!";
+            //Проверяем размерность данных
+            string gtin = GtinBox.Text;
+            string serial = SerialBox.Text;
+            ResultBox.Clear();
+            if (gtin.Length != 14) ResultBox.Text += "Некорректная длина кода GTIN!";
+            if (serial.Length != 13) ResultBox.Text += "Некорректная длина серийного номера!";
+            if (gtin.Length == 14 & serial.Length == 13) ResultBox.Text =  dbc.GetCrypto(gtin, serial);
         }
     }
 }

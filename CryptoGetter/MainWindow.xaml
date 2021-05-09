@@ -5,17 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CryptoGetter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="227.25" Width="545.75">
+        Title="CryptoGetter" Height="332.25" Width="545.75" ResizeMode="NoResize">
     <Grid Margin="0,0,13,5" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
-        <Label Content="GTIN" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.487,0.567" FontSize="14"/>
-        <Label Content="Серийный номер" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.502,-0.15" FontSize="14"/>
-        <TextBox x:Name="GtinBox" HorizontalAlignment="Left" Height="23" Margin="135,13,0,0" TextWrapping="Wrap" Text="04605310011256" VerticalAlignment="Top" Width="120" FontSize="14"/>
-        <TextBox x:Name="SerialBox" HorizontalAlignment="Left" Height="23" Margin="135,57,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="GetButton" Content="Получить данные" HorizontalAlignment="Left" Margin="296,13,0,0" VerticalAlignment="Top" Width="107" Height="67" Click="GetButton_Click"/>
-        <Label Content="Результат" HorizontalAlignment="Left" Margin="54,120,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Button x:Name="CopyButton" Content="Скопировать" HorizontalAlignment="Left" Margin="395,99,0,0" VerticalAlignment="Top" Width="108" Height="67"/>
-        <TextBox x:Name="SerialBox_Copy" HorizontalAlignment="Left" Height="23" Margin="135,57,0,0" TextWrapping="Wrap" Text="1234567890123" VerticalAlignment="Top" Width="120" FontSize="14"/>
-        <TextBox x:Name="ResultBox" HorizontalAlignment="Left" Height="67" Margin="135,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="239"/>
+        <Label Content="GTIN"            HorizontalAlignment="Left" Margin="80,10,0,0"  VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Серийный номер"  HorizontalAlignment="Left" Margin="10,54,0,0"  VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Код для"         HorizontalAlignment="Left" Margin="10,104,0,0"  VerticalAlignment="Top" FontSize="14" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" Width="120"/>
+        <Label Content="Layout Designer" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" FontSize="14" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" Width="120"/>
+
+        <Button x:Name="GetButton"  Content="Получить  данные" HorizontalAlignment="Left" Margin="297,19,0,0" VerticalAlignment="Top" Width="107" Height="60" Click="GetButton_Click" />
+        <Button x:Name="CopyButton" Content="Скопировать"     HorizontalAlignment="Left" Margin="394,107,0,0" VerticalAlignment="Top" Width="81"  Height="49" />
+
+        <TextBox x:Name="GtinBox"   HorizontalAlignment="Left" Height="23" Margin="135,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="14" Text="04605310011256"/>
+        <TextBox x:Name="SerialBox" HorizontalAlignment="Left" Height="23" Margin="135,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="14" Text="1234567890123"/>
+        <TextBox x:Name="ResultBox" HorizontalAlignment="Left" Height="67" Margin="135,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="239" FontSize="14"/>
+        
 
     </Grid>
 </Window>

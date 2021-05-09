@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+//using System.Windows;
 
 namespace CryptoGetter
 {
@@ -19,6 +20,15 @@ namespace CryptoGetter
         public DataBaseConnector()
         {
             connection = new SqlConnection(connectionString);
+            /*
+            try 
+            {
+                if (connection.State != System.Data.ConnectionState.Open) connection.Open();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);           
+            }*/
         }
         
         /// <summary>
