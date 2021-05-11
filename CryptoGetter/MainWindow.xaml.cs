@@ -26,5 +26,10 @@ namespace CryptoGetter
             if (serial.Length != 13) ResultBox.Text += "Некорректная длина серийного номера!";
             if (gtin.Length == 14 & serial.Length == 13) ResultBox.Text =  dbc.GetCrypto(gtin, serial);
         }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(ResultBox.Text);
+        }
     }
 }

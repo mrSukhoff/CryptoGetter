@@ -62,7 +62,7 @@ namespace CryptoGetter
             if (CryptoKey.Length == 0) return "Криптоданные не найдены!";
 
             //Формируем строку с результатом
-            string result = String.Format("01<<{0}>>21<<{1}>><<GS1Separator>>91<<{2}>><<GS1Separator>>92<<{3}>>{4}",GTIN,Serial,CryptoKey,CryptoCode,GTINid);
+            string result = String.Format("01<<{0}>>21<<{1}>><<GS1Separator>>91<<{2}>><<GS1Separator>>92<<{3}>>}",GTIN,Serial,CryptoKey,CryptoCode);
             
             return result;
         }
