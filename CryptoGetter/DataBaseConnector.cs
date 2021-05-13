@@ -9,14 +9,14 @@ namespace CryptoGetter
     {
         //Строка подключения к "боевой" базе данных в Иркутске
         static readonly string connectionString = "Data Source=IRK-M1-SQL;Initial Catalog=AntaresTracking_PRD;Persist Security Info=True;User ID=tav;Password=tav";
-        
+
         //Соединение с БД
-        private SqlConnection connection;
+        private readonly SqlConnection connection;
 
         /// <summary>
         /// Конструктор класса. Инициализирует соединение с БД.
         /// </summary>
-        
+
         public DataBaseConnector()
         {
             connection = new SqlConnection(connectionString);
@@ -30,11 +30,11 @@ namespace CryptoGetter
                 MessageBox.Show(e.Message);           
             }*/
         }
-        
+
         /// <summary>
         /// Метод используется при уничтожении класса.
         /// </summary>
-         ~DataBaseConnector()
+        ~DataBaseConnector()
         {
             if (connection.State == System.Data.ConnectionState.Open) connection.Close();
         }
@@ -53,17 +53,15 @@ namespace CryptoGetter
             //Проверяем найден ли GTIN
             if (GTINid.Length != 4) return "GTIN не найден!";
 
-            string CryptoKey, CryptoCode;
             // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
-            GetCryptoData(GTINid, Serial,out CryptoCode, out CryptoKey);
+            GetCryptoData(GTINid, Serial, out string CryptoCode, out string CryptoKey);
 
             //Проверяем найдены ли криптоданныу
-            if (CryptoCode.Length == 0 ) return "Криптоданные не найдены!";
-            if (CryptoKey.Length == 0) return "Криптоданные не найдены!";
-
-            //Формируем строку с результатом
-            string result = String.Format("01<<{0}>>21<<{1}>><<GS1Separator>>91<<{2}>><<GS1Separator>>92<<{3}>>}",GTIN,Serial,CryptoKey,CryptoCode);
+            if ((CryptoCode.Length < 44) | (CryptoKey.Length <4)) return "Криптоданные не найдены!";
             
+            //Формируем строку с результатом
+            string result = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + CryptoKey + "<<GS1Separator>>92" + CryptoCode + "}";
+
             return result;
         }
 
@@ -72,7 +70,7 @@ namespace CryptoGetter
         /// </summary>
         /// <param name="GTIN">GTIN, для которого ищем идентификатор</param>
         /// <returns></returns>
-        private string GetGtinId(string GTIN) 
+        private string GetGtinId(string GTIN)
         {
             //Результат по умолчанию
             string result = "";
@@ -82,24 +80,24 @@ namespace CryptoGetter
 
             //Создаем запрос к БД
             string cmdString = String.Format("SELECT [Id] FROM [AntaresTracking_PRD].[dbo].[NtinDefinition] WHERE Ntin = '{0}'", GTIN);
-            SqlCommand cmd = new SqlCommand( cmdString, connection);
+            SqlCommand cmd = new SqlCommand(cmdString, connection);
             // И выполняем его
             SqlDataReader reader = cmd.ExecuteReader();
-            
+
             //Читаем все результаты
             while (reader.Read())
-                {
-                    //но запоминаем последний :)
-                    result = reader.GetValue(0).ToString();
-                }
-            
+            {
+                //но запоминаем последний :)
+                result = reader.GetValue(0).ToString();
+            }
+
             //Всё закрываем
             reader.Close();
             connection.Close();
             cmd.Dispose();
             //И проверяем
             if (!reader.IsClosed) throw new Exception();
-                        
+
             return result;
         }
 
@@ -115,14 +113,14 @@ namespace CryptoGetter
             //Устанавливаем значения, возвращаемые по умолчанию.
             cryptoCode = "";
             cryptoKey = "";
-            
+
             Dictionary<string, string> results = new Dictionary<string, string>();
 
             //Если соединения нет, открываем его
             if (connection.State != System.Data.ConnectionState.Open) connection.Open();
 
             //Формируем запрос
-            string cmdString = String.Format("SELECT [VariableName] ,[VariableValue] FROM [AntaresTracking_PRD].[dbo].[ItemDetails] where Serial='{0}' and NtinId={1}",serial, gtinId);
+            string cmdString = String.Format("SELECT [VariableName] ,[VariableValue] FROM [AntaresTracking_PRD].[dbo].[ItemDetails] where Serial='{0}' and NtinId={1}", serial, gtinId);
             SqlCommand cmd = new SqlCommand(cmdString, connection);
             //И выполняем его
             SqlDataReader reader = cmd.ExecuteReader();
@@ -132,7 +130,7 @@ namespace CryptoGetter
             {
                 string key = reader.GetValue(0).ToString();
                 string value = reader.GetValue(1).ToString();
-                results.Add(key, value); 
+                results.Add(key, value);
             }
 
             if (results.Count == 2)
