@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+
 
 namespace CryptoGetter
 {
@@ -39,9 +41,18 @@ namespace CryptoGetter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [STAThread]
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(ResultBox.Text);
+            try
+            {
+                
+                Clipboard.SetText(ResultBox.Text, TextDataFormat.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
