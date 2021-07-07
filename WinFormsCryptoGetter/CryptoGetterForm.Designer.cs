@@ -42,8 +42,9 @@ namespace WinFormsCryptoGetter
             this.label6 = new System.Windows.Forms.Label();
             this.tbBarCode = new System.Windows.Forms.TextBox();
             this.tbLayoutDesigner = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.CopyToBarCodeButton = new System.Windows.Forms.Button();
+            this.CopyToLayoutDesignerButton = new System.Windows.Forms.Button();
+            this.ClearButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -79,39 +80,39 @@ namespace WinFormsCryptoGetter
             // tbGTIN
             // 
             this.tbGTIN.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbGTIN.Location = new System.Drawing.Point(83, 82);
+            this.tbGTIN.Location = new System.Drawing.Point(91, 82);
             this.tbGTIN.Name = "tbGTIN";
             this.tbGTIN.Size = new System.Drawing.Size(136, 29);
             this.tbGTIN.TabIndex = 3;
-            this.tbGTIN.Text = "04605310016718";
             this.tbGTIN.TextChanged += new System.EventHandler(this.tbGTIN_TextChanged);
             // 
             // tbSGTIN
             // 
             this.tbSGTIN.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbSGTIN.Location = new System.Drawing.Point(83, 47);
+            this.tbSGTIN.Location = new System.Drawing.Point(91, 47);
             this.tbSGTIN.Name = "tbSGTIN";
             this.tbSGTIN.Size = new System.Drawing.Size(254, 29);
-            this.tbSGTIN.TabIndex = 4;
-            this.tbSGTIN.Text = "046053100112360123456789123";
+            this.tbSGTIN.TabIndex = 2;
+            this.tbSGTIN.TextChanged += new System.EventHandler(this.tbSGTIN_TextChanged);
             // 
             // tbSerial
             // 
             this.tbSerial.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbSerial.Location = new System.Drawing.Point(83, 117);
+            this.tbSerial.Location = new System.Drawing.Point(91, 117);
             this.tbSerial.Name = "tbSerial";
             this.tbSerial.Size = new System.Drawing.Size(136, 29);
-            this.tbSerial.TabIndex = 5;
-            this.tbSerial.Text = "0000000660635";
+            this.tbSerial.TabIndex = 4;
+            this.tbSerial.TextChanged += new System.EventHandler(this.tbSerial_TextChanged);
             // 
             // cbCity
             // 
             this.cbCity.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cbCity.FormattingEnabled = true;
-            this.cbCity.Location = new System.Drawing.Point(83, 12);
+            this.cbCity.Location = new System.Drawing.Point(91, 12);
             this.cbCity.Name = "cbCity";
             this.cbCity.Size = new System.Drawing.Size(136, 29);
-            this.cbCity.TabIndex = 6;
+            this.cbCity.TabIndex = 1;
+            this.cbCity.SelectedIndexChanged += new System.EventHandler(this.cbCity_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -126,10 +127,10 @@ namespace WinFormsCryptoGetter
             // GET_button
             // 
             this.GET_button.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GET_button.Location = new System.Drawing.Point(361, 15);
+            this.GET_button.Location = new System.Drawing.Point(361, 12);
             this.GET_button.Name = "GET_button";
-            this.GET_button.Size = new System.Drawing.Size(74, 131);
-            this.GET_button.TabIndex = 8;
+            this.GET_button.Size = new System.Drawing.Size(74, 134);
+            this.GET_button.TabIndex = 5;
             this.GET_button.Text = "GET Crypto";
             this.GET_button.UseVisualStyleBackColor = true;
             this.GET_button.Click += new System.EventHandler(this.GET_button_Click);
@@ -137,9 +138,9 @@ namespace WinFormsCryptoGetter
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(12, 165);
+            this.label5.Location = new System.Drawing.Point(12, 164);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 55);
+            this.label5.Size = new System.Drawing.Size(83, 69);
             this.label5.TabIndex = 9;
             this.label5.Text = "BarCode  online generator";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -147,47 +148,62 @@ namespace WinFormsCryptoGetter
             // label6
             // 
             this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(11, 243);
+            this.label6.Location = new System.Drawing.Point(11, 251);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 49);
+            this.label6.Size = new System.Drawing.Size(73, 71);
             this.label6.TabIndex = 10;
             this.label6.Text = "Layout Designer";
             // 
             // tbBarCode
             // 
             this.tbBarCode.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbBarCode.Location = new System.Drawing.Point(83, 165);
+            this.tbBarCode.Location = new System.Drawing.Point(91, 164);
             this.tbBarCode.Multiline = true;
             this.tbBarCode.Name = "tbBarCode";
-            this.tbBarCode.Size = new System.Drawing.Size(490, 56);
-            this.tbBarCode.TabIndex = 11;
+            this.tbBarCode.Size = new System.Drawing.Size(490, 69);
+            this.tbBarCode.TabIndex = 6;
             // 
             // tbLayoutDesigner
             // 
             this.tbLayoutDesigner.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbLayoutDesigner.Location = new System.Drawing.Point(83, 240);
+            this.tbLayoutDesigner.Location = new System.Drawing.Point(91, 251);
             this.tbLayoutDesigner.Multiline = true;
             this.tbLayoutDesigner.Name = "tbLayoutDesigner";
-            this.tbLayoutDesigner.Size = new System.Drawing.Size(490, 56);
-            this.tbLayoutDesigner.TabIndex = 12;
+            this.tbLayoutDesigner.Size = new System.Drawing.Size(490, 69);
+            this.tbLayoutDesigner.TabIndex = 8;
             // 
-            // button1
+            // CopyToBarCodeButton
             // 
-            this.button1.Location = new System.Drawing.Point(579, 165);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 56);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "copy";
-            this.button1.UseVisualStyleBackColor = true;
+            this.CopyToBarCodeButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CopyToBarCodeButton.Location = new System.Drawing.Point(587, 164);
+            this.CopyToBarCodeButton.Name = "CopyToBarCodeButton";
+            this.CopyToBarCodeButton.Size = new System.Drawing.Size(75, 69);
+            this.CopyToBarCodeButton.TabIndex = 7;
+            this.CopyToBarCodeButton.Text = "Copy it!";
+            this.CopyToBarCodeButton.UseVisualStyleBackColor = true;
+            this.CopyToBarCodeButton.Click += new System.EventHandler(this.CopyToBarCodeButton_Click);
             // 
-            // button2
+            // CopyToLayoutDesignerButton
             // 
-            this.button2.Location = new System.Drawing.Point(579, 240);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 56);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "copy";
-            this.button2.UseVisualStyleBackColor = true;
+            this.CopyToLayoutDesignerButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CopyToLayoutDesignerButton.Location = new System.Drawing.Point(587, 251);
+            this.CopyToLayoutDesignerButton.Name = "CopyToLayoutDesignerButton";
+            this.CopyToLayoutDesignerButton.Size = new System.Drawing.Size(75, 69);
+            this.CopyToLayoutDesignerButton.TabIndex = 9;
+            this.CopyToLayoutDesignerButton.Text = "Copy it!";
+            this.CopyToLayoutDesignerButton.UseVisualStyleBackColor = true;
+            this.CopyToLayoutDesignerButton.Click += new System.EventHandler(this.CopyToLayoutDesignerButton_Click);
+            // 
+            // ClearButton
+            // 
+            this.ClearButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ClearButton.Location = new System.Drawing.Point(587, 12);
+            this.ClearButton.Name = "ClearButton";
+            this.ClearButton.Size = new System.Drawing.Size(75, 69);
+            this.ClearButton.TabIndex = 10;
+            this.ClearButton.Text = "Clear Form";
+            this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
             // CryptoGetterForm
             // 
@@ -195,9 +211,10 @@ namespace WinFormsCryptoGetter
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(662, 310);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(690, 337);
+            this.Controls.Add(this.ClearButton);
+            this.Controls.Add(this.CopyToLayoutDesignerButton);
+            this.Controls.Add(this.CopyToBarCodeButton);
             this.Controls.Add(this.tbLayoutDesigner);
             this.Controls.Add(this.tbBarCode);
             this.Controls.Add(this.label6);
@@ -215,7 +232,7 @@ namespace WinFormsCryptoGetter
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(678, 349);
             this.Name = "CryptoGetterForm";
-            this.Text = "Crypto Getter";
+            this.Text = "Crypto Getter by SMS";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,8 +253,9 @@ namespace WinFormsCryptoGetter
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbBarCode;
         private System.Windows.Forms.TextBox tbLayoutDesigner;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button CopyToBarCodeButton;
+        private System.Windows.Forms.Button CopyToLayoutDesignerButton;
+        private System.Windows.Forms.Button ClearButton;
     }
 }
 

@@ -41,7 +41,6 @@ namespace CryptoGetter
             //Получаем по GTIN его идентификатор.
             string GTINid = GetGtinId(GTIN);
 
-            MessageBox.Show(GTINid);
             //MessageBox.Show(servername + GTIN + Serial);
             //Проверяем найден ли GTIN
             if (GTINid.Length != 4)
@@ -123,7 +122,7 @@ namespace CryptoGetter
             cryptoCode = "";
             cryptoKey = "";
 
-            Dictionary<string, string> results = new Dictionary<string, string>();
+            Dictionary<string, string> results = new();
 
             //Если соединения нет, открываем его
             if (connection.State != System.Data.ConnectionState.Open) connection.Open();
@@ -131,6 +130,7 @@ namespace CryptoGetter
             //Формируем запрос
             string cmdString = String.Format("SELECT [VariableName] ,[VariableValue] FROM [AntaresTracking_PRD].[dbo].[ItemDetails] where Serial='{0}' and NtinId={1}", serial, gtinId);
             SqlCommand cmd = new SqlCommand(cmdString, connection);
+            cmd.CommandTimeout = 300;
             //И выполняем его
             SqlDataReader reader = cmd.ExecuteReader();
 
@@ -142,7 +142,7 @@ namespace CryptoGetter
                 results.Add(key, value);
             }
 
-            if (results.Count == 2)
+            if (results.Count >= 2)
             {
                 cryptoCode = results["cryptocode"];
                 cryptoKey = results["cryptokey"];
