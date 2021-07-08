@@ -46,13 +46,20 @@ namespace CryptoGetterForNet45
             this.ClearButton = new System.Windows.Forms.Button();
             this.GTINTextBox = new System.Windows.Forms.TextBox();
             this.SGTINTextBox = new System.Windows.Forms.TextBox();
+            this.DMXPictureBox = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.KeyTextBox = new System.Windows.Forms.TextBox();
+            this.CodeTextBox = new System.Windows.Forms.TextBox();
+            this.SaveImeageButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(16, 15);
+            this.label1.Location = new System.Drawing.Point(13, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 20);
             this.label1.TabIndex = 0;
@@ -63,7 +70,7 @@ namespace CryptoGetterForNet45
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(17, 49);
+            this.label2.Location = new System.Drawing.Point(13, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(58, 20);
             this.label2.TabIndex = 1;
@@ -74,7 +81,7 @@ namespace CryptoGetterForNet45
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(16, 81);
+            this.label3.Location = new System.Drawing.Point(13, 81);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 20);
             this.label3.TabIndex = 2;
@@ -85,7 +92,7 @@ namespace CryptoGetterForNet45
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(17, 113);
+            this.label4.Location = new System.Drawing.Point(13, 113);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 20);
             this.label4.TabIndex = 3;
@@ -96,7 +103,7 @@ namespace CryptoGetterForNet45
             // 
             this.CityComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CityComboBox.FormattingEnabled = true;
-            this.CityComboBox.Location = new System.Drawing.Point(105, 12);
+            this.CityComboBox.Location = new System.Drawing.Point(95, 12);
             this.CityComboBox.Name = "CityComboBox";
             this.CityComboBox.Size = new System.Drawing.Size(176, 28);
             this.CityComboBox.TabIndex = 1;
@@ -104,9 +111,9 @@ namespace CryptoGetterForNet45
             // SerialTextBox
             // 
             this.SerialTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SerialTextBox.Location = new System.Drawing.Point(105, 110);
+            this.SerialTextBox.Location = new System.Drawing.Point(95, 110);
             this.SerialTextBox.Name = "SerialTextBox";
-            this.SerialTextBox.Size = new System.Drawing.Size(135, 26);
+            this.SerialTextBox.Size = new System.Drawing.Size(130, 26);
             this.SerialTextBox.TabIndex = 4;
             this.SerialTextBox.TextChanged += new System.EventHandler(this.SerialTextBox_TextChanged);
             // 
@@ -115,7 +122,7 @@ namespace CryptoGetterForNet45
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label5.Location = new System.Drawing.Point(13, 149);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 67);
+            this.label5.Size = new System.Drawing.Size(79, 67);
             this.label5.TabIndex = 8;
             this.label5.Text = "BarCode  online generator";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -123,7 +130,7 @@ namespace CryptoGetterForNet45
             // label6
             // 
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(13, 227);
+            this.label6.Location = new System.Drawing.Point(13, 225);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(79, 67);
             this.label6.TabIndex = 9;
@@ -133,19 +140,19 @@ namespace CryptoGetterForNet45
             // BarCodeTextBox
             // 
             this.BarCodeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BarCodeTextBox.Location = new System.Drawing.Point(101, 149);
+            this.BarCodeTextBox.Location = new System.Drawing.Point(95, 149);
             this.BarCodeTextBox.Multiline = true;
             this.BarCodeTextBox.Name = "BarCodeTextBox";
-            this.BarCodeTextBox.Size = new System.Drawing.Size(437, 67);
+            this.BarCodeTextBox.Size = new System.Drawing.Size(423, 67);
             this.BarCodeTextBox.TabIndex = 6;
             // 
             // DesignerTextBox
             // 
             this.DesignerTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DesignerTextBox.Location = new System.Drawing.Point(101, 227);
+            this.DesignerTextBox.Location = new System.Drawing.Point(95, 225);
             this.DesignerTextBox.Multiline = true;
             this.DesignerTextBox.Name = "DesignerTextBox";
-            this.DesignerTextBox.Size = new System.Drawing.Size(437, 67);
+            this.DesignerTextBox.Size = new System.Drawing.Size(423, 67);
             this.DesignerTextBox.TabIndex = 8;
             // 
             // GetDataButton
@@ -173,7 +180,7 @@ namespace CryptoGetterForNet45
             // DesignerCopyButton
             // 
             this.DesignerCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DesignerCopyButton.Location = new System.Drawing.Point(546, 228);
+            this.DesignerCopyButton.Location = new System.Drawing.Point(546, 226);
             this.DesignerCopyButton.Name = "DesignerCopyButton";
             this.DesignerCopyButton.Size = new System.Drawing.Size(75, 67);
             this.DesignerCopyButton.TabIndex = 9;
@@ -186,7 +193,7 @@ namespace CryptoGetterForNet45
             this.ClearButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ClearButton.Location = new System.Drawing.Point(546, 12);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(75, 67);
+            this.ClearButton.Size = new System.Drawing.Size(75, 75);
             this.ClearButton.TabIndex = 10;
             this.ClearButton.Text = "Clear Form";
             this.ClearButton.UseVisualStyleBackColor = true;
@@ -195,7 +202,7 @@ namespace CryptoGetterForNet45
             // GTINTextBox
             // 
             this.GTINTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.GTINTextBox.Location = new System.Drawing.Point(105, 78);
+            this.GTINTextBox.Location = new System.Drawing.Point(95, 78);
             this.GTINTextBox.Name = "GTINTextBox";
             this.GTINTextBox.Size = new System.Drawing.Size(135, 26);
             this.GTINTextBox.TabIndex = 3;
@@ -204,18 +211,81 @@ namespace CryptoGetterForNet45
             // SGTINTextBox
             // 
             this.SGTINTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SGTINTextBox.Location = new System.Drawing.Point(105, 46);
+            this.SGTINTextBox.Location = new System.Drawing.Point(95, 46);
             this.SGTINTextBox.Name = "SGTINTextBox";
             this.SGTINTextBox.Size = new System.Drawing.Size(254, 26);
             this.SGTINTextBox.TabIndex = 2;
             this.SGTINTextBox.TextChanged += new System.EventHandler(this.SGTINTextBox_TextChanged);
+            // 
+            // DMXPictureBox
+            // 
+            this.DMXPictureBox.BackColor = System.Drawing.SystemColors.Info;
+            this.DMXPictureBox.Location = new System.Drawing.Point(95, 369);
+            this.DMXPictureBox.Name = "DMXPictureBox";
+            this.DMXPictureBox.Size = new System.Drawing.Size(185, 185);
+            this.DMXPictureBox.TabIndex = 11;
+            this.DMXPictureBox.TabStop = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(13, 303);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(35, 20);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Key";
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.Location = new System.Drawing.Point(13, 332);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 26);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Code";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // KeyTextBox
+            // 
+            this.KeyTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.KeyTextBox.Location = new System.Drawing.Point(95, 300);
+            this.KeyTextBox.Name = "KeyTextBox";
+            this.KeyTextBox.Size = new System.Drawing.Size(100, 26);
+            this.KeyTextBox.TabIndex = 14;
+            // 
+            // CodeTextBox
+            // 
+            this.CodeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CodeTextBox.Location = new System.Drawing.Point(95, 332);
+            this.CodeTextBox.Multiline = true;
+            this.CodeTextBox.Name = "CodeTextBox";
+            this.CodeTextBox.Size = new System.Drawing.Size(526, 26);
+            this.CodeTextBox.TabIndex = 15;
+            // 
+            // SaveImeageButton
+            // 
+            this.SaveImeageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveImeageButton.Location = new System.Drawing.Point(314, 422);
+            this.SaveImeageButton.Name = "SaveImeageButton";
+            this.SaveImeageButton.Size = new System.Drawing.Size(78, 78);
+            this.SaveImeageButton.TabIndex = 16;
+            this.SaveImeageButton.Text = "Save";
+            this.SaveImeageButton.UseVisualStyleBackColor = true;
+            this.SaveImeageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(633, 310);
+            this.ClientSize = new System.Drawing.Size(633, 565);
+            this.Controls.Add(this.SaveImeageButton);
+            this.Controls.Add(this.CodeTextBox);
+            this.Controls.Add(this.KeyTextBox);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.DMXPictureBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.DesignerCopyButton);
@@ -237,6 +307,7 @@ namespace CryptoGetterForNet45
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "CryptoGetter by S.M.S.";
+            ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -260,6 +331,12 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Button ClearButton;
         private System.Windows.Forms.TextBox GTINTextBox;
         private System.Windows.Forms.TextBox SGTINTextBox;
+        private System.Windows.Forms.PictureBox DMXPictureBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox KeyTextBox;
+        private System.Windows.Forms.TextBox CodeTextBox;
+        private System.Windows.Forms.Button SaveImeageButton;
     }
 }
 

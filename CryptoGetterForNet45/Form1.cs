@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using DataMatrix.net;
 
 namespace CryptoGetterForNet45
 {
@@ -9,12 +11,8 @@ namespace CryptoGetterForNet45
         //создаем объект бизнеслогики
         CryptoGetter.DataBaseConnector dbc = new CryptoGetter.DataBaseConnector();
 
-        //Выбранный сервер
-        private string SelectedServer = "";
-
         //Список серверов
         private List<City> Cities;
-
 
         public Form1()
         {
@@ -77,7 +75,7 @@ namespace CryptoGetterForNet45
         /// <param name="e"></param>
         private void GetDataButton_Click(object sender, EventArgs e)
         {
-            string cyptokey, cryptocode;
+            string cryptokey, cryptocode;
             string server = CityComboBox.SelectedValue.ToString();
             string GTIN = GTINTextBox.Text;
             string Serial = SerialTextBox.Text;
@@ -89,10 +87,13 @@ namespace CryptoGetterForNet45
             if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
             if (Serial.Length == 13 & GTIN.Length == 14)
             {
-                if (dbc.GetCrypto(server, GTIN, Serial, out cyptokey, out cryptocode))
+                if (dbc.GetCrypto(server, GTIN, Serial, out cryptokey, out cryptocode))
                 {
-                    BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cyptokey + "\\F92" + cryptocode;
-                    DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cyptokey + "<<GS1Separator>>92" + cryptocode;
+                    BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cryptokey + "\\F92" + cryptocode;
+                    DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cryptokey + "<<GS1Separator>>92" + cryptocode;
+                    KeyTextBox.Text = cryptokey;
+                    CodeTextBox.Text = cryptocode;
+                    DMXcreator("01" + GTIN + "21" + Serial + char.ConvertFromUtf32(29)+"91" + cryptokey + char.ConvertFromUtf32(29) + "92" + cryptocode);
                 }
                 else
                 {
@@ -120,6 +121,28 @@ namespace CryptoGetterForNet45
             SerialTextBox.Clear();
             BarCodeTextBox.Clear();
             DesignerTextBox.Clear();
+        }
+
+        private void DMXcreator(string dataMatrixString)
+        {
+            DmtxImageEncoder encoder = new DmtxImageEncoder();
+            DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
+            options.ModuleSize = 5;
+            options.MarginSize = 4;
+            Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
+            DMXPictureBox.Image = encodedBitmap;
+        }
+
+        private void SaveImeageButton_Click(object sender, EventArgs e)
+        {
+            if (DMXPictureBox.Image == null) return;
+            
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = "bmp";
+            if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
+            
+            string path = saveFileDialog.FileName;
+            DMXPictureBox.Image.Save(path);
         }
     }
 
