@@ -25,16 +25,17 @@ namespace CryptoGetter
             connection.Open();
 
             CryptoKey = "";
-            CryptoCode = "";
+            //CryptoCode = "";
 
             //Получаем по GTIN его идентификатор.
             string GTINid = GetGtinId(GTIN);
 
-            //MessageBox.Show(servername + GTIN + Serial);
             //Проверяем найден ли GTIN
             if (GTINid.Length != 4)
             { 
                 CryptoCode = "GTIN не найден!";
+                connection.Close();
+                connection.Dispose();
                 return false;
             }
             
