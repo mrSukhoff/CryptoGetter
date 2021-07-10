@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace CryptoGetter
 {
-    class DataBaseConnector
+    class DataBaseCryptoExtractor
     {
         //Соединение с БД
         private SqlConnection connection;
 
-        public DataBaseConnector()
+        public DataBaseCryptoExtractor()
         {
         }
         /*
