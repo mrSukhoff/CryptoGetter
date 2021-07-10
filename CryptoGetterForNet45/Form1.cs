@@ -12,7 +12,7 @@ namespace CryptoGetterForNet45
         CryptoGetter.DataBaseCryptoExtractor dbc = new CryptoGetter.DataBaseCryptoExtractor();
 
         //Список серверов
-        private List<City> Cities;
+        private readonly List<City> Cities;
 
         public Form1()
         {
@@ -114,8 +114,8 @@ namespace CryptoGetterForNet45
             } 
             else
             {
-                if (GTIN.Length != 14) BarCodeTextBox.Text = "Неверная длина GTIN!\r\n";
-                if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text = "GTIN содержит не числовые символы!\r\n";
+                if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
+                if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
                 if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
             }
 
@@ -141,6 +141,11 @@ namespace CryptoGetterForNet45
             if (DesignerTextBox.Text.Length > 0) Clipboard.SetText(DesignerTextBox.Text);
         }
 
+        /// <summary>
+        /// Метод отчищает все поля формы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ClearButton_Click(object sender, EventArgs e)
         {
             SGTINTextBox.Clear();
@@ -152,6 +157,10 @@ namespace CryptoGetterForNet45
             DMXPictureBox.Image = null;
         }
 
+        /// <summary>
+        /// По входной строке метод рисует DatamatrixCode
+        /// </summary>
+        /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
         private void DMXcreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
@@ -162,6 +171,11 @@ namespace CryptoGetterForNet45
             DMXPictureBox.Image = encodedBitmap;
         }
 
+        /// <summary>
+        ////Метод сохраняет картинку в файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
             if (DMXPictureBox.Image == null) return;
@@ -176,7 +190,7 @@ namespace CryptoGetterForNet45
     }
 
     /// <summary>
-    ////Класс объектов для привязки списка городо
+    ////Класс объектов для привязки списка городов
     /// </summary>
     class City
     {
