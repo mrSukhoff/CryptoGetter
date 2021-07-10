@@ -11,19 +11,6 @@ namespace CryptoGetter
         //Соединение с БД
         private SqlConnection connection;
 
-        public DataBaseCryptoExtractor()
-        {
-        }
-        /*
-        /// <summary>
-        /// Метод используется при уничтожении класса.
-        /// </summary>
-        ~DataBaseConnector()
-        {
-            if (connection != null && connection.State == System.Data.ConnectionState.Open) connection.Close();
-        }
-        */
-
         /// <summary>
         /// Метод возвращает истину если все данные получены и имеют правильную длину, в выходных переменных сохраняет криптоключ и криптокод.
         /// В случае ошибки возвращает ложь и сообщение об ошибке в переменной CryptoCode
@@ -54,29 +41,25 @@ namespace CryptoGetter
             // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
             GetCryptoData(GTINid, Serial, out string cCode, out string cKey);
 
-            CryptoCode = cCode;
-            CryptoKey = cKey;
-            //Проверяем найдены ли криптоданныу
+            connection.Close();
+            connection.Dispose();
+            
+            //Проверяем найдены ли криптоданные
             if (cCode.Length != 44) 
             {
-                connection.Close();
-                connection.Dispose();
+                CryptoCode = "Неверная длина криптокода!";
                 return false;
             }
                 
-            if (cKey.Length <4)
+            if (cKey.Length !=4)
             {
-                connection.Close();
-                connection.Dispose();
+                CryptoCode = "Неверная длина криптоключа!";
                 return false;
             }
             
             CryptoKey = cKey;
             CryptoCode = cCode;
-            connection.Close();
-            connection.Dispose();
             return true;
-            
         }
 
         /// <summary>
@@ -107,16 +90,13 @@ namespace CryptoGetter
 
             //Всё закрываем
             reader.Close();
-            //connection.Close();
             cmd.Dispose();
-            //И проверяем
-            if (!reader.IsClosed) throw new Exception();
 
             return result;
         }
 
         /// <summary>
-        /// Метод пытается получить для SGTIN криптоключ и криптохвост и БД 
+        /// Метод пытается получить для SGTIN криптоключ и криптохвост из БД 
         /// </summary>
         /// <param name="gtinId">Идентификатор GTIN</param>
         /// <param name="serial">Серийный номер</param>
@@ -155,12 +135,7 @@ namespace CryptoGetter
             }
 
             reader.Close();
-            connection.Close();
             cmd.Dispose();
-            if (!reader.IsClosed) throw new Exception();
-
         }
-
-
     }
 }
