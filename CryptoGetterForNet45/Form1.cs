@@ -97,7 +97,7 @@ namespace CryptoGetterForNet45
             BarCodeTextBox.Clear();
             DesignerTextBox.Clear();
                     
-            if (Serial.Length == 13 & GTIN.Length == 14 & int.TryParse(GTIN,out int res))
+            if (Serial.Length == 13 & GTIN.Length == 14)
             {
                 if (dbc.GetCrypto(server, GTIN, Serial, out string cryptokey, out string cryptocode))
                 {
@@ -115,7 +115,7 @@ namespace CryptoGetterForNet45
             else
             {
                 if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
-                if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
+                //if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
                 if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
             }
 
@@ -153,6 +153,8 @@ namespace CryptoGetterForNet45
             SerialTextBox.Clear();
             BarCodeTextBox.Clear();
             DesignerTextBox.Clear();
+            KeyTextBox.Clear();
+            CodeTextBox.Clear();
             if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
             DMXPictureBox.Image = null;
         }

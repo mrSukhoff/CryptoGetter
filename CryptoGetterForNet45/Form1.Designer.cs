@@ -194,7 +194,7 @@ namespace CryptoGetterForNet45
             this.ClearButton.Location = new System.Drawing.Point(546, 12);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(75, 75);
-            this.ClearButton.TabIndex = 10;
+            this.ClearButton.TabIndex = 13;
             this.ClearButton.Text = "Clear Form";
             this.ClearButton.UseVisualStyleBackColor = true;
             this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
@@ -252,7 +252,7 @@ namespace CryptoGetterForNet45
             this.KeyTextBox.Location = new System.Drawing.Point(95, 300);
             this.KeyTextBox.Name = "KeyTextBox";
             this.KeyTextBox.Size = new System.Drawing.Size(100, 26);
-            this.KeyTextBox.TabIndex = 14;
+            this.KeyTextBox.TabIndex = 10;
             // 
             // CodeTextBox
             // 
@@ -260,8 +260,8 @@ namespace CryptoGetterForNet45
             this.CodeTextBox.Location = new System.Drawing.Point(95, 332);
             this.CodeTextBox.Multiline = true;
             this.CodeTextBox.Name = "CodeTextBox";
-            this.CodeTextBox.Size = new System.Drawing.Size(526, 26);
-            this.CodeTextBox.TabIndex = 15;
+            this.CodeTextBox.Size = new System.Drawing.Size(423, 26);
+            this.CodeTextBox.TabIndex = 11;
             // 
             // SaveImeageButton
             // 
@@ -269,7 +269,7 @@ namespace CryptoGetterForNet45
             this.SaveImeageButton.Location = new System.Drawing.Point(314, 422);
             this.SaveImeageButton.Name = "SaveImeageButton";
             this.SaveImeageButton.Size = new System.Drawing.Size(78, 78);
-            this.SaveImeageButton.TabIndex = 16;
+            this.SaveImeageButton.TabIndex = 12;
             this.SaveImeageButton.Text = "Save";
             this.SaveImeageButton.UseVisualStyleBackColor = true;
             this.SaveImeageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
