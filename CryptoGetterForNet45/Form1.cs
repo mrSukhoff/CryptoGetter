@@ -88,7 +88,7 @@ namespace CryptoGetterForNet45
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GetDataButton_Click(object sender, EventArgs e)
+        private void GetDataButton_Click(object sender, EventArgs e)  
         {
             string server = CityComboBox.SelectedValue.ToString();
             string GTIN = GTINTextBox.Text;
