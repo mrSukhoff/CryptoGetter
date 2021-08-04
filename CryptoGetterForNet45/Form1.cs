@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using DataMatrix.net;
+using CryptoGetter;
 
 namespace CryptoGetterForNet45
 {
@@ -36,8 +37,8 @@ namespace CryptoGetterForNet45
             CityComboBox.SelectedItem = 0;
 
             //инициализируем переменные            
-            GTINTextBox_TextChanged(null, null);
-            SerialTextBox_TextChanged(null, null);
+            //GTINTextBox_TextChanged(null, null);
+            //SerialTextBox_TextChanged(null, null);
         }
         /// <summary>
         /// Метод при изменении SGTIN меняет поля GTIN и серийного номера
@@ -90,36 +91,44 @@ namespace CryptoGetterForNet45
         /// <param name="e"></param>
         private void GetDataButton_Click(object sender, EventArgs e)  
         {
-            string server = CityComboBox.SelectedValue.ToString();
-            string GTIN = GTINTextBox.Text;
-            string Serial = SerialTextBox.Text;
-
-            BarCodeTextBox.Clear();
-            DesignerTextBox.Clear();
-                    
-            if (Serial.Length == 13 & GTIN.Length == 14)
+            ClearResultFields();
+            Package package = new Package()
             {
-                if (dbc.GetCrypto(server, GTIN, Serial, out string cryptokey, out string cryptocode))
+                GTIN = GTINTextBox.Text,
+                Serial = SerialTextBox.Text
+            };
+            
+            try 
+            {
+                dbc.Connect(CityComboBox.SelectedValue.ToString());
+
+                
+                if (Serial.Length == 13 & GTIN.Length == 14)
                 {
-                    BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cryptokey + "\\F92" + cryptocode;
-                    DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cryptokey + "<<GS1Separator>>92" + cryptocode;
-                    KeyTextBox.Text = cryptokey;
-                    CodeTextBox.Text = cryptocode;
-                    DMXcreator("01" + GTIN + "21" + Serial + char.ConvertFromUtf32(29)+"91" + cryptokey + char.ConvertFromUtf32(29) + "92" + cryptocode);
+                    if (dbc.GetCrypto(server, GTIN, Serial, out string cryptokey, out string cryptocode))
+                    {
+                        BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cryptokey + "\\F92" + cryptocode;
+                        DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cryptokey + "<<GS1Separator>>92" + cryptocode;
+                        KeyTextBox.Text = cryptokey;
+                        CodeTextBox.Text = cryptocode;
+                        DMXcreator("01" + GTIN + "21" + Serial + char.ConvertFromUtf32(29) + "91" + cryptokey + char.ConvertFromUtf32(29) + "92" + cryptocode);
+                    }
+                    else
+                    {
+                        BarCodeTextBox.Text = cryptocode;
+                    }
                 }
                 else
                 {
-                    BarCodeTextBox.Text = cryptocode;
+                    if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
+                    //if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
+                    if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
+                } }
+            catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
-            } 
-            else
-            {
-                if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
-                //if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
-                if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
             }
-
-        }
 
         /// <summary>
         ////Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
@@ -151,12 +160,16 @@ namespace CryptoGetterForNet45
             SGTINTextBox.Clear();
             GTINTextBox.Clear();
             SerialTextBox.Clear();
-            BarCodeTextBox.Clear();
-            DesignerTextBox.Clear();
-            KeyTextBox.Clear();
-            CodeTextBox.Clear();
-            if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
-            DMXPictureBox.Image = null;
+            ClearResultFields();
+        }
+
+        private void ClearResultFields()
+        {
+                BarCodeTextBox.Clear();
+                DesignerTextBox.Clear();
+                KeyTextBox.Clear();
+                CodeTextBox.Clear();
+                if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
         }
 
         /// <summary>
@@ -167,6 +180,7 @@ namespace CryptoGetterForNet45
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
             DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
+
             options.ModuleSize = 5;
             options.MarginSize = 4;
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
