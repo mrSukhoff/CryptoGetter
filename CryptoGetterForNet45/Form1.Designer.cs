@@ -258,9 +258,8 @@ namespace CryptoGetterForNet45
             // 
             this.CodeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CodeTextBox.Location = new System.Drawing.Point(95, 332);
-            this.CodeTextBox.Multiline = true;
             this.CodeTextBox.Name = "CodeTextBox";
-            this.CodeTextBox.Size = new System.Drawing.Size(423, 26);
+            this.CodeTextBox.Size = new System.Drawing.Size(455, 26);
             this.CodeTextBox.TabIndex = 11;
             // 
             // SaveImeageButton
