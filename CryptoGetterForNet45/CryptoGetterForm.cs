@@ -7,7 +7,7 @@ using CryptoGetter;
 
 namespace CryptoGetterForNet45
 {
-    public partial class Form1 : Form
+    public partial class CryptoGetterForm : Form
     {
         //создаем объект бизнеслогики
         CryptoGetter.DataBaseCryptoExtractor dbc = new CryptoGetter.DataBaseCryptoExtractor();
@@ -15,7 +15,7 @@ namespace CryptoGetterForNet45
         //Список серверов
         private readonly List<City> Cities;
 
-        public Form1()
+        public CryptoGetterForm()
         {
             InitializeComponent();
 
