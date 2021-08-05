@@ -30,6 +30,27 @@ namespace CryptoGetter
             }
         }
 
+        /// <summary>
+        /// Отключеие от БД
+        /// </summary>
+        public void Disconnect()
+        {
+            if (IsConnected)
+            {
+                if (connection != null) 
+                {
+                    connection.Close();
+                    IsConnected = false;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Возвращает пакет со всеми заполнеными полями.
+        /// </summary>
+        /// <param name="package">В пакете должны быть заполнены GTIN и серийный номер</param>
+        /// <returns></returns>
         public Package GetCrypto (Package package)
         {
             //Получаем по GTIN его идентификатор.
@@ -42,20 +63,7 @@ namespace CryptoGetter
             }
             
             // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
-            Package result = GetCryptoData(package, GTINid);
-
-            //Проверяем найдены ли криптоданные
-            if (result.CryptoCode.Length != 44) 
-            {
-                throw new Exception( "Неверная длина криптокода!");
-            }
-                
-            if (result.CryptoCode.Length !=4)
-            {
-                throw new Exception("Неверная длина криптоключа!");
-            }
-            
-            return result;
+            return GetCryptoData(package, GTINid);
         }
          
 
@@ -90,12 +98,11 @@ namespace CryptoGetter
         }
 
         /// <summary>
-        /// Метод пытается получить для SGTIN криптоключ и криптохвост из БД 
+        ////Метод по идентификатору GTIN и серийному номеру находит криптоданные и возвращает пакет со всеми даннфми
         /// </summary>
+        /// <param name="package">пакет с заполненым GTIN и серийным номером</param>
         /// <param name="gtinId">Идентификатор GTIN</param>
-        /// <param name="serial">Серийный номер</param>
-        /// <param name="cryptoCode">Криптокод</param>
-        /// <param name="cryptoKey">Криптоключь</param>
+        /// <returns></returns>
         private Package GetCryptoData(Package package,string gtinId)
         {
             Package result = new Package() { GTIN = package.GTIN, Serial = package.Serial};
