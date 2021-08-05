@@ -160,7 +160,7 @@ namespace CryptoGetterForNet45
             this.GetDataButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.GetDataButton.Location = new System.Drawing.Point(382, 12);
             this.GetDataButton.Name = "GetDataButton";
-            this.GetDataButton.Size = new System.Drawing.Size(78, 124);
+            this.GetDataButton.Size = new System.Drawing.Size(75, 124);
             this.GetDataButton.TabIndex = 5;
             this.GetDataButton.Text = "Get Data";
             this.GetDataButton.UseVisualStyleBackColor = true;
@@ -267,13 +267,13 @@ namespace CryptoGetterForNet45
             this.SaveImeageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.SaveImeageButton.Location = new System.Drawing.Point(314, 422);
             this.SaveImeageButton.Name = "SaveImeageButton";
-            this.SaveImeageButton.Size = new System.Drawing.Size(78, 78);
+            this.SaveImeageButton.Size = new System.Drawing.Size(75, 78);
             this.SaveImeageButton.TabIndex = 12;
             this.SaveImeageButton.Text = "Save";
             this.SaveImeageButton.UseVisualStyleBackColor = true;
             this.SaveImeageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
             // 
-            // Form1
+            // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -304,7 +304,7 @@ namespace CryptoGetterForNet45
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "CryptoGetterForm";
             this.Text = "CryptoGetter by S.M.S.";
             ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).EndInit();
             this.ResumeLayout(false);
