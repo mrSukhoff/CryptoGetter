@@ -17,17 +17,11 @@ namespace CryptoGetter
         /// <param name="servername"></param>
         public void Connect (string servername)
         {
+            Disconnect();
             string connectionString = "Data Source=" + servername + ";Initial Catalog=AntaresTracking_PRD;Persist Security Info=True;User ID=tav;Password=tav";
             connection = new SqlConnection(connectionString);
-            try
-            {
-                connection.Open();
-                IsConnected = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            connection.Open();
+            IsConnected = true;
         }
 
         /// <summary>

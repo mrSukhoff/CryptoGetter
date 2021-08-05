@@ -51,7 +51,7 @@ namespace CryptoGetterForNet45
             {
                 //странная переменная, но без неё не работает
                 string text = SGTINTextBox.Text;
-                GTINTextBox.Text = text.Substring(0, 14); 
+                GTINTextBox.Text = text.Substring(0, 14);
                 SerialTextBox.Text = text.Substring(14, 13);
             }
         }
@@ -89,47 +89,36 @@ namespace CryptoGetterForNet45
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GetDataButton_Click(object sender, EventArgs e)  
+        private void GetDataButton_Click(object sender, EventArgs e)
         {
             ClearResultFields();
-            Package package = new Package()
+            try
             {
-                GTIN = GTINTextBox.Text,
-                Serial = SerialTextBox.Text
-            };
-            
-            try 
-            {
+                Package package = new Package()
+                {
+                    GTIN = GTINTextBox.Text,
+                    Serial = SerialTextBox.Text
+                };
                 dbc.Connect(CityComboBox.SelectedValue.ToString());
-
-                
-                if (Serial.Length == 13 & GTIN.Length == 14)
-                {
-                    if (dbc.GetCrypto(server, GTIN, Serial, out string cryptokey, out string cryptocode))
-                    {
-                        BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cryptokey + "\\F92" + cryptocode;
-                        DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cryptokey + "<<GS1Separator>>92" + cryptocode;
-                        KeyTextBox.Text = cryptokey;
-                        CodeTextBox.Text = cryptocode;
-                        DMXcreator("01" + GTIN + "21" + Serial + char.ConvertFromUtf32(29) + "91" + cryptokey + char.ConvertFromUtf32(29) + "92" + cryptocode);
-                    }
-                    else
-                    {
-                        BarCodeTextBox.Text = cryptocode;
-                    }
-                }
-                else
-                {
-                    if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
-                    //if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
-                    if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
-                } }
-            catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                dbc.GetCrypto(package);
+                ShowResults(package);
+                dbc.Disconnect();
             }
-
+            catch (Exception ex)
+            {
+                BarCodeTextBox.Text = ex.Message;
+            }
+        }
+    
+        private void ShowResults(Package package)
+        {
+            BarCodeTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "\\F91" + package.CryptoKey + "\\F92" + package.CryptoCode;
+            DesignerTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "<<GS1Separator>>91" + package.CryptoKey + "<<GS1Separator>>92" + package.CryptoCode;
+            KeyTextBox.Text = package.CryptoKey;
+            CodeTextBox.Text = package.CryptoCode;
+            DMXcreator("01" + package.GTIN + "21" + package.Serial + char.ConvertFromUtf32(29) + "91" + package.CryptoKey + char.ConvertFromUtf32(29) + "92" + package.CryptoCode);
+        }
+            
         /// <summary>
         ////Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
         /// </summary>
