@@ -8,74 +8,70 @@ namespace CryptoGetter
     {
         //Соединение с БД
         private SqlConnection connection;
+        public bool IsConnected { get; private set; }
 
         /// <summary>
-        /// Метод возвращает истину если все данные получены и имеют правильную длину, в выходных переменных сохраняет криптоключ и криптокод.
-        /// В случае ошибки возвращает ложь и сообщение об ошибке в переменной CryptoCode
+        ////Соединение с БД 
         /// </summary>
-        /// <param name="GTIN">GTIN</param>
-        /// <param name="Serial">серийный номер пачки</param>
-        /// <returns></returns>
-        public bool GetCrypto (string servername, string GTIN, string Serial, out string CryptoKey, out string CryptoCode)
+        /// <param name="servername"></param>
+        public void Connect (string servername)
         {
+            Disconnect();
             string connectionString = "Data Source=" + servername + ";Initial Catalog=AntaresTracking_PRD;Persist Security Info=True;User ID=tav;Password=tav";
             connection = new SqlConnection(connectionString);
             connection.Open();
+            IsConnected = true;
+        }
 
-            CryptoKey = "";
-            //CryptoCode = "";
+        /// <summary>
+        /// Отключеие от БД
+        /// </summary>
+        public void Disconnect()
+        {
+            if (IsConnected)
+            {
+                if (connection != null) 
+                {
+                    connection.Close();
+                    IsConnected = false;
+                }
+            }
 
+        }
+
+        /// <summary>
+        /// Возвращает пакет со всеми заполнеными полями.
+        /// </summary>
+        /// <param name="package">В пакете должны быть заполнены GTIN и серийный номер</param>
+        /// <returns></returns>
+        public Package GetCrypto (Package package)
+        {
             //Получаем по GTIN его идентификатор.
-            string GTINid = GetGtinId(GTIN);
+            string GTINid = GetGtinId(package.GTIN);
 
             //Проверяем найден ли GTIN
             if (GTINid.Length != 4)
             { 
-                CryptoCode = "GTIN не найден!";
-                connection.Close();
-                connection.Dispose();
-                return false;
+                throw new Exception("GTIN не найден!");
             }
             
             // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
-            GetCryptoData(GTINid, Serial, out string cCode, out string cKey);
-
-            connection.Close();
-            connection.Dispose();
-            
-            //Проверяем найдены ли криптоданные
-            if (cCode.Length != 44) 
-            {
-                CryptoCode = "Неверная длина криптокода!";
-                return false;
-            }
-                
-            if (cKey.Length !=4)
-            {
-                CryptoCode = "Неверная длина криптоключа!";
-                return false;
-            }
-            
-            CryptoKey = cKey;
-            CryptoCode = cCode;
-            return true;
+            return GetCryptoData(package, GTINid);
         }
+         
 
         /// <summary>
         /// Метод запрашивает в БД идентификатор GTINа
         /// </summary>
         /// <param name="GTIN">GTIN, для которого ищем идентификатор</param>
         /// <returns></returns>
-        private string GetGtinId(string GTIN)
+        private string GetGtinId(string gtin)
         {
             //Результат по умолчанию
             string result = "";
 
-            //Если соединение не открыто, то открываем его
-            if (connection.State != System.Data.ConnectionState.Open) connection.Open();
-
             //Создаем запрос к БД
-            string cmdString = String.Format("SELECT [Id] FROM [AntaresTracking_PRD].[dbo].[NtinDefinition] WHERE Ntin = '{0}'", GTIN);
+            string cmdString = String.Format("SELECT [Id] FROM [AntaresTracking_PRD].[dbo].[NtinDefinition] WHERE Ntin = '{0}'", gtin);
             SqlCommand cmd = new SqlCommand(cmdString, connection);
             // И выполняем его
             SqlDataReader reader = cmd.ExecuteReader();
@@ -95,25 +91,18 @@ namespace CryptoGetter
         }
 
         /// <summary>
-        /// Метод пытается получить для SGTIN криптоключ и криптохвост из БД 
+        ////Метод по идентификатору GTIN и серийному номеру находит криптоданные и возвращает пакет со всеми даннфми
         /// </summary>
+        /// <param name="package">пакет с заполненым GTIN и серийным номером</param>
         /// <param name="gtinId">Идентификатор GTIN</param>
-        /// <param name="serial">Серийный номер</param>
-        /// <param name="cryptoCode">Криптокод</param>
-        /// <param name="cryptoKey">Криптоключь</param>
-        private void GetCryptoData(string gtinId, string serial, out string cryptoCode, out string cryptoKey)
+        /// <returns></returns>
+        private Package GetCryptoData(Package package,string gtinId)
         {
-            //Устанавливаем значения, возвращаемые по умолчанию.
-            cryptoCode = "Криптокод не найден!";
-            cryptoKey = "Криптоключь не найден!";
-
+            Package result = new Package() { GTIN = package.GTIN, Serial = package.Serial};
             Dictionary<string, string> results = new Dictionary<string, string>();
-
-            //Если соединения нет, открываем его
-            if (connection.State != System.Data.ConnectionState.Open) connection.Open();
-
+            
             //Формируем запрос
-            string cmdString = String.Format("SELECT [VariableName] ,[VariableValue] FROM [AntaresTracking_PRD].[dbo].[ItemDetails] where Serial='{0}' and NtinId={1}", serial, gtinId);
+            string cmdString = String.Format("SELECT [VariableName] ,[VariableValue] FROM [AntaresTracking_PRD].[dbo].[ItemDetails] where Serial='{0}' and NtinId={1}", package.Serial, gtinId);
             SqlCommand cmd = new SqlCommand(cmdString, connection);
             cmd.CommandTimeout = 300;
             //И выполняем его
@@ -126,15 +115,98 @@ namespace CryptoGetter
                 string value = reader.GetValue(1).ToString();
                 results.Add(key, value);
             }
+            reader.Close();
+            cmd.Dispose();
 
             if (results.Count >= 2)
             {
-                cryptoCode = results["cryptocode"];
-                cryptoKey = results["cryptokey"];
+                result.CryptoCode = results["cryptocode"];
+                result.CryptoKey = results["cryptokey"];
             }
+            else
+            {
+                throw new Exception("Криптоданные не найдены");
+            }
+            return result;
+        }
+    }
 
-            reader.Close();
-            cmd.Dispose();
+    public struct Package
+    {
+        private string _gtin;
+        private string _serial;
+        private string _cryptoKey;
+        private string _cryptoCode;
+        public string GTIN 
+        { 
+            get 
+            {
+                return _gtin;
+            }
+            set 
+            {
+                if (value.Length == 14)
+                {
+                    _gtin = value;
+                }
+                else
+                { 
+                    throw new ArgumentException("Неверная длина GTIN!"); 
+                }
+            } 
+        }
+        public string Serial 
+        {
+            get
+            {
+                return _serial;
+            }
+            set
+            {
+                if (value.Length == 13)
+                { 
+                    _serial = value; 
+                }
+                else
+                { 
+                    throw new ArgumentException("Неверная длина серийного номера!"); 
+                }
+            }
+        }
+        public string CryptoKey
+        {
+            get
+            {
+                return _cryptoKey;
+            }
+            set
+            {
+                if (value.Length == 4)
+                {
+                    _cryptoKey = value; 
+                }
+                else
+                {
+                    throw new ArgumentException("Неверная длина криптоключа"); 
+                }
+            }
+        }
+        public string CryptoCode
+        {
+            get
+            {
+                return _cryptoCode;
+            }
+            set
+            {
+                if (value.Length == 44)
+                {
+                    _cryptoCode = value; }
+                else
+                { 
+                    throw new ArgumentException("Неверная длина криптокода!"); 
+                }
+            }
         }
     }
 }

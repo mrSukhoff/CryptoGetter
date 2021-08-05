@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using DataMatrix.net;
+using CryptoGetter;
 
 namespace CryptoGetterForNet45
 {
@@ -21,9 +22,9 @@ namespace CryptoGetterForNet45
             //Создаем список объектов городов
             Cities = new List<City>
             {
-                new City {Name = "Уссурийск", Server = "uss-m1-sql" },
                 new City {Name = "Иркутск", Server = "irk-m1-sql" },
                 new City {Name = "Тюмень", Server = "tmn-m1-sql" },
+                new City {Name = "Уссурийск", Server = "uss-m1-sql" },
                 new City {Name = "Санкт-Петербург", Server = "spb-m1-sql" }
             };
 
@@ -32,34 +33,23 @@ namespace CryptoGetterForNet45
             //И сообщаем что показывать, а что выдавать
             CityComboBox.DisplayMember = "Name";
             CityComboBox.ValueMember = "Server";
-            //подписываем обработчик изменений
+            //Устанавливаем выбранный элемент
             CityComboBox.SelectedItem = 0;
-
-            //инициализируем переменные            
-            GTINTextBox_TextChanged(null, null);
-            SerialTextBox_TextChanged(null, null);
         }
-        /// <summary>
-        /// Метод при изменении SGTIN меняет поля GTIN и серийного номера
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
+        // Метод при изменении SGTIN меняет поля GTIN и серийного номера
         private void SGTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SGTINTextBox.Text.Length == 27)
             {
                 //странная переменная, но без неё не работает
                 string text = SGTINTextBox.Text;
-                GTINTextBox.Text = text.Substring(0, 14); 
+                GTINTextBox.Text = text.Substring(0, 14);
                 SerialTextBox.Text = text.Substring(14, 13);
             }
         }
 
-        /// <summary>
-        /// Метод при изменении поля GTIN меняет поле SGTIN
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод при изменении поля GTIN меняет поле SGTIN
         private void GTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (GTINTextBox.Text.Length > 14) GTINTextBox.Text = GTINTextBox.Text.Substring(0, 13);
@@ -69,11 +59,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// <summary>
-        /// Метод при изменении поля мерийного номера меняет SGTIN
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод при изменении поля мерийного номера меняет SGTIN
         private void SerialTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SerialTextBox.Text.Length > 13) SerialTextBox.Text = SerialTextBox.Text.Substring(0, 13);
@@ -83,74 +69,61 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// <summary>
         /// Основной метод работы с моделью
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GetDataButton_Click(object sender, EventArgs e)  
+        private void GetDataButton_Click(object sender, EventArgs e)
         {
-            string server = CityComboBox.SelectedValue.ToString();
-            string GTIN = GTINTextBox.Text;
-            string Serial = SerialTextBox.Text;
-
-            BarCodeTextBox.Clear();
-            DesignerTextBox.Clear();
-                    
-            if (Serial.Length == 13 & GTIN.Length == 14)
+            ClearResultFields();
+            try
             {
-                if (dbc.GetCrypto(server, GTIN, Serial, out string cryptokey, out string cryptocode))
+                Package package = new Package()
                 {
-                    BarCodeTextBox.Text = "01" + GTIN + "21" + Serial + "\\F91" + cryptokey + "\\F92" + cryptocode;
-                    DesignerTextBox.Text = "01" + GTIN + "21" + Serial + "<<GS1Separator>>91" + cryptokey + "<<GS1Separator>>92" + cryptocode;
-                    KeyTextBox.Text = cryptokey;
-                    CodeTextBox.Text = cryptocode;
-                    DMXcreator("01" + GTIN + "21" + Serial + char.ConvertFromUtf32(29)+"91" + cryptokey + char.ConvertFromUtf32(29) + "92" + cryptocode);
-                }
-                else
-                {
-                    BarCodeTextBox.Text = cryptocode;
-                }
-            } 
-            else
-            {
-                if (GTIN.Length != 14) BarCodeTextBox.Text += "Неверная длина GTIN!\r\n";
-                //if (!int.TryParse(GTIN, out int result)) BarCodeTextBox.Text += "GTIN содержит не числовые символы!\r\n";
-                if (Serial.Length != 13) BarCodeTextBox.Text += "Неверная длина серийного номера!\r\n";
+                    GTIN = GTINTextBox.Text,
+                    Serial = SerialTextBox.Text
+                };
+                dbc.Connect(CityComboBox.SelectedValue.ToString());
+                Package result = dbc.GetCrypto(package);
+                dbc.Disconnect();
+                ShowResults(result);
             }
-
+            catch (Exception ex)
+            {
+                BarCodeTextBox.Text = ex.Message;
+            }
         }
-
-        /// <summary>
-        ////Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+    
+        private void ShowResults(Package package)
+        {
+            BarCodeTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "\\F91" + package.CryptoKey + "\\F92" + package.CryptoCode;
+            DesignerTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "<<GS1Separator>>91" + package.CryptoKey + "<<GS1Separator>>92" + package.CryptoCode;
+            KeyTextBox.Text = package.CryptoKey;
+            CodeTextBox.Text = package.CryptoCode;
+            DMXcreator("01" + package.GTIN + "21" + package.Serial + char.ConvertFromUtf32(29) + "91" + package.CryptoKey + char.ConvertFromUtf32(29) + "92" + package.CryptoCode);
+        }
+            
+        //Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
         private void BarCodeCopyButton_Click(object sender, EventArgs e)
         {
             if (BarCodeTextBox.Text.Length > 0) Clipboard.SetText(BarCodeTextBox.Text);
         }
 
-        /// <summary>
-        ////Метод копирует содержимое поля DesignerCopyButton в бувер обмена
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        //Метод копирует содержимое поля DesignerCopyButton в бувер обмена
         private void DesignerCopyButton_Click(object sender, EventArgs e)
         {
             if (DesignerTextBox.Text.Length > 0) Clipboard.SetText(DesignerTextBox.Text);
         }
 
-        /// <summary>
-        /// Метод отчищает все поля формы
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод отчищает все поля формы
         private void ClearButton_Click(object sender, EventArgs e)
         {
             SGTINTextBox.Clear();
             GTINTextBox.Clear();
             SerialTextBox.Clear();
+            ClearResultFields();
+        }
+
+        //Метод очищает поля результатов
+        private void ClearResultFields()
+        {
             BarCodeTextBox.Clear();
             DesignerTextBox.Clear();
             KeyTextBox.Clear();
@@ -167,17 +140,14 @@ namespace CryptoGetterForNet45
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
             DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
+
             options.ModuleSize = 5;
             options.MarginSize = 4;
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
             DMXPictureBox.Image = encodedBitmap;
         }
 
-        /// <summary>
-        ////Метод сохраняет картинку в файл
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        //Метод сохраняет картинку в файл
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
             if (DMXPictureBox.Image == null) return;
@@ -191,9 +161,7 @@ namespace CryptoGetterForNet45
         }
     }
 
-    /// <summary>
-    ////Класс объектов для привязки списка городов
-    /// </summary>
+    //Класс объектов для привязки списка городов
     class City
     {
         public string Name { get; set; }
