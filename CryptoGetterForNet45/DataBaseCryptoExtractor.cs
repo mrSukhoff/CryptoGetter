@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 
 namespace CryptoGetter
 {
@@ -146,7 +145,7 @@ namespace CryptoGetter
             }
             set 
             {
-                if (value.Length == 13)
+                if (value.Length == 14)
                 {
                     _gtin = value;
                 }
@@ -164,7 +163,7 @@ namespace CryptoGetter
             }
             set
             {
-                if (value.Length == 14)
+                if (value.Length == 13)
                 { 
                     _serial = value; 
                 }

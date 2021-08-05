@@ -22,9 +22,9 @@ namespace CryptoGetterForNet45
             //Создаем список объектов городов
             Cities = new List<City>
             {
-                new City {Name = "Уссурийск", Server = "uss-m1-sql" },
                 new City {Name = "Иркутск", Server = "irk-m1-sql" },
                 new City {Name = "Тюмень", Server = "tmn-m1-sql" },
+                new City {Name = "Уссурийск", Server = "uss-m1-sql" },
                 new City {Name = "Санкт-Петербург", Server = "spb-m1-sql" }
             };
 
@@ -33,18 +33,11 @@ namespace CryptoGetterForNet45
             //И сообщаем что показывать, а что выдавать
             CityComboBox.DisplayMember = "Name";
             CityComboBox.ValueMember = "Server";
-            //подписываем обработчик изменений
+            //Устанавливаем выбранный элемент
             CityComboBox.SelectedItem = 0;
-
-            //инициализируем переменные            
-            //GTINTextBox_TextChanged(null, null);
-            //SerialTextBox_TextChanged(null, null);
         }
-        /// <summary>
-        /// Метод при изменении SGTIN меняет поля GTIN и серийного номера
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
+        // Метод при изменении SGTIN меняет поля GTIN и серийного номера
         private void SGTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SGTINTextBox.Text.Length == 27)
@@ -56,11 +49,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// <summary>
-        /// Метод при изменении поля GTIN меняет поле SGTIN
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод при изменении поля GTIN меняет поле SGTIN
         private void GTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (GTINTextBox.Text.Length > 14) GTINTextBox.Text = GTINTextBox.Text.Substring(0, 13);
@@ -70,11 +59,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// <summary>
-        /// Метод при изменении поля мерийного номера меняет SGTIN
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод при изменении поля мерийного номера меняет SGTIN
         private void SerialTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SerialTextBox.Text.Length > 13) SerialTextBox.Text = SerialTextBox.Text.Substring(0, 13);
@@ -84,11 +69,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// <summary>
         /// Основной метод работы с моделью
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void GetDataButton_Click(object sender, EventArgs e)
         {
             ClearResultFields();
@@ -100,9 +81,9 @@ namespace CryptoGetterForNet45
                     Serial = SerialTextBox.Text
                 };
                 dbc.Connect(CityComboBox.SelectedValue.ToString());
-                dbc.GetCrypto(package);
-                ShowResults(package);
+                Package result = dbc.GetCrypto(package);
                 dbc.Disconnect();
+                ShowResults(result);
             }
             catch (Exception ex)
             {
@@ -119,31 +100,19 @@ namespace CryptoGetterForNet45
             DMXcreator("01" + package.GTIN + "21" + package.Serial + char.ConvertFromUtf32(29) + "91" + package.CryptoKey + char.ConvertFromUtf32(29) + "92" + package.CryptoCode);
         }
             
-        /// <summary>
-        ////Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        //Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
         private void BarCodeCopyButton_Click(object sender, EventArgs e)
         {
             if (BarCodeTextBox.Text.Length > 0) Clipboard.SetText(BarCodeTextBox.Text);
         }
 
-        /// <summary>
-        ////Метод копирует содержимое поля DesignerCopyButton в бувер обмена
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        //Метод копирует содержимое поля DesignerCopyButton в бувер обмена
         private void DesignerCopyButton_Click(object sender, EventArgs e)
         {
             if (DesignerTextBox.Text.Length > 0) Clipboard.SetText(DesignerTextBox.Text);
         }
 
-        /// <summary>
-        /// Метод отчищает все поля формы
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Метод отчищает все поля формы
         private void ClearButton_Click(object sender, EventArgs e)
         {
             SGTINTextBox.Clear();
@@ -152,13 +121,15 @@ namespace CryptoGetterForNet45
             ClearResultFields();
         }
 
+        //Метод очищает поля результатов
         private void ClearResultFields()
         {
-                BarCodeTextBox.Clear();
-                DesignerTextBox.Clear();
-                KeyTextBox.Clear();
-                CodeTextBox.Clear();
-                if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
+            BarCodeTextBox.Clear();
+            DesignerTextBox.Clear();
+            KeyTextBox.Clear();
+            CodeTextBox.Clear();
+            if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
+            DMXPictureBox.Image = null;
         }
 
         /// <summary>
@@ -176,11 +147,7 @@ namespace CryptoGetterForNet45
             DMXPictureBox.Image = encodedBitmap;
         }
 
-        /// <summary>
-        ////Метод сохраняет картинку в файл
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        //Метод сохраняет картинку в файл
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
             if (DMXPictureBox.Image == null) return;
@@ -194,9 +161,7 @@ namespace CryptoGetterForNet45
         }
     }
 
-    /// <summary>
-    ////Класс объектов для привязки списка городов
-    /// </summary>
+    //Класс объектов для привязки списка городов
     class City
     {
         public string Name { get; set; }
