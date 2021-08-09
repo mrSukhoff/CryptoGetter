@@ -51,7 +51,7 @@ namespace CryptoGetterForNet45
             this.label8 = new System.Windows.Forms.Label();
             this.KeyTextBox = new System.Windows.Forms.TextBox();
             this.CodeTextBox = new System.Windows.Forms.TextBox();
-            this.SaveImeageButton = new System.Windows.Forms.Button();
+            this.SaveImageButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -262,16 +262,16 @@ namespace CryptoGetterForNet45
             this.CodeTextBox.Size = new System.Drawing.Size(455, 26);
             this.CodeTextBox.TabIndex = 11;
             // 
-            // SaveImeageButton
+            // SaveImageButton
             // 
-            this.SaveImeageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveImeageButton.Location = new System.Drawing.Point(314, 422);
-            this.SaveImeageButton.Name = "SaveImeageButton";
-            this.SaveImeageButton.Size = new System.Drawing.Size(75, 78);
-            this.SaveImeageButton.TabIndex = 12;
-            this.SaveImeageButton.Text = "Save";
-            this.SaveImeageButton.UseVisualStyleBackColor = true;
-            this.SaveImeageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
+            this.SaveImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveImageButton.Location = new System.Drawing.Point(314, 422);
+            this.SaveImageButton.Name = "SaveImageButton";
+            this.SaveImageButton.Size = new System.Drawing.Size(75, 75);
+            this.SaveImageButton.TabIndex = 12;
+            this.SaveImageButton.Text = "Save";
+            this.SaveImageButton.UseVisualStyleBackColor = true;
+            this.SaveImageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
             // 
             // CryptoGetterForm
             // 
@@ -279,7 +279,7 @@ namespace CryptoGetterForNet45
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(633, 565);
-            this.Controls.Add(this.SaveImeageButton);
+            this.Controls.Add(this.SaveImageButton);
             this.Controls.Add(this.CodeTextBox);
             this.Controls.Add(this.KeyTextBox);
             this.Controls.Add(this.label8);
@@ -335,7 +335,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox KeyTextBox;
         private System.Windows.Forms.TextBox CodeTextBox;
-        private System.Windows.Forms.Button SaveImeageButton;
+        private System.Windows.Forms.Button SaveImageButton;
     }
 }
 
