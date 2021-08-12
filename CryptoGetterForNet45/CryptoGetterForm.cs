@@ -100,13 +100,13 @@ namespace CryptoGetterForNet45
             DMXcreator("01" + package.GTIN + "21" + package.Serial + char.ConvertFromUtf32(29) + "91" + package.CryptoKey + char.ConvertFromUtf32(29) + "92" + package.CryptoCode);
         }
             
-        //Метод копирует содержимое поля BarCodeCopyButton в бувер обмена
+        //Метод копирует содержимое поля BarCodeCopyButton в буфер обмена
         private void BarCodeCopyButton_Click(object sender, EventArgs e)
         {
             if (BarCodeTextBox.Text.Length > 0) Clipboard.SetText(BarCodeTextBox.Text);
         }
 
-        //Метод копирует содержимое поля DesignerCopyButton в бувер обмена
+        //Метод копирует содержимое поля DesignerCopyButton в буфер обмена
         private void DesignerCopyButton_Click(object sender, EventArgs e)
         {
             if (DesignerTextBox.Text.Length > 0) Clipboard.SetText(DesignerTextBox.Text);
