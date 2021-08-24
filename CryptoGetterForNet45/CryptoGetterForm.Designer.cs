@@ -52,6 +52,12 @@ namespace CryptoGetterForNet45
             this.KeyTextBox = new System.Windows.Forms.TextBox();
             this.CodeTextBox = new System.Windows.Forms.TextBox();
             this.SaveImageButton = new System.Windows.Forms.Button();
+            this.OneSTextBox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.WTSTextBox = new System.Windows.Forms.TextBox();
+            this.OneSCopyButton = new System.Windows.Forms.Button();
+            this.WtsCopyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -273,12 +279,78 @@ namespace CryptoGetterForNet45
             this.SaveImageButton.UseVisualStyleBackColor = true;
             this.SaveImageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
             // 
+            // OneSTextBox
+            // 
+            this.OneSTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OneSTextBox.Location = new System.Drawing.Point(95, 572);
+            this.OneSTextBox.Multiline = true;
+            this.OneSTextBox.Name = "OneSTextBox";
+            this.OneSTextBox.Size = new System.Drawing.Size(455, 67);
+            this.OneSTextBox.TabIndex = 14;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label9.Location = new System.Drawing.Point(13, 595);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 20);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "1С";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.Location = new System.Drawing.Point(13, 686);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(44, 20);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "WTS";
+            // 
+            // WTSTextBox
+            // 
+            this.WTSTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.WTSTextBox.Location = new System.Drawing.Point(95, 663);
+            this.WTSTextBox.Multiline = true;
+            this.WTSTextBox.Name = "WTSTextBox";
+            this.WTSTextBox.Size = new System.Drawing.Size(455, 66);
+            this.WTSTextBox.TabIndex = 16;
+            // 
+            // OneSCopyButton
+            // 
+            this.OneSCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OneSCopyButton.Location = new System.Drawing.Point(556, 572);
+            this.OneSCopyButton.Name = "OneSCopyButton";
+            this.OneSCopyButton.Size = new System.Drawing.Size(75, 67);
+            this.OneSCopyButton.TabIndex = 18;
+            this.OneSCopyButton.Text = "Copy";
+            this.OneSCopyButton.UseVisualStyleBackColor = true;
+            this.OneSCopyButton.Click += new System.EventHandler(this.OneSCopyButton_Click);
+            // 
+            // WtsCopyButton
+            // 
+            this.WtsCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.WtsCopyButton.Location = new System.Drawing.Point(556, 663);
+            this.WtsCopyButton.Name = "WtsCopyButton";
+            this.WtsCopyButton.Size = new System.Drawing.Size(75, 67);
+            this.WtsCopyButton.TabIndex = 19;
+            this.WtsCopyButton.Text = "Copy";
+            this.WtsCopyButton.UseVisualStyleBackColor = true;
+            this.WtsCopyButton.Click += new System.EventHandler(this.WtsCopyButton_Click);
+            // 
             // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(633, 565);
+            this.ClientSize = new System.Drawing.Size(633, 741);
+            this.Controls.Add(this.WtsCopyButton);
+            this.Controls.Add(this.OneSCopyButton);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.WTSTextBox);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.OneSTextBox);
             this.Controls.Add(this.SaveImageButton);
             this.Controls.Add(this.CodeTextBox);
             this.Controls.Add(this.KeyTextBox);
@@ -336,6 +408,12 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.TextBox KeyTextBox;
         private System.Windows.Forms.TextBox CodeTextBox;
         private System.Windows.Forms.Button SaveImageButton;
+        private System.Windows.Forms.TextBox OneSTextBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox WTSTextBox;
+        private System.Windows.Forms.Button OneSCopyButton;
+        private System.Windows.Forms.Button WtsCopyButton;
     }
 }
 

@@ -159,6 +159,18 @@ namespace CryptoGetterForNet45
             string path = saveFileDialog.FileName;
             DMXPictureBox.Image.Save(path);
         }
+
+        //копирует содержимое поля OneSTextBox в буфер обмена
+        private void OneSCopyButton_Click(object sender, EventArgs e)
+        {
+            if (OneSTextBox.Text.Length > 0) Clipboard.SetText(OneSTextBox.Text);
+        }
+
+        //копирует содержимое поля WTSTextBox в буфер обмена
+        private void WtsCopyButton_Click(object sender, EventArgs e)
+        {
+            if (WTSTextBox.Text.Length > 0) Clipboard.SetText(WTSTextBox.Text);
+        }
     }
 
     //Класс объектов для привязки списка городов
