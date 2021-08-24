@@ -59,7 +59,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        // Метод при изменении поля мерийного номера меняет SGTIN
+        // Метод при изменении поля cерийного номера меняет SGTIN
         private void SerialTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SerialTextBox.Text.Length > 13) SerialTextBox.Text = SerialTextBox.Text.Substring(0, 13);
@@ -91,28 +91,31 @@ namespace CryptoGetterForNet45
             }
         }
     
+        //заполняет поля формы по имеющимся данным
         private void ShowResults(Package package)
         {
-            BarCodeTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "\\F91" + package.CryptoKey + "\\F92" + package.CryptoCode;
-            DesignerTextBox.Text = "01" + package.GTIN + "21" + package.Serial + "<<GS1Separator>>91" + package.CryptoKey + "<<GS1Separator>>92" + package.CryptoCode;
+            BarCodeTextBox.Text = $"01{package.GTIN}21{package.Serial}\\F91{package.CryptoKey}\\F92{package.CryptoCode}";
+            DesignerTextBox.Text = $"01{package.GTIN}21{package.Serial}<<GS1Separator>>91{package.CryptoKey}<<GS1Separator>>92{ package.CryptoCode}";
             KeyTextBox.Text = package.CryptoKey;
             CodeTextBox.Text = package.CryptoCode;
-            DMXcreator("01" + package.GTIN + "21" + package.Serial + char.ConvertFromUtf32(29) + "91" + package.CryptoKey + char.ConvertFromUtf32(29) + "92" + package.CryptoCode);
+            DMXcreator($"01{package.GTIN}21{package.Serial}{char.ConvertFromUtf32(29)}91{package.CryptoKey}{char.ConvertFromUtf32(29)}92{package.CryptoCode}");
+            OneSTextBox.Text = $"{package.Serial} {package.CryptoKey} {package.CryptoCode}";
+            WTSTextBox.Text = $"01{package.GTIN}21{package.Serial}§91{package.CryptoKey}§92{package.CryptoCode}";
         }
             
-        //Метод копирует содержимое поля BarCodeCopyButton в буфер обмена
+        //копирует содержимое поля BarCodeCopyButton в буфер обмена
         private void BarCodeCopyButton_Click(object sender, EventArgs e)
         {
             if (BarCodeTextBox.Text.Length > 0) Clipboard.SetText(BarCodeTextBox.Text);
         }
 
-        //Метод копирует содержимое поля DesignerCopyButton в буфер обмена
+        //копирует содержимое поля DesignerCopyButton в буфер обмена
         private void DesignerCopyButton_Click(object sender, EventArgs e)
         {
             if (DesignerTextBox.Text.Length > 0) Clipboard.SetText(DesignerTextBox.Text);
         }
 
-        // Метод отчищает все поля формы
+        //очищает все поля формы
         private void ClearButton_Click(object sender, EventArgs e)
         {
             SGTINTextBox.Clear();
@@ -121,7 +124,7 @@ namespace CryptoGetterForNet45
             ClearResultFields();
         }
 
-        //Метод очищает поля результатов
+        //очищает поля результатов
         private void ClearResultFields()
         {
             BarCodeTextBox.Clear();
@@ -130,6 +133,8 @@ namespace CryptoGetterForNet45
             CodeTextBox.Clear();
             if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
             DMXPictureBox.Image = null;
+            OneSTextBox.Clear();
+            WTSTextBox.Clear();
         }
 
         /// <summary>
@@ -147,7 +152,7 @@ namespace CryptoGetterForNet45
             DMXPictureBox.Image = encodedBitmap;
         }
 
-        //Метод сохраняет картинку в файл
+        //охраняет картинку в файл
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
             if (DMXPictureBox.Image == null) return;

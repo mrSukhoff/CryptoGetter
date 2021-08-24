@@ -285,7 +285,7 @@ namespace CryptoGetterForNet45
             this.OneSTextBox.Location = new System.Drawing.Point(95, 572);
             this.OneSTextBox.Multiline = true;
             this.OneSTextBox.Name = "OneSTextBox";
-            this.OneSTextBox.Size = new System.Drawing.Size(455, 67);
+            this.OneSTextBox.Size = new System.Drawing.Size(423, 67);
             this.OneSTextBox.TabIndex = 14;
             // 
             // label9
@@ -314,13 +314,13 @@ namespace CryptoGetterForNet45
             this.WTSTextBox.Location = new System.Drawing.Point(95, 663);
             this.WTSTextBox.Multiline = true;
             this.WTSTextBox.Name = "WTSTextBox";
-            this.WTSTextBox.Size = new System.Drawing.Size(455, 66);
+            this.WTSTextBox.Size = new System.Drawing.Size(423, 66);
             this.WTSTextBox.TabIndex = 16;
             // 
             // OneSCopyButton
             // 
             this.OneSCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.OneSCopyButton.Location = new System.Drawing.Point(556, 572);
+            this.OneSCopyButton.Location = new System.Drawing.Point(546, 572);
             this.OneSCopyButton.Name = "OneSCopyButton";
             this.OneSCopyButton.Size = new System.Drawing.Size(75, 67);
             this.OneSCopyButton.TabIndex = 18;
@@ -331,7 +331,7 @@ namespace CryptoGetterForNet45
             // WtsCopyButton
             // 
             this.WtsCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.WtsCopyButton.Location = new System.Drawing.Point(556, 663);
+            this.WtsCopyButton.Location = new System.Drawing.Point(546, 663);
             this.WtsCopyButton.Name = "WtsCopyButton";
             this.WtsCopyButton.Size = new System.Drawing.Size(75, 67);
             this.WtsCopyButton.TabIndex = 19;
