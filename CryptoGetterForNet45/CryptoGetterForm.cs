@@ -159,6 +159,7 @@ namespace CryptoGetterForNet45
             
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "bmp";
+            saveFileDialog.FileName = SGTINTextBox.Text;
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
             
             string path = saveFileDialog.FileName;
