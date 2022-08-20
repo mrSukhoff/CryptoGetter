@@ -23,7 +23,7 @@ namespace CryptoGetter
             string serial = sGTIN.Substring(14);
             if (serial.Length != 13) throw new ArgumentException("Неверная длина серийного номера!");
 
-            Connect(_server);
+            Connect();
 
             //Получаем по GTIN его идентификатор.
             string gtinId = GetGtinId(gtin);
@@ -43,10 +43,10 @@ namespace CryptoGetter
             Disconnect();
         }
 
-        private void Connect(Server server)
+        private void Connect()
         {
             Disconnect();
-            string connectionString = $"Data Source={server.FQN};Initial Catalog={ server.DBName};Persist Security Info=True;" +
+            string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
             _connection = new SqlConnection(connectionString);
             _connection.Open();

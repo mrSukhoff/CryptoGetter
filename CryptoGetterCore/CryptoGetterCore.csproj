@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="DataMatrix.net" Version="0.4.2" />
     <PackageReference Include="DataMatrix.NetCore" Version="0.4.2" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
 </Project>
