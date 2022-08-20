@@ -26,7 +26,7 @@ namespace CryptoGetter
 
         public void Close()
         {
-            throw new NotImplementedException();
+            Disconnect();
         }
 
         private void Connect() 
