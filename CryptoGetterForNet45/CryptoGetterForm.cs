@@ -1,43 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using DataMatrix.net;
 using CryptoGetter;
+using System.Linq;
 
 namespace CryptoGetterForNet45
 {
     public partial class CryptoGetterForm : Form
     {
-        //создаем объект бизнеслогики
-        CryptoGetter.DataBaseCryptoExtractor dbc = new CryptoGetter.DataBaseCryptoExtractor();
-
-        //Список серверов
-        private readonly List<City> Cities;
+        private readonly ServerList _serverList = new ServerList();
+        private DataMinerFactory _dataMinerFactory = new DataMinerFactory();
 
         public CryptoGetterForm()
         {
             InitializeComponent();
-
-            //Создаем список объектов городов
-            Cities = new List<City>
-            {
-                new City {Name = "Иркутск", Server = "irk-m1-sql" },
-                new City {Name = "Тюмень", Server = "tmn-m1-sql" },
-                new City {Name = "Уссурийск", Server = "uss-m1-sql" },
-                new City {Name = "Санкт-Петербург", Server = "spb-m1-sql" }
-            };
-
-            //Привязываем его к combobox
-            CityComboBox.DataSource = Cities;
-            //И сообщаем что показывать, а что выдавать
-            CityComboBox.DisplayMember = "Name";
-            CityComboBox.ValueMember = "Server";
-            //Устанавливаем выбранный элемент
-            CityComboBox.SelectedItem = 0;
+            foreach (ServerList.Server server in _serverList.ListOfServers)
+                ServerListComboBox.Items.Add(server.Name);
         }
 
-        // Метод при изменении SGTIN меняет поля GTIN и серийного номера
+        // При изменении SGTIN меняет поля GTIN и серийного номера
         private void SGTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SGTINTextBox.Text.Length == 27)
@@ -49,7 +31,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        // Метод при изменении поля GTIN меняет поле SGTIN
+        // При изменении поля GTIN меняет поле SGTIN
         private void GTINTextBox_TextChanged(object sender, EventArgs e)
         {
             if (GTINTextBox.Text.Length > 14) GTINTextBox.Text = GTINTextBox.Text.Substring(0, 13);
@@ -59,7 +41,7 @@ namespace CryptoGetterForNet45
             }
         }
 
-        // Метод при изменении поля cерийного номера меняет SGTIN
+        // При изменении поля cерийного номера меняет SGTIN
         private void SerialTextBox_TextChanged(object sender, EventArgs e)
         {
             if (SerialTextBox.Text.Length > 13) SerialTextBox.Text = SerialTextBox.Text.Substring(0, 13);
@@ -69,21 +51,18 @@ namespace CryptoGetterForNet45
             }
         }
 
-        /// Основной метод работы с моделью
+        /// Получаем криптоданные
         private void GetDataButton_Click(object sender, EventArgs e)
         {
             ClearResultFields();
+
+            var server = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem);
             try
             {
-                Package package = new Package()
-                {
-                    GTIN = GTINTextBox.Text,
-                    Serial = SerialTextBox.Text
-                };
-                dbc.Connect(CityComboBox.SelectedValue.ToString());
-                Package result = dbc.GetCrypto(package);
-                dbc.Disconnect();
-                ShowResults(result);
+                IDataMiner DM = _dataMinerFactory.GetDataMiner(server.Type);
+                (string cryptoCode, string cryptoKey) = DM.GetCrypto(SGTINTextBox.Text);
+                ShowResults(GTINTextBox.Text, SerialTextBox.Text, cryptoCode, cryptoKey);
+                DM.Close();
             }
             catch (Exception ex)
             {
@@ -92,15 +71,15 @@ namespace CryptoGetterForNet45
         }
     
         //заполняет поля формы по имеющимся данным
-        private void ShowResults(Package package)
+        private void ShowResults(string GTIN, string Serial, string CryptoCode, string CryptoKey)
         {
-            BarCodeTextBox.Text = $"01{package.GTIN}21{package.Serial}\\F91{package.CryptoKey}\\F92{package.CryptoCode}";
-            DesignerTextBox.Text = $"01{package.GTIN}21{package.Serial}<<GS1Separator>>91{package.CryptoKey}<<GS1Separator>>92{ package.CryptoCode}";
-            KeyTextBox.Text = package.CryptoKey;
-            CodeTextBox.Text = package.CryptoCode;
-            DMXcreator($"01{package.GTIN}21{package.Serial}{char.ConvertFromUtf32(29)}91{package.CryptoKey}{char.ConvertFromUtf32(29)}92{package.CryptoCode}");
-            OneSTextBox.Text = $"{package.Serial} {package.CryptoKey} {package.CryptoCode}";
-            WTSTextBox.Text = $"01{package.GTIN}21{package.Serial}§91{package.CryptoKey}§92{package.CryptoCode}";
+            BarCodeTextBox.Text = $"01{GTIN}21{Serial}\\F91{CryptoKey}\\F92{CryptoCode}";
+            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
+            KeyTextBox.Text = CryptoKey;
+            CodeTextBox.Text = CryptoCode;
+            DMXcreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
+            OneSTextBox.Text = $"{Serial} {CryptoKey} {CryptoCode}";
+            WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
         }
             
         //копирует содержимое поля BarCodeCopyButton в буфер обмена
@@ -177,12 +156,7 @@ namespace CryptoGetterForNet45
         {
             if (WTSTextBox.Text.Length > 0) Clipboard.SetText(WTSTextBox.Text);
         }
+
     }
 
-    //Класс объектов для привязки списка городов
-    class City
-    {
-        public string Name { get; set; }
-        public string Server { get; set; }
-    }
 }

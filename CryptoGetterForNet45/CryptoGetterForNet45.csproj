@@ -80,15 +80,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataBaseCryptoExtractor.cs" />
+    <Compile Include="CryptoGetter\AntaresDataMiner.cs" />
+    <Compile Include="CryptoGetter\DataBaseCryptoExtractor.cs" />
     <Compile Include="CryptoGetterForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CryptoGetterForm.Designer.cs">
       <DependentUpon>CryptoGetterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CryptoGetter\DataMinerFactory.cs" />
+    <Compile Include="CryptoGetter\MedtechDataMiner.cs" />
+    <Compile Include="CryptoGetter\IDataMiner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CryptoGetter\ServerList.cs" />
     <EmbeddedResource Include="CryptoGetterForm.resx">
       <DependentUpon>CryptoGetterForm.cs</DependentUpon>
     </EmbeddedResource>

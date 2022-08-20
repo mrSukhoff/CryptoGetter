@@ -34,7 +34,7 @@ namespace CryptoGetterForNet45
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.CityComboBox = new System.Windows.Forms.ComboBox();
+            this.ServerListComboBox = new System.Windows.Forms.ComboBox();
             this.SerialTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -67,9 +67,9 @@ namespace CryptoGetterForNet45
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(13, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 20);
+            this.label1.Size = new System.Drawing.Size(55, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "City";
+            this.label1.Text = "Server";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label2
@@ -105,14 +105,14 @@ namespace CryptoGetterForNet45
             this.label4.Text = "Serial";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // CityComboBox
+            // ServerListComboBox
             // 
-            this.CityComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CityComboBox.FormattingEnabled = true;
-            this.CityComboBox.Location = new System.Drawing.Point(95, 12);
-            this.CityComboBox.Name = "CityComboBox";
-            this.CityComboBox.Size = new System.Drawing.Size(176, 28);
-            this.CityComboBox.TabIndex = 1;
+            this.ServerListComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ServerListComboBox.FormattingEnabled = true;
+            this.ServerListComboBox.Location = new System.Drawing.Point(95, 12);
+            this.ServerListComboBox.Name = "ServerListComboBox";
+            this.ServerListComboBox.Size = new System.Drawing.Size(176, 28);
+            this.ServerListComboBox.TabIndex = 1;
             // 
             // SerialTextBox
             // 
@@ -369,7 +369,7 @@ namespace CryptoGetterForNet45
             this.Controls.Add(this.SerialTextBox);
             this.Controls.Add(this.GTINTextBox);
             this.Controls.Add(this.SGTINTextBox);
-            this.Controls.Add(this.CityComboBox);
+            this.Controls.Add(this.ServerListComboBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -390,7 +390,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox CityComboBox;
+        private System.Windows.Forms.ComboBox ServerListComboBox;
         private System.Windows.Forms.TextBox SerialTextBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
