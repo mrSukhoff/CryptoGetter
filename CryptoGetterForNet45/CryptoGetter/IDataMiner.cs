@@ -9,6 +9,5 @@ namespace CryptoGetter
     internal interface IDataMiner
     {
         (string, string) GetCrypto(String sGTIN);
-        void Close();
     }
 }

@@ -6,8 +6,6 @@ namespace CryptoGetter
 {
     internal class AntaresDataMiner : IDataMiner
     {
-        //Соединение с БД
-        private SqlConnection _connection;
         private readonly Server  _server;
 
         public AntaresDataMiner(Server server)
@@ -23,92 +21,42 @@ namespace CryptoGetter
             string serial = sGTIN.Substring(14);
             if (serial.Length != 13) throw new ArgumentException("Неверная длина серийного номера!");
 
-            Connect();
-
-            //Получаем по GTIN его идентификатор.
-            string gtinId = GetGtinId(gtin);
-
-            //Проверяем найден ли GTIN
-            if (gtinId.Length != 4)
-            {
-                throw new Exception("GTIN не найден!");
-            }
-
-            // По идентификатору GTIN и серийному номеру пачки получаем крипто-данные.
-            return GetCryptoData(gtinId, serial);
-        }
-
-        public void Close()
-        {
-            Disconnect();
-        }
-
-        private void Connect()
-        {
-            Disconnect();
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
-        }
-
-        public void Disconnect()
-        {
-            if (_connection != null)
-            {
-                _connection.Close();
-            }
-        }
-
-        private string GetGtinId(string gtin)
-        {
-            string result = "";
-
-            string cmdString = $"SELECT [Id] FROM {_server.DBName}.[dbo].[NtinDefinition] WHERE Ntin = '{gtin}'";
-            SqlCommand cmd = new SqlCommand(cmdString, _connection);
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                result = reader.GetValue(0).ToString();
-            }
-
-            reader.Close();
-            cmd.Dispose();
-
-            return result;
-        }
-
-        private (string,string) GetCryptoData(string gtinId, string serial)
-        {
-            string cmdString = $"SELECT [VariableName] ,[VariableValue] FROM {_server.DBName}.[dbo].[ItemDetails] " +
-                $"where Serial='{serial}' and NtinId={gtinId}";
-            SqlCommand cmd = new SqlCommand(cmdString, _connection);
-            cmd.CommandTimeout = 20;
-            SqlDataReader reader = cmd.ExecuteReader();
-
+            
+            string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM {_server.DBName}.[dbo].[ItemDetails] as i " +
+                $"JOIN [AntaresTracking_PRD].[dbo].[NtinDefinition] as n on i.NtinId = n.Id " +
+                $"where i.Serial='{serial}' and n.Ntin='{gtin}'";
             Dictionary<string, string> results = new Dictionary<string, string>();
-            //Читаем по порядку все ответы
-            while (reader.Read())
-            {
-                string key = reader.GetValue(0).ToString();
-                string value = reader.GetValue(1).ToString();
-                results.Add(key, value);
-            }
-            reader.Close();
-            cmd.Dispose();
 
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(cmdString, connection))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string key = reader.GetValue(0).ToString();
+                            string value = reader.GetValue(1).ToString();
+                            results.Add(key, value);
+                        }
+                    }
+                }
+            }
+            
             string cryptoCode, cryptoKey;
             if (results.Count >= 2)
             {
-                cryptoCode = results["cryptocode"];
                 cryptoKey = results["cryptokey"];
+                cryptoCode = results["cryptocode"];
             }
             else
             {
                 throw new Exception("Криптоданные не найдены");
             }
-            return (cryptoCode, cryptoKey);
+            return (cryptoKey, cryptoCode);
         }
     }
 }

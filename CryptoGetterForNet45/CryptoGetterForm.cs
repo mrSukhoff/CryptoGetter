@@ -61,9 +61,8 @@ namespace CryptoGetterForNet45
             try
             {
                 IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
-                (string cryptoCode, string cryptoKey) = dataMiner.GetCrypto(SGTINTextBox.Text);
+                (string cryptoKey, string cryptoCode) = dataMiner.GetCrypto(SGTINTextBox.Text);
                 ShowResults(GTINTextBox.Text, SerialTextBox.Text, cryptoCode, cryptoKey);
-                dataMiner.Close();
             }
             catch (Exception ex)
             {
