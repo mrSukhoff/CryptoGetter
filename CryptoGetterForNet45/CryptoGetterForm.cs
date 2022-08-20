@@ -56,10 +56,10 @@ namespace CryptoGetterForNet45
         {
             ClearResultFields();
 
-            var server = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem);
+            ServerList.Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             try
             {
-                IDataMiner DM = _dataMinerFactory.GetDataMiner(server.Type);
+                IDataMiner DM = _dataMinerFactory.GetDataMiner(selectedServer.Type);
                 (string cryptoCode, string cryptoKey) = DM.GetCrypto(SGTINTextBox.Text);
                 ShowResults(GTINTextBox.Text, SerialTextBox.Text, cryptoCode, cryptoKey);
                 DM.Close();
