@@ -56,6 +56,7 @@ namespace CryptoGetterForNet45
         private void GetDataButton_Click(object sender, EventArgs e)
         {
             ClearResultFields();
+            if (SGTINTextBox.Text.Length != 27) return;
 
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             try

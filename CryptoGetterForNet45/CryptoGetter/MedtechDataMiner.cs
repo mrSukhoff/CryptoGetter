@@ -49,7 +49,6 @@ namespace CryptoGetter
             }
         
             string cryptoCode, cryptoKey;
-
             if (results.Count >= 2)
             {
                 cryptoKey = results["cryptokey"];

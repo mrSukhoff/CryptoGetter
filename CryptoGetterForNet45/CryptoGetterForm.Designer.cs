@@ -111,7 +111,7 @@ namespace CryptoGetterForNet45
             this.ServerListComboBox.FormattingEnabled = true;
             this.ServerListComboBox.Location = new System.Drawing.Point(95, 12);
             this.ServerListComboBox.Name = "ServerListComboBox";
-            this.ServerListComboBox.Size = new System.Drawing.Size(176, 28);
+            this.ServerListComboBox.Size = new System.Drawing.Size(254, 28);
             this.ServerListComboBox.TabIndex = 1;
             // 
             // SerialTextBox
@@ -343,7 +343,7 @@ namespace CryptoGetterForNet45
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Window;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(633, 741);
             this.Controls.Add(this.WtsCopyButton);
             this.Controls.Add(this.OneSCopyButton);

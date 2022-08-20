@@ -91,7 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CryptoGetter\AntaresDataMiner.cs" />
-    <Compile Include="CryptoGetter\DataBaseCryptoExtractor.cs" />
     <Compile Include="CryptoGetterForm.cs">
       <SubType>Form</SubType>
     </Compile>

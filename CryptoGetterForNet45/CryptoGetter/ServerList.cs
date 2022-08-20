@@ -12,7 +12,8 @@ namespace CryptoGetter
 
         public ServerList()
         {
-            string path = @"server.ini";
+            string path = "server.ini";
+            
             ListOfServers = new List<Server>();
 
             if (File.Exists(path))
@@ -23,7 +24,7 @@ namespace CryptoGetter
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        string[] word = line.Split(' ');
+                        string[] word = line.Split(',',';');
                         string name = word[0];
                         string fqn = word[1];
                         string dbname = word[2];

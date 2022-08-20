@@ -27,6 +27,7 @@ namespace CryptoGetter
             string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM {_server.DBName}.[dbo].[ItemDetails] as i " +
                 $"JOIN [AntaresTracking_PRD].[dbo].[NtinDefinition] as n on i.NtinId = n.Id " +
                 $"where i.Serial='{serial}' and n.Ntin='{gtin}'";
+            
             Dictionary<string, string> results = new Dictionary<string, string>();
 
             using (var connection = new SqlConnection(connectionString))
