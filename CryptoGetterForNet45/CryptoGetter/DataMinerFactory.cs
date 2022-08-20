@@ -8,11 +8,11 @@ namespace CryptoGetter
 {
     internal class DataMinerFactory
     {
-        public IDataMiner GetDataMiner(ServerList.ServerType typeOfServer)
+        public IDataMiner GetDataMiner(Server server)
         {
             
-            if (typeOfServer == ServerList.ServerType.Antares) return new AntaresDataMiner();
-            if (typeOfServer == ServerList.ServerType.Medtech) return new MedtechDataMiner();
+            if (server.Type == ServerType.Antares) return new AntaresDataMiner(server);
+            if (server.Type == ServerType.Medtech) return new MedtechDataMiner(server);
             throw new Exception ("Класс типа сервера не описан!");
         }
 

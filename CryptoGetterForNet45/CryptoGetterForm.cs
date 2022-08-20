@@ -15,8 +15,9 @@ namespace CryptoGetterForNet45
         public CryptoGetterForm()
         {
             InitializeComponent();
-            foreach (ServerList.Server server in _serverList.ListOfServers)
+            foreach (Server server in _serverList.ListOfServers)
                 ServerListComboBox.Items.Add(server.Name);
+            ServerListComboBox.SelectedIndex = 0;
         }
 
         // При изменении SGTIN меняет поля GTIN и серийного номера
@@ -56,13 +57,13 @@ namespace CryptoGetterForNet45
         {
             ClearResultFields();
 
-            ServerList.Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
+            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             try
             {
-                IDataMiner DM = _dataMinerFactory.GetDataMiner(selectedServer.Type);
-                (string cryptoCode, string cryptoKey) = DM.GetCrypto(SGTINTextBox.Text);
+                IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+                (string cryptoCode, string cryptoKey) = dataMiner.GetCrypto(SGTINTextBox.Text);
                 ShowResults(GTINTextBox.Text, SerialTextBox.Text, cryptoCode, cryptoKey);
-                DM.Close();
+                dataMiner.Close();
             }
             catch (Exception ex)
             {
