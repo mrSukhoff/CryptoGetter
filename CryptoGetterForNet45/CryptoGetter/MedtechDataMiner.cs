@@ -28,12 +28,12 @@ namespace CryptoGetter
             FbConnectionStringBuilder connectionStringBuilder = new FbConnectionStringBuilder
             {
                 Database = $"{_server.FQN}:{_server.DBName}",
-                UserID = "SMS_DATAREADER",
-                Password = "123",
+                UserID = "FS_ADMIN",
+                Password = "NdVj4K?9",
                 Charset = "UTF8",
-                //Role = "RDB$ADMIN",
+                Role = "RDB$ADMIN",
             };
-
+            
             string connectionString = connectionStringBuilder.ToString();
 
             string cryptoKey = "",  cryptoCode = "";
