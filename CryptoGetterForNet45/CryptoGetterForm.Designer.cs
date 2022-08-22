@@ -201,7 +201,6 @@ namespace CryptoGetterForNet45
             this.SGTINTextBox.Name = "SGTINTextBox";
             this.SGTINTextBox.Size = new System.Drawing.Size(254, 26);
             this.SGTINTextBox.TabIndex = 2;
-            this.SGTINTextBox.Text = "04605310023518oAjiB1Ol4b2uD";
             this.SGTINTextBox.TextChanged += new System.EventHandler(this.SGTINTextBox_TextChanged);
             // 
             // DMXPictureBox
