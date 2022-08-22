@@ -15,12 +15,11 @@ namespace CryptoGetter
 
         public (string, string) GetCrypto(string sGTIN)
         {
-            string gtin = sGTIN.Substring(0,14);
-            if (gtin.Length != 14) throw new ArgumentException("Неверная длина GTIN!");
-            
-            string serial = sGTIN.Substring(14);
-            if (serial.Length != 13) throw new ArgumentException("Неверная длина серийного номера!");
+            if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
+            string gtin = sGTIN.Substring(0,14);
+            string serial = sGTIN.Substring(14);
+            
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
             
