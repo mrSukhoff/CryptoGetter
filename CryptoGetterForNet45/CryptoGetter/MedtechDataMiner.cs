@@ -31,7 +31,7 @@ namespace CryptoGetter
                 UserID = "SMS_DATAREADER",
                 Password = "123",
                 Charset = "UTF8",
-                Role = "USER_ROLE",
+                //Role = "RDB$ADMIN",
             };
 
             string connectionString = connectionStringBuilder.ToString();

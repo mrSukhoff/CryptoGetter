@@ -67,26 +67,19 @@ namespace CryptoGetterForNet45
             }
             catch (Exception ex)
             {
-                BarCodeTextBox.Text = ex.Message;
+                DesignerTextBox.Text = ex.Message;
             }
         }
     
         //заполняет поля формы по имеющимся данным
         private void ShowResults(string GTIN, string Serial, string CryptoCode, string CryptoKey)
         {
-            BarCodeTextBox.Text = $"01{GTIN}21{Serial}\\F91{CryptoKey}\\F92{CryptoCode}";
             DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
             DMXcreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
-            OneSTextBox.Text = $"{Serial} {CryptoKey} {CryptoCode}";
             WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
-        }
-            
-        //копирует содержимое поля BarCodeCopyButton в буфер обмена
-        private void BarCodeCopyButton_Click(object sender, EventArgs e)
-        {
-            if (BarCodeTextBox.Text.Length > 0) Clipboard.SetText(BarCodeTextBox.Text);
+            SUZTextBox.Text = $"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}";
         }
 
         //копирует содержимое поля DesignerCopyButton в буфер обмена
@@ -107,14 +100,13 @@ namespace CryptoGetterForNet45
         //очищает поля результатов
         private void ClearResultFields()
         {
-            BarCodeTextBox.Clear();
             DesignerTextBox.Clear();
             KeyTextBox.Clear();
             CodeTextBox.Clear();
             if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
             DMXPictureBox.Image = null;
-            OneSTextBox.Clear();
             WTSTextBox.Clear();
+            SUZTextBox.Clear();
         }
 
         /// <summary>
@@ -146,18 +138,16 @@ namespace CryptoGetterForNet45
             DMXPictureBox.Image.Save(path);
         }
 
-        //копирует содержимое поля OneSTextBox в буфер обмена
-        private void OneSCopyButton_Click(object sender, EventArgs e)
-        {
-            if (OneSTextBox.Text.Length > 0) Clipboard.SetText(OneSTextBox.Text);
-        }
-
         //копирует содержимое поля WTSTextBox в буфер обмена
         private void WtsCopyButton_Click(object sender, EventArgs e)
         {
             if (WTSTextBox.Text.Length > 0) Clipboard.SetText(WTSTextBox.Text);
         }
 
+        private void SUZCopyButton_Click(object sender, EventArgs e)
+        {
+            if (SUZTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
+        }
     }
 
 }
