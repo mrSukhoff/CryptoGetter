@@ -77,7 +77,7 @@ namespace CryptoGetterForNet45
             DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
-            DMXcreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
+            DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
             WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
             SUZTextBox.Text = $"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}";
         }
@@ -103,8 +103,8 @@ namespace CryptoGetterForNet45
             DesignerTextBox.Clear();
             KeyTextBox.Clear();
             CodeTextBox.Clear();
-            if (DMXPictureBox.Image != null) DMXPictureBox.Image.Dispose();
-            DMXPictureBox.Image = null;
+            if (DtmxPictureBox.Image != null) DtmxPictureBox.Image.Dispose();
+            DtmxPictureBox.Image = null;
             WTSTextBox.Clear();
             SUZTextBox.Clear();
         }
@@ -113,7 +113,7 @@ namespace CryptoGetterForNet45
         /// По входной строке метод рисует DatamatrixCode
         /// </summary>
         /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
-        private void DMXcreator(string dataMatrixString)
+        private void DtmxCreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
             DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
@@ -121,13 +121,13 @@ namespace CryptoGetterForNet45
             options.ModuleSize = 5;
             options.MarginSize = 4;
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
-            DMXPictureBox.Image = encodedBitmap;
+            DtmxPictureBox.Image = encodedBitmap;
         }
 
         //охраняет картинку в файл
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
-            if (DMXPictureBox.Image == null) return;
+            if (DtmxPictureBox.Image == null) return;
             
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "bmp";
@@ -135,7 +135,7 @@ namespace CryptoGetterForNet45
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
             
             string path = saveFileDialog.FileName;
-            DMXPictureBox.Image.Save(path);
+            DtmxPictureBox.Image.Save(path);
         }
 
         //копирует содержимое поля WTSTextBox в буфер обмена

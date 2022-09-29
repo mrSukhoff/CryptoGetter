@@ -43,7 +43,7 @@ namespace CryptoGetterForNet45
             this.ClearButton = new System.Windows.Forms.Button();
             this.GTINTextBox = new System.Windows.Forms.TextBox();
             this.SGTINTextBox = new System.Windows.Forms.TextBox();
-            this.DMXPictureBox = new System.Windows.Forms.PictureBox();
+            this.DtmxPictureBox = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.KeyTextBox = new System.Windows.Forms.TextBox();
@@ -55,7 +55,7 @@ namespace CryptoGetterForNet45
             this.SUZTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.SUZCopyButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -205,13 +205,13 @@ namespace CryptoGetterForNet45
             // 
             // DMXPictureBox
             // 
-            this.DMXPictureBox.BackColor = System.Drawing.SystemColors.Info;
-            this.DMXPictureBox.Location = new System.Drawing.Point(131, 559);
-            this.DMXPictureBox.Margin = new System.Windows.Forms.Padding(10);
-            this.DMXPictureBox.Name = "DMXPictureBox";
-            this.DMXPictureBox.Size = new System.Drawing.Size(188, 188);
-            this.DMXPictureBox.TabIndex = 11;
-            this.DMXPictureBox.TabStop = false;
+            this.DtmxPictureBox.BackColor = System.Drawing.SystemColors.Info;
+            this.DtmxPictureBox.Location = new System.Drawing.Point(131, 559);
+            this.DtmxPictureBox.Margin = new System.Windows.Forms.Padding(10);
+            this.DtmxPictureBox.Name = "DMXPictureBox";
+            this.DtmxPictureBox.Size = new System.Drawing.Size(188, 188);
+            this.DtmxPictureBox.TabIndex = 11;
+            this.DtmxPictureBox.TabStop = false;
             // 
             // label7
             // 
@@ -352,7 +352,7 @@ namespace CryptoGetterForNet45
             this.Controls.Add(this.KeyTextBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.DMXPictureBox);
+            this.Controls.Add(this.DtmxPictureBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.DesignerCopyButton);
@@ -371,7 +371,7 @@ namespace CryptoGetterForNet45
             this.MaximizeBox = false;
             this.Name = "CryptoGetterForm";
             this.Text = "CryptoGetter by S.M.S.";
-            ((System.ComponentModel.ISupportInitialize)(this.DMXPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -392,7 +392,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Button ClearButton;
         private System.Windows.Forms.TextBox GTINTextBox;
         private System.Windows.Forms.TextBox SGTINTextBox;
-        private System.Windows.Forms.PictureBox DMXPictureBox;
+        private System.Windows.Forms.PictureBox DtmxPictureBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox KeyTextBox;
