@@ -148,6 +148,16 @@ namespace CryptoGetterForNet45
         {
             if (SUZTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
         }
+
+        private void GtinCopyButton_Click(object sender, EventArgs e)
+        {
+            if (GTINTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
+        }
+
+        private void SerialCopyButton_Click(object sender, EventArgs e)
+        {
+            if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
+        }
     }
 
 }

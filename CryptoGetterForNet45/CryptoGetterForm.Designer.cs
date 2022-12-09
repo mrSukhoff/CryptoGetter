@@ -55,6 +55,8 @@ namespace CryptoGetterForNet45
             this.SUZTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.SUZCopyButton = new System.Windows.Forms.Button();
+            this.GtinCopyButton = new System.Windows.Forms.Button();
+            this.SerialCopyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -203,12 +205,12 @@ namespace CryptoGetterForNet45
             this.SGTINTextBox.TabIndex = 2;
             this.SGTINTextBox.TextChanged += new System.EventHandler(this.SGTINTextBox_TextChanged);
             // 
-            // DMXPictureBox
+            // DtmxPictureBox
             // 
             this.DtmxPictureBox.BackColor = System.Drawing.SystemColors.Info;
             this.DtmxPictureBox.Location = new System.Drawing.Point(131, 559);
             this.DtmxPictureBox.Margin = new System.Windows.Forms.Padding(10);
-            this.DtmxPictureBox.Name = "DMXPictureBox";
+            this.DtmxPictureBox.Name = "DtmxPictureBox";
             this.DtmxPictureBox.Size = new System.Drawing.Size(188, 188);
             this.DtmxPictureBox.TabIndex = 11;
             this.DtmxPictureBox.TabStop = false;
@@ -335,12 +337,38 @@ namespace CryptoGetterForNet45
             this.SUZCopyButton.UseVisualStyleBackColor = true;
             this.SUZCopyButton.Click += new System.EventHandler(this.SUZCopyButton_Click);
             // 
+            // GtinCopyButton
+            // 
+            this.GtinCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.GtinCopyButton.Location = new System.Drawing.Point(272, 116);
+            this.GtinCopyButton.Margin = new System.Windows.Forms.Padding(10);
+            this.GtinCopyButton.Name = "GtinCopyButton";
+            this.GtinCopyButton.Size = new System.Drawing.Size(113, 26);
+            this.GtinCopyButton.TabIndex = 23;
+            this.GtinCopyButton.Text = "Копировать";
+            this.GtinCopyButton.UseVisualStyleBackColor = true;
+            this.GtinCopyButton.Click += new System.EventHandler(this.GtinCopyButton_Click);
+            // 
+            // SerialCopyButton
+            // 
+            this.SerialCopyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SerialCopyButton.Location = new System.Drawing.Point(272, 162);
+            this.SerialCopyButton.Margin = new System.Windows.Forms.Padding(10);
+            this.SerialCopyButton.Name = "SerialCopyButton";
+            this.SerialCopyButton.Size = new System.Drawing.Size(113, 26);
+            this.SerialCopyButton.TabIndex = 24;
+            this.SerialCopyButton.Text = "Копировать";
+            this.SerialCopyButton.UseVisualStyleBackColor = true;
+            this.SerialCopyButton.Click += new System.EventHandler(this.SerialCopyButton_Click);
+            // 
             // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(705, 771);
+            this.Controls.Add(this.SerialCopyButton);
+            this.Controls.Add(this.GtinCopyButton);
             this.Controls.Add(this.SUZCopyButton);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.SUZTextBox);
@@ -404,6 +432,8 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.TextBox SUZTextBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button SUZCopyButton;
+        private System.Windows.Forms.Button GtinCopyButton;
+        private System.Windows.Forms.Button SerialCopyButton;
     }
 }
 
