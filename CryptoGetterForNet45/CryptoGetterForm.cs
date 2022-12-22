@@ -151,12 +151,12 @@ namespace CryptoGetterForNet45
 
         private void GtinCopyButton_Click(object sender, EventArgs e)
         {
-            if (GTINTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
+            if (GTINTextBox.Text.Length > 0) Clipboard.SetText(GTINTextBox.Text);
         }
 
         private void SerialCopyButton_Click(object sender, EventArgs e)
         {
-            if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
+            if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
     }
 
