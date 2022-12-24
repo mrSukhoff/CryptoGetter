@@ -124,7 +124,7 @@ namespace CryptoGetterForNet45
             DtmxPictureBox.Image = encodedBitmap;
         }
 
-        //охраняет картинку в файл
+        //сохраняет картинку в файл
         private void SaveImeageButton_Click(object sender, EventArgs e)
         {
             if (DtmxPictureBox.Image == null) return;
@@ -157,6 +157,42 @@ namespace CryptoGetterForNet45
         private void SerialCopyButton_Click(object sender, EventArgs e)
         {
             if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
+        }
+
+        private void OpenXmlButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.DefaultExt = "xml";
+            if (dialog.ShowDialog() == DialogResult.OK) 
+            { 
+                XmlFileLabel.Text = dialog.FileName;
+            }
+
+        }
+
+        private void OpenSgtinButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.DefaultExt = "txt";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                SginFileLabel.Text = dialog.FileName;
+            }
+        }
+
+        private void SelectFolderButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.ShowNewFolderButton = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                SginFileLabel.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void GenerateButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
