@@ -71,7 +71,7 @@ namespace CryptoGetterForNet45
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.FolderPathLabel = new System.Windows.Forms.Label();
             this.SelectFolderButton = new System.Windows.Forms.Button();
             this.GenerateButton = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
@@ -424,7 +424,7 @@ namespace CryptoGetterForNet45
             this.MultimodeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.MultimodeTabPage.Controls.Add(this.GenerateButton);
             this.MultimodeTabPage.Controls.Add(this.SelectFolderButton);
-            this.MultimodeTabPage.Controls.Add(this.label15);
+            this.MultimodeTabPage.Controls.Add(this.FolderPathLabel);
             this.MultimodeTabPage.Controls.Add(this.label14);
             this.MultimodeTabPage.Controls.Add(this.label13);
             this.MultimodeTabPage.Controls.Add(this.label12);
@@ -451,6 +451,7 @@ namespace CryptoGetterForNet45
             this.SginFileLabel.Size = new System.Drawing.Size(342, 20);
             this.SginFileLabel.TabIndex = 7;
             this.SginFileLabel.Text = "Выберете файл с SGTIN";
+            this.SginFileLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // OpenSgtinButton
             // 
@@ -550,14 +551,15 @@ namespace CryptoGetterForNet45
             this.label14.TabIndex = 10;
             this.label14.Text = "Папка с результатами";
             // 
-            // label15
+            // FolderPathLabel
             // 
-            this.label15.Location = new System.Drawing.Point(215, 204);
-            this.label15.Margin = new System.Windows.Forms.Padding(10);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(342, 20);
-            this.label15.TabIndex = 11;
-            this.label15.Text = "Выберете папку";
+            this.FolderPathLabel.Location = new System.Drawing.Point(215, 204);
+            this.FolderPathLabel.Margin = new System.Windows.Forms.Padding(10);
+            this.FolderPathLabel.Name = "FolderPathLabel";
+            this.FolderPathLabel.Size = new System.Drawing.Size(342, 20);
+            this.FolderPathLabel.TabIndex = 11;
+            this.FolderPathLabel.Text = "Выберете папку";
+            this.FolderPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // SelectFolderButton
             // 
@@ -645,7 +647,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Button OpenXmlButton;
         private System.Windows.Forms.Button GenerateButton;
         private System.Windows.Forms.Button SelectFolderButton;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label FolderPathLabel;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;

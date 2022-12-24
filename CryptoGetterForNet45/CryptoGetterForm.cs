@@ -186,7 +186,7 @@ namespace CryptoGetterForNet45
             dialog.ShowNewFolderButton = true;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                SginFileLabel.Text = dialog.SelectedPath;
+                FolderPathLabel.Text = dialog.SelectedPath;
             }
         }
 
