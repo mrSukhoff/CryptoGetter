@@ -32,7 +32,6 @@ namespace CryptoGetterForNet45
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CryptoGetterForm));
             this.ModeTabControl = new System.Windows.Forms.TabControl();
             this.SingleModeTabPage = new System.Windows.Forms.TabPage();
-            this.MultimodeTabPage = new System.Windows.Forms.TabPage();
             this.SerialCopyButton = new System.Windows.Forms.Button();
             this.GtinCopyButton = new System.Windows.Forms.Button();
             this.KeyTextBox = new System.Windows.Forms.TextBox();
@@ -60,9 +59,19 @@ namespace CryptoGetterForNet45
             this.DesignerCopyButton = new System.Windows.Forms.Button();
             this.DesignerTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.MultimodeTabPage = new System.Windows.Forms.TabPage();
+            this.SginFileLabel = new System.Windows.Forms.Label();
+            this.OpenSgtinButton = new System.Windows.Forms.Button();
+            this.XmlFileLabel = new System.Windows.Forms.Label();
+            this.ExpiredTextBox = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.LotTextBox = new System.Windows.Forms.TextBox();
+            this.OpenXmlButton = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
+            this.MultimodeTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // ModeTabControl
@@ -113,16 +122,6 @@ namespace CryptoGetterForNet45
             this.SingleModeTabPage.Size = new System.Drawing.Size(685, 746);
             this.SingleModeTabPage.TabIndex = 0;
             this.SingleModeTabPage.Text = "Одиночный режим";
-            // 
-            // MultimodeTabPage
-            // 
-            this.MultimodeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.MultimodeTabPage.Location = new System.Drawing.Point(4, 29);
-            this.MultimodeTabPage.Margin = new System.Windows.Forms.Padding(0);
-            this.MultimodeTabPage.Name = "MultimodeTabPage";
-            this.MultimodeTabPage.Size = new System.Drawing.Size(685, 746);
-            this.MultimodeTabPage.TabIndex = 1;
-            this.MultimodeTabPage.Text = "Групповой режим";
             // 
             // SerialCopyButton
             // 
@@ -414,6 +413,100 @@ namespace CryptoGetterForNet45
             this.label6.Text = "Layout Designer";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // MultimodeTabPage
+            // 
+            this.MultimodeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MultimodeTabPage.Controls.Add(this.SginFileLabel);
+            this.MultimodeTabPage.Controls.Add(this.OpenSgtinButton);
+            this.MultimodeTabPage.Controls.Add(this.XmlFileLabel);
+            this.MultimodeTabPage.Controls.Add(this.ExpiredTextBox);
+            this.MultimodeTabPage.Controls.Add(this.label11);
+            this.MultimodeTabPage.Controls.Add(this.label9);
+            this.MultimodeTabPage.Controls.Add(this.LotTextBox);
+            this.MultimodeTabPage.Controls.Add(this.OpenXmlButton);
+            this.MultimodeTabPage.Location = new System.Drawing.Point(4, 29);
+            this.MultimodeTabPage.Margin = new System.Windows.Forms.Padding(0);
+            this.MultimodeTabPage.Name = "MultimodeTabPage";
+            this.MultimodeTabPage.Size = new System.Drawing.Size(685, 746);
+            this.MultimodeTabPage.TabIndex = 1;
+            this.MultimodeTabPage.Text = "Групповой режим";
+            // 
+            // SginFileLabel
+            // 
+            this.SginFileLabel.AutoSize = true;
+            this.SginFileLabel.Location = new System.Drawing.Point(132, 72);
+            this.SginFileLabel.Margin = new System.Windows.Forms.Padding(10);
+            this.SginFileLabel.Name = "SginFileLabel";
+            this.SginFileLabel.Size = new System.Drawing.Size(197, 20);
+            this.SginFileLabel.TabIndex = 7;
+            this.SginFileLabel.Text = "Выберете файл с SGTIN";
+            // 
+            // OpenSgtinButton
+            // 
+            this.OpenSgtinButton.Location = new System.Drawing.Point(19, 67);
+            this.OpenSgtinButton.Margin = new System.Windows.Forms.Padding(10);
+            this.OpenSgtinButton.Name = "OpenSgtinButton";
+            this.OpenSgtinButton.Size = new System.Drawing.Size(93, 31);
+            this.OpenSgtinButton.TabIndex = 6;
+            this.OpenSgtinButton.Text = "Открыть";
+            this.OpenSgtinButton.UseVisualStyleBackColor = true;
+            // 
+            // XmlFileLabel
+            // 
+            this.XmlFileLabel.AutoSize = true;
+            this.XmlFileLabel.Location = new System.Drawing.Point(132, 21);
+            this.XmlFileLabel.Margin = new System.Windows.Forms.Padding(10);
+            this.XmlFileLabel.Name = "XmlFileLabel";
+            this.XmlFileLabel.Size = new System.Drawing.Size(160, 20);
+            this.XmlFileLabel.TabIndex = 5;
+            this.XmlFileLabel.Text = "Выберете xml-файл";
+            // 
+            // ExpiredTextBox
+            // 
+            this.ExpiredTextBox.Location = new System.Drawing.Point(136, 161);
+            this.ExpiredTextBox.Margin = new System.Windows.Forms.Padding(10);
+            this.ExpiredTextBox.Name = "ExpiredTextBox";
+            this.ExpiredTextBox.Size = new System.Drawing.Size(100, 26);
+            this.ExpiredTextBox.TabIndex = 4;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(15, 164);
+            this.label11.Margin = new System.Windows.Forms.Padding(10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(80, 20);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "Годен до";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(15, 118);
+            this.label9.Margin = new System.Windows.Forms.Padding(10);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 20);
+            this.label9.TabIndex = 2;
+            this.label9.Text = "Серия";
+            // 
+            // LotTextBox
+            // 
+            this.LotTextBox.Location = new System.Drawing.Point(136, 115);
+            this.LotTextBox.Margin = new System.Windows.Forms.Padding(10);
+            this.LotTextBox.Name = "LotTextBox";
+            this.LotTextBox.Size = new System.Drawing.Size(100, 26);
+            this.LotTextBox.TabIndex = 1;
+            // 
+            // OpenXmlButton
+            // 
+            this.OpenXmlButton.Location = new System.Drawing.Point(19, 16);
+            this.OpenXmlButton.Margin = new System.Windows.Forms.Padding(10);
+            this.OpenXmlButton.Name = "OpenXmlButton";
+            this.OpenXmlButton.Size = new System.Drawing.Size(93, 31);
+            this.OpenXmlButton.TabIndex = 0;
+            this.OpenXmlButton.Text = "Открыть";
+            this.OpenXmlButton.UseVisualStyleBackColor = true;
+            // 
             // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -430,6 +523,8 @@ namespace CryptoGetterForNet45
             this.SingleModeTabPage.ResumeLayout(false);
             this.SingleModeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).EndInit();
+            this.MultimodeTabPage.ResumeLayout(false);
+            this.MultimodeTabPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -466,6 +561,14 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.TextBox DesignerTextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TabPage MultimodeTabPage;
+        private System.Windows.Forms.Label SginFileLabel;
+        private System.Windows.Forms.Button OpenSgtinButton;
+        private System.Windows.Forms.Label XmlFileLabel;
+        private System.Windows.Forms.TextBox ExpiredTextBox;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox LotTextBox;
+        private System.Windows.Forms.Button OpenXmlButton;
     }
 }
 
