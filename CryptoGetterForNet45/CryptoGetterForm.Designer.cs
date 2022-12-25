@@ -60,6 +60,14 @@ namespace CryptoGetterForNet45
             this.DesignerTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.MultimodeTabPage = new System.Windows.Forms.TabPage();
+            this.GroupServerListComboBox = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.GenerateButton = new System.Windows.Forms.Button();
+            this.SelectFolderButton = new System.Windows.Forms.Button();
+            this.FolderPathLabel = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.SginFileLabel = new System.Windows.Forms.Label();
             this.OpenSgtinButton = new System.Windows.Forms.Button();
             this.XmlFileLabel = new System.Windows.Forms.Label();
@@ -68,12 +76,6 @@ namespace CryptoGetterForNet45
             this.label9 = new System.Windows.Forms.Label();
             this.LotTextBox = new System.Windows.Forms.TextBox();
             this.OpenXmlButton = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.FolderPathLabel = new System.Windows.Forms.Label();
-            this.SelectFolderButton = new System.Windows.Forms.Button();
-            this.GenerateButton = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -422,6 +424,8 @@ namespace CryptoGetterForNet45
             // MultimodeTabPage
             // 
             this.MultimodeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MultimodeTabPage.Controls.Add(this.GroupServerListComboBox);
+            this.MultimodeTabPage.Controls.Add(this.label15);
             this.MultimodeTabPage.Controls.Add(this.GenerateButton);
             this.MultimodeTabPage.Controls.Add(this.SelectFolderButton);
             this.MultimodeTabPage.Controls.Add(this.FolderPathLabel);
@@ -443,9 +447,93 @@ namespace CryptoGetterForNet45
             this.MultimodeTabPage.TabIndex = 1;
             this.MultimodeTabPage.Text = "Групповой режим";
             // 
+            // GroupServerListComboBox
+            // 
+            this.GroupServerListComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.GroupServerListComboBox.FormattingEnabled = true;
+            this.GroupServerListComboBox.Location = new System.Drawing.Point(158, 10);
+            this.GroupServerListComboBox.Margin = new System.Windows.Forms.Padding(10);
+            this.GroupServerListComboBox.Name = "GroupServerListComboBox";
+            this.GroupServerListComboBox.Size = new System.Drawing.Size(254, 28);
+            this.GroupServerListComboBox.TabIndex = 66;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label15.Location = new System.Drawing.Point(15, 13);
+            this.label15.Margin = new System.Windows.Forms.Padding(10);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(92, 20);
+            this.label15.TabIndex = 65;
+            this.label15.Text = "Сервер БД";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // GenerateButton
+            // 
+            this.GenerateButton.Location = new System.Drawing.Point(268, 358);
+            this.GenerateButton.Margin = new System.Windows.Forms.Padding(10);
+            this.GenerateButton.Name = "GenerateButton";
+            this.GenerateButton.Size = new System.Drawing.Size(144, 31);
+            this.GenerateButton.TabIndex = 13;
+            this.GenerateButton.Text = "Сгенерировать";
+            this.GenerateButton.UseVisualStyleBackColor = true;
+            this.GenerateButton.Click += new System.EventHandler(this.GenerateButton_Click);
+            // 
+            // SelectFolderButton
+            // 
+            this.SelectFolderButton.Location = new System.Drawing.Point(577, 236);
+            this.SelectFolderButton.Margin = new System.Windows.Forms.Padding(10);
+            this.SelectFolderButton.Name = "SelectFolderButton";
+            this.SelectFolderButton.Size = new System.Drawing.Size(93, 31);
+            this.SelectFolderButton.TabIndex = 12;
+            this.SelectFolderButton.Text = "Выбрать";
+            this.SelectFolderButton.UseVisualStyleBackColor = true;
+            this.SelectFolderButton.Click += new System.EventHandler(this.SelectFolderButton_Click);
+            // 
+            // FolderPathLabel
+            // 
+            this.FolderPathLabel.Location = new System.Drawing.Point(215, 241);
+            this.FolderPathLabel.Margin = new System.Windows.Forms.Padding(10);
+            this.FolderPathLabel.Name = "FolderPathLabel";
+            this.FolderPathLabel.Size = new System.Drawing.Size(342, 20);
+            this.FolderPathLabel.TabIndex = 11;
+            this.FolderPathLabel.Text = "Выберете папку";
+            this.FolderPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(15, 241);
+            this.label14.Margin = new System.Windows.Forms.Padding(10);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(180, 20);
+            this.label14.TabIndex = 10;
+            this.label14.Text = "Папка с результатами";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(15, 109);
+            this.label13.Margin = new System.Windows.Forms.Padding(10);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(117, 20);
+            this.label13.TabIndex = 9;
+            this.label13.Text = "Файл с SGTIN";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(15, 58);
+            this.label12.Margin = new System.Windows.Forms.Padding(10);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(90, 20);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "XML-файл";
+            // 
             // SginFileLabel
             // 
-            this.SginFileLabel.Location = new System.Drawing.Point(215, 72);
+            this.SginFileLabel.Location = new System.Drawing.Point(215, 109);
             this.SginFileLabel.Margin = new System.Windows.Forms.Padding(10);
             this.SginFileLabel.Name = "SginFileLabel";
             this.SginFileLabel.Size = new System.Drawing.Size(342, 20);
@@ -455,7 +543,7 @@ namespace CryptoGetterForNet45
             // 
             // OpenSgtinButton
             // 
-            this.OpenSgtinButton.Location = new System.Drawing.Point(577, 61);
+            this.OpenSgtinButton.Location = new System.Drawing.Point(577, 104);
             this.OpenSgtinButton.Margin = new System.Windows.Forms.Padding(10);
             this.OpenSgtinButton.Name = "OpenSgtinButton";
             this.OpenSgtinButton.Size = new System.Drawing.Size(93, 31);
@@ -466,7 +554,7 @@ namespace CryptoGetterForNet45
             // 
             // XmlFileLabel
             // 
-            this.XmlFileLabel.Location = new System.Drawing.Point(215, 21);
+            this.XmlFileLabel.Location = new System.Drawing.Point(215, 58);
             this.XmlFileLabel.Margin = new System.Windows.Forms.Padding(10);
             this.XmlFileLabel.Name = "XmlFileLabel";
             this.XmlFileLabel.Size = new System.Drawing.Size(342, 20);
@@ -476,7 +564,7 @@ namespace CryptoGetterForNet45
             // 
             // ExpiredTextBox
             // 
-            this.ExpiredTextBox.Location = new System.Drawing.Point(219, 158);
+            this.ExpiredTextBox.Location = new System.Drawing.Point(219, 195);
             this.ExpiredTextBox.Margin = new System.Windows.Forms.Padding(10);
             this.ExpiredTextBox.Name = "ExpiredTextBox";
             this.ExpiredTextBox.Size = new System.Drawing.Size(100, 26);
@@ -485,7 +573,7 @@ namespace CryptoGetterForNet45
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(15, 164);
+            this.label11.Location = new System.Drawing.Point(15, 198);
             this.label11.Margin = new System.Windows.Forms.Padding(10);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(80, 20);
@@ -495,7 +583,7 @@ namespace CryptoGetterForNet45
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(15, 118);
+            this.label9.Location = new System.Drawing.Point(15, 152);
             this.label9.Margin = new System.Windows.Forms.Padding(10);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(56, 20);
@@ -504,7 +592,7 @@ namespace CryptoGetterForNet45
             // 
             // LotTextBox
             // 
-            this.LotTextBox.Location = new System.Drawing.Point(219, 112);
+            this.LotTextBox.Location = new System.Drawing.Point(219, 149);
             this.LotTextBox.Margin = new System.Windows.Forms.Padding(10);
             this.LotTextBox.Name = "LotTextBox";
             this.LotTextBox.Size = new System.Drawing.Size(100, 26);
@@ -512,7 +600,7 @@ namespace CryptoGetterForNet45
             // 
             // OpenXmlButton
             // 
-            this.OpenXmlButton.Location = new System.Drawing.Point(577, 10);
+            this.OpenXmlButton.Location = new System.Drawing.Point(577, 53);
             this.OpenXmlButton.Margin = new System.Windows.Forms.Padding(10);
             this.OpenXmlButton.Name = "OpenXmlButton";
             this.OpenXmlButton.Size = new System.Drawing.Size(93, 31);
@@ -520,68 +608,6 @@ namespace CryptoGetterForNet45
             this.OpenXmlButton.Text = "Выбрать";
             this.OpenXmlButton.UseVisualStyleBackColor = true;
             this.OpenXmlButton.Click += new System.EventHandler(this.OpenXmlButton_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(15, 21);
-            this.label12.Margin = new System.Windows.Forms.Padding(10);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(90, 20);
-            this.label12.TabIndex = 8;
-            this.label12.Text = "XML-файл";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(15, 72);
-            this.label13.Margin = new System.Windows.Forms.Padding(10);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(117, 20);
-            this.label13.TabIndex = 9;
-            this.label13.Text = "Файл с SGTIN";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(15, 204);
-            this.label14.Margin = new System.Windows.Forms.Padding(10);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(180, 20);
-            this.label14.TabIndex = 10;
-            this.label14.Text = "Папка с результатами";
-            // 
-            // FolderPathLabel
-            // 
-            this.FolderPathLabel.Location = new System.Drawing.Point(215, 204);
-            this.FolderPathLabel.Margin = new System.Windows.Forms.Padding(10);
-            this.FolderPathLabel.Name = "FolderPathLabel";
-            this.FolderPathLabel.Size = new System.Drawing.Size(342, 20);
-            this.FolderPathLabel.TabIndex = 11;
-            this.FolderPathLabel.Text = "Выберете папку";
-            this.FolderPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // SelectFolderButton
-            // 
-            this.SelectFolderButton.Location = new System.Drawing.Point(577, 199);
-            this.SelectFolderButton.Margin = new System.Windows.Forms.Padding(10);
-            this.SelectFolderButton.Name = "SelectFolderButton";
-            this.SelectFolderButton.Size = new System.Drawing.Size(93, 31);
-            this.SelectFolderButton.TabIndex = 12;
-            this.SelectFolderButton.Text = "Выбрать";
-            this.SelectFolderButton.UseVisualStyleBackColor = true;
-            this.SelectFolderButton.Click += new System.EventHandler(this.SelectFolderButton_Click);
-            // 
-            // GenerateButton
-            // 
-            this.GenerateButton.Location = new System.Drawing.Point(268, 372);
-            this.GenerateButton.Margin = new System.Windows.Forms.Padding(10);
-            this.GenerateButton.Name = "GenerateButton";
-            this.GenerateButton.Size = new System.Drawing.Size(144, 31);
-            this.GenerateButton.TabIndex = 13;
-            this.GenerateButton.Text = "Сгенерировать";
-            this.GenerateButton.UseVisualStyleBackColor = true;
-            this.GenerateButton.Click += new System.EventHandler(this.GenerateButton_Click);
             // 
             // CryptoGetterForm
             // 
@@ -651,6 +677,8 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox GroupServerListComboBox;
+        private System.Windows.Forms.Label label15;
     }
 }
 

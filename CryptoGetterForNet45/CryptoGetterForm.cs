@@ -19,8 +19,12 @@ namespace CryptoGetterForNet45
         {
             InitializeComponent();
             foreach (Server server in _serverList.ListOfServers)
+            {
                 ServerListComboBox.Items.Add(server.Name);
+                GroupServerListComboBox.Items.Add(server.Name);
+            }
             ServerListComboBox.SelectedIndex = 0;
+            GroupServerListComboBox.SelectedIndex = 0;
         }
 
         // При изменении SGTIN меняет поля GTIN и серийного номера
@@ -219,10 +223,10 @@ namespace CryptoGetterForNet45
             return result;
         }
         
-        private XmlDocument LoadXml(string path) 
+        /*private XmlDocument LoadXml(string path) 
         { 
         
-        }
+        }*/
     }
 
 }
