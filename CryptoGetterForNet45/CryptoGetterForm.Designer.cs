@@ -569,6 +569,7 @@ namespace CryptoGetterForNet45
             this.ExpiredTextBox.Name = "ExpiredTextBox";
             this.ExpiredTextBox.Size = new System.Drawing.Size(100, 26);
             this.ExpiredTextBox.TabIndex = 4;
+            this.ExpiredTextBox.Text = "10/2025";
             // 
             // label11
             // 
@@ -597,6 +598,7 @@ namespace CryptoGetterForNet45
             this.LotTextBox.Name = "LotTextBox";
             this.LotTextBox.Size = new System.Drawing.Size(100, 26);
             this.LotTextBox.TabIndex = 1;
+            this.LotTextBox.Text = "1000922";
             // 
             // OpenXmlButton
             // 

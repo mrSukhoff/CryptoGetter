@@ -30,6 +30,10 @@ namespace CryptoGetterForNet45.CryptoGetter
             //if (File.Exists(sgtinPath) == false) throw new Exception("Файл с SGTIN не найден!");
 
             //var sgtins = LoadSgtins(sgtinPath);
+
+            string gtin = "04605310011236";
+            string serial = "01234567890123";
+
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(File.ReadAllText(xmlPath));
 
@@ -38,33 +42,37 @@ namespace CryptoGetterForNet45.CryptoGetter
             foreach (XmlNode line in printLines)
             {
                 if (line.InnerXml.Contains("fixedText")) continue;
-
+                /*
                 if (line.InnerXml.Contains("GTIN")) 
                 { 
                     line.RemoveAll();
-                    line.InnerXml = "<fixedText>04605310011236</fixedText>";
+                    line.InnerXml = $"<fixedText>{gtin}</fixedText>";
                 }
 
                 if (line.InnerXml.Contains("Serial"))
                 {
                     line.RemoveAll();
-                    line.InnerXml = "<fixedText>0123456789123</fixedText>";
+                    line.InnerXml = $"<fixedText>{serial}</fixedText>";
                 }
-
+                */
                 if (line.InnerXml.Contains("Lot"))
                 {
                     line.RemoveAll();
-                    line.InnerXml = "<fixedText>101022</fixedText>";
+                    line.InnerXml = $"<fixedText>{lot}</fixedText>";
                 }
                 
                 if (line.InnerXml.Contains("Eval"))
                 {
                     line.RemoveAll();
-                    line.InnerXml = "<fixedText>10/2025</fixedText>";
+                    line.InnerXml = $"<fixedText>{expiredTo}</fixedText>";
                 }
             }
+            
+            
 
-            xDoc.Save(xmlPath+"2");
+            XmlDocument preparedXdoc = new XmlDocument();
+            preparedXdoc.LoadXml(xDoc.ToString());
+            preparedXdoc.Save(xmlPath.Insert(xmlPath.Length - 4, "2"));
         }
 
 
