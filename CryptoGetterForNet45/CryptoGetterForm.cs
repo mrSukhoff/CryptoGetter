@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Xml;
+using CryptoGetterForNet45.CryptoGetter;
 
 namespace CryptoGetterForNet45
 {
@@ -201,32 +202,23 @@ namespace CryptoGetterForNet45
         {
             string lot = LotTextBox.Text;
             string expiredto = ExpiredTextBox.Text;
-            var sgtins = LoadSgtins(SginFileLabel.Text);            
-        
-        
-        }
+            string xmlPath = XmlFileLabel.Text;
+            string sgtinPath = SginFileLabel.Text;
 
-        private List<string> LoadSgtins(string path)
-        {
-            var result = new List<string>();
-            using (StreamReader reader = new StreamReader(path))
+            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
+            
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    line = line.Trim('\r','\n');
-                    if (line.Length != 27) throw new Exception("Неверная длина SGTIN");
-                    result.Add(line); 
-                }
+                var mm = new MultiMiner(selectedServer);
+                mm.GenerateXmlFiles(xmlPath, sgtinPath, lot, expiredto);
             }
-            if (result.Count == 0) throw new Exception("SGTIN не найдены!");
-            return result;
+            catch
+            { 
+            }
+            
+        
+        
         }
-        
-        /*private XmlDocument LoadXml(string path) 
-        { 
-        
-        }*/
     }
 
 }

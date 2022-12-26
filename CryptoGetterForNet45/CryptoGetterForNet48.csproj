@@ -103,6 +103,7 @@
     <Compile Include="CryptoGetter\DataMinerFactory.cs" />
     <Compile Include="CryptoGetter\MedtechDataMiner.cs" />
     <Compile Include="CryptoGetter\IDataMiner.cs" />
+    <Compile Include="CryptoGetter\MultiMiner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CryptoGetter\ServerList.cs" />
