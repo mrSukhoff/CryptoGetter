@@ -170,7 +170,7 @@ namespace CryptoGetterForNet45
         private void OpenXmlButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.DefaultExt = "xml";
+            dialog.Filter = "XML-файлы (*.xml)|*.xml|Все файлы (*.*)|*.*";
             if (dialog.ShowDialog() == DialogResult.OK) 
             { 
                 XmlFileLabel.Text = dialog.FileName;
@@ -212,8 +212,9 @@ namespace CryptoGetterForNet45
                 var mm = new MultiMiner(selectedServer);
                 mm.GenerateXmlFiles(xmlPath, sgtinPath, lot, expiredto);
             }
-            catch
-            { 
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
             }
             
         
