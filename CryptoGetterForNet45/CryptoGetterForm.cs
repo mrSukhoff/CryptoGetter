@@ -189,6 +189,7 @@ namespace CryptoGetterForNet45
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = true;
+            dialog.SelectedPath = Application.StartupPath;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 OutFolderPathLabel.Text = dialog.SelectedPath;

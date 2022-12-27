@@ -53,10 +53,10 @@ namespace CryptoGetterForNet45.CryptoGetter
             KIZ[] result = new KIZ[sgtins.Length];
             
             for (int i = 0; i < sgtins.Length; i++)
-            { 
-                result[i].SGTIN = sgtins[i].Trim('\r', '\n');
-                result[i].GTIN = result[i].SGTIN.Substring(0,13);
-                result[i].Serial = result[i].SGTIN.Substring(14, 27);
+            {
+                result[i].SGTIN = sgtins[i];
+                result[i].GTIN = result[i].SGTIN.Substring(0,14);
+                result[i].Serial = result[i].SGTIN.Substring(14, 13);
             }
             
             return result;
