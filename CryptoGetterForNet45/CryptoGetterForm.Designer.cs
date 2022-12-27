@@ -130,6 +130,7 @@ namespace CryptoGetterForNet45
             this.SingleModeTabPage.Size = new System.Drawing.Size(693, 746);
             this.SingleModeTabPage.TabIndex = 0;
             this.SingleModeTabPage.Text = "Одиночный режим";
+            this.SingleModeTabPage.Click += new System.EventHandler(this.DesignerCopyButton_Click);
             // 
             // SerialCopyButton
             // 
@@ -141,6 +142,7 @@ namespace CryptoGetterForNet45
             this.SerialCopyButton.TabIndex = 76;
             this.SerialCopyButton.Text = "Копировать";
             this.SerialCopyButton.UseVisualStyleBackColor = true;
+            this.SerialCopyButton.Click += new System.EventHandler(this.SerialCopyButton_Click);
             // 
             // GtinCopyButton
             // 
@@ -152,6 +154,7 @@ namespace CryptoGetterForNet45
             this.GtinCopyButton.TabIndex = 75;
             this.GtinCopyButton.Text = "Копировать";
             this.GtinCopyButton.UseVisualStyleBackColor = true;
+            this.GtinCopyButton.Click += new System.EventHandler(this.GtinCopyButton_Click);
             // 
             // KeyTextBox
             // 
@@ -196,6 +199,7 @@ namespace CryptoGetterForNet45
             this.ClearButton.TabIndex = 74;
             this.ClearButton.Text = "Очистить форму";
             this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
             // GetDataButton
             // 
@@ -207,6 +211,7 @@ namespace CryptoGetterForNet45
             this.GetDataButton.TabIndex = 71;
             this.GetDataButton.Text = "Получить криптокод";
             this.GetDataButton.UseVisualStyleBackColor = true;
+            this.GetDataButton.Click += new System.EventHandler(this.GetDataButton_Click);
             // 
             // SerialTextBox
             // 
@@ -216,6 +221,7 @@ namespace CryptoGetterForNet45
             this.SerialTextBox.Name = "SerialTextBox";
             this.SerialTextBox.Size = new System.Drawing.Size(130, 26);
             this.SerialTextBox.TabIndex = 70;
+            this.SerialTextBox.TextChanged += new System.EventHandler(this.SerialTextBox_TextChanged);
             // 
             // GTINTextBox
             // 
@@ -225,6 +231,7 @@ namespace CryptoGetterForNet45
             this.GTINTextBox.Name = "GTINTextBox";
             this.GTINTextBox.Size = new System.Drawing.Size(135, 26);
             this.GTINTextBox.TabIndex = 68;
+            this.GTINTextBox.TextChanged += new System.EventHandler(this.GTINTextBox_TextChanged);
             // 
             // SGTINTextBox
             // 
@@ -234,6 +241,7 @@ namespace CryptoGetterForNet45
             this.SGTINTextBox.Name = "SGTINTextBox";
             this.SGTINTextBox.Size = new System.Drawing.Size(254, 26);
             this.SGTINTextBox.TabIndex = 67;
+            this.SGTINTextBox.TextChanged += new System.EventHandler(this.SGTINTextBox_TextChanged);
             // 
             // ServerListComboBox
             // 
@@ -290,6 +298,7 @@ namespace CryptoGetterForNet45
             this.SUZCopyButton.TabIndex = 62;
             this.SUZCopyButton.Text = "Копировать";
             this.SUZCopyButton.UseVisualStyleBackColor = true;
+            this.SUZCopyButton.Click += new System.EventHandler(this.SUZCopyButton_Click);
             // 
             // label5
             // 
@@ -323,6 +332,7 @@ namespace CryptoGetterForNet45
             this.WtsCopyButton.TabIndex = 59;
             this.WtsCopyButton.Text = "Копировать";
             this.WtsCopyButton.UseVisualStyleBackColor = true;
+            this.WtsCopyButton.Click += new System.EventHandler(this.WtsCopyButton_Click);
             // 
             // label10
             // 
@@ -356,6 +366,7 @@ namespace CryptoGetterForNet45
             this.SaveImageButton.TabIndex = 55;
             this.SaveImageButton.Text = "Сохранить";
             this.SaveImageButton.UseVisualStyleBackColor = true;
+            this.SaveImageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
             // 
             // CodeTextBox
             // 
@@ -398,6 +409,7 @@ namespace CryptoGetterForNet45
             this.DesignerCopyButton.TabIndex = 51;
             this.DesignerCopyButton.Text = "Копировать";
             this.DesignerCopyButton.UseVisualStyleBackColor = true;
+            this.DesignerCopyButton.Click += new System.EventHandler(this.DesignerCopyButton_Click);
             // 
             // DesignerTextBox
             // 
