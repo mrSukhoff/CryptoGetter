@@ -64,7 +64,7 @@ namespace CryptoGetterForNet45
             this.label15 = new System.Windows.Forms.Label();
             this.GenerateButton = new System.Windows.Forms.Button();
             this.SelectFolderButton = new System.Windows.Forms.Button();
-            this.FolderPathLabel = new System.Windows.Forms.Label();
+            this.OutFolderPathLabel = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -428,7 +428,7 @@ namespace CryptoGetterForNet45
             this.MultimodeTabPage.Controls.Add(this.label15);
             this.MultimodeTabPage.Controls.Add(this.GenerateButton);
             this.MultimodeTabPage.Controls.Add(this.SelectFolderButton);
-            this.MultimodeTabPage.Controls.Add(this.FolderPathLabel);
+            this.MultimodeTabPage.Controls.Add(this.OutFolderPathLabel);
             this.MultimodeTabPage.Controls.Add(this.label14);
             this.MultimodeTabPage.Controls.Add(this.label13);
             this.MultimodeTabPage.Controls.Add(this.label12);
@@ -491,15 +491,15 @@ namespace CryptoGetterForNet45
             this.SelectFolderButton.UseVisualStyleBackColor = true;
             this.SelectFolderButton.Click += new System.EventHandler(this.SelectFolderButton_Click);
             // 
-            // FolderPathLabel
+            // OutFolderPathLabel
             // 
-            this.FolderPathLabel.Location = new System.Drawing.Point(215, 241);
-            this.FolderPathLabel.Margin = new System.Windows.Forms.Padding(10);
-            this.FolderPathLabel.Name = "FolderPathLabel";
-            this.FolderPathLabel.Size = new System.Drawing.Size(342, 20);
-            this.FolderPathLabel.TabIndex = 11;
-            this.FolderPathLabel.Text = "Выберете папку";
-            this.FolderPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.OutFolderPathLabel.Location = new System.Drawing.Point(215, 241);
+            this.OutFolderPathLabel.Margin = new System.Windows.Forms.Padding(10);
+            this.OutFolderPathLabel.Name = "OutFolderPathLabel";
+            this.OutFolderPathLabel.Size = new System.Drawing.Size(342, 20);
+            this.OutFolderPathLabel.TabIndex = 11;
+            this.OutFolderPathLabel.Text = "Выберете папку";
+            this.OutFolderPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label14
             // 
@@ -675,7 +675,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.Button OpenXmlButton;
         private System.Windows.Forms.Button GenerateButton;
         private System.Windows.Forms.Button SelectFolderButton;
-        private System.Windows.Forms.Label FolderPathLabel;
+        private System.Windows.Forms.Label OutFolderPathLabel;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;

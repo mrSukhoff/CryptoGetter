@@ -194,7 +194,7 @@ namespace CryptoGetterForNet45
             dialog.ShowNewFolderButton = true;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                FolderPathLabel.Text = dialog.SelectedPath;
+                OutFolderPathLabel.Text = dialog.SelectedPath;
             }
         }
 
@@ -204,13 +204,15 @@ namespace CryptoGetterForNet45
             string expiredto = ExpiredTextBox.Text;
             string xmlPath = XmlFileLabel.Text;
             string sgtinPath = SginFileLabel.Text;
+            string outerPath = OutFolderPathLabel.Text;
 
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             
             try
             {
-                var mm = new MultiMiner(selectedServer);
-                mm.GenerateXmlFiles(xmlPath, sgtinPath, lot, expiredto);
+                IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+                var mm = new MultiMiner(dataMiner);
+                mm.GenerateXmlFiles(xmlPath, sgtinPath, outerPath, lot, expiredto);
             }
             catch (Exception exp)
             {
