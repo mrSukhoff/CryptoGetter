@@ -25,14 +25,14 @@ namespace CryptoGetterForNet45.CryptoGetter
 
         public void GenerateXmlFiles (string xmlPath, string sgtinPath, string outerPath, string lot, string expiredTo)
         {
-            if (xmlPath == "") throw new Exception("Пустое имя файла XML!");
+            if (xmlPath == "")   throw new Exception("Пустое имя файла XML!");
             if (sgtinPath == "") throw new Exception("Пустое имя файла c SGTIN!");
             if (outerPath == "") throw new Exception("Пустое поле выходной папки!");
-            if (xmlPath == "") throw new Exception("Пустое поле серии!");
-            if (xmlPath == "") throw new Exception("Пустое поле срока годности!");
+            if (xmlPath == "")   throw new Exception("Пустое поле серии!");
+            if (xmlPath == "")   throw new Exception("Пустое поле срока годности!");
             
 
-            if (File.Exists(xmlPath) == false) throw new Exception("Файл XML не найден!");
+            if (File.Exists(xmlPath) == false)   throw new Exception("Файл XML не найден!");
             if (File.Exists(sgtinPath) == false) throw new Exception("Файл с SGTIN не найден!");
 
             KIZ[] kizes = LoadSgtinsFromFile(sgtinPath);
