@@ -4,9 +4,6 @@ using System.Windows.Forms;
 using DataMatrix.net;
 using CryptoGetter;
 using System.Linq;
-using System.IO;
-using System.Collections.Generic;
-using System.Xml;
 using CryptoGetterForNet45.CryptoGetter;
 
 namespace CryptoGetterForNet45

@@ -1,11 +1,6 @@
 ﻿using CryptoGetter;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Xml;
 
 namespace CryptoGetterForNet45.CryptoGetter
@@ -28,12 +23,14 @@ namespace CryptoGetterForNet45.CryptoGetter
             _dm = dataminer;
         }
 
-        public void GenerateXmlFiles (string xmlPath, string sgtinPath, string lot, string expiredTo)
+        public void GenerateXmlFiles (string xmlPath, string sgtinPath, string outerPath, string lot, string expiredTo)
         {
             if (xmlPath == "") throw new Exception("Пустое имя файла XML!");
             if (sgtinPath == "") throw new Exception("Пустое имя файла c SGTIN!");
+            if (outerPath == "") throw new Exception("Пустое поле выходной папки!");
             if (xmlPath == "") throw new Exception("Пустое поле серии!");
             if (xmlPath == "") throw new Exception("Пустое поле срока годности!");
+            
 
             if (File.Exists(xmlPath) == false) throw new Exception("Файл XML не найден!");
             if (File.Exists(sgtinPath) == false) throw new Exception("Файл с SGTIN не найден!");
@@ -45,10 +42,8 @@ namespace CryptoGetterForNet45.CryptoGetter
                 (kizes[i].CryptoKey, kizes[i].CryptoCode) = _dm.GetCrypto(kizes[i].SGTIN);
             }
 
-            BuildXmlFiles(ref kizes, xmlPath, lot, expiredTo);
-
+            BuildXmlFiles(ref kizes, xmlPath, outerPath, lot, expiredTo);
         }
-
 
         private KIZ[] LoadSgtinsFromFile(string path)
         {
@@ -66,54 +61,52 @@ namespace CryptoGetterForNet45.CryptoGetter
             
             return result;
         }
-
-        private void GetCryptoData(ref KIZ[] kizes)
-        {
-
-        }
     
-        private void BuildXmlFiles(ref KIZ[] kizs, string xmlPath, string lot, string expiredTo)
+        private void BuildXmlFiles(ref KIZ[] kizes, string xmlPath, string outerPath, string lot, string expiredTo)
         {
             XmlDocument xDoc = new XmlDocument();
-            xDoc.LoadXml(File.ReadAllText(xmlPath));
 
-            var printLines = xDoc.SelectNodes("/job/printObjects/printObject/printLines/printLine");
-
-            foreach (XmlNode line in printLines)
+            for (int i = 0; i < kizes.Length; i++)
             {
-                if (line.InnerXml.Contains("fixedText")) continue;
-                /*
-                if (line.InnerXml.Contains("GTIN")) 
-                { 
-                    line.RemoveAll();
-                    line.InnerXml = $"<fixedText>{gtin}</fixedText>";
+                xDoc.LoadXml(File.ReadAllText(xmlPath));
+
+                var printLines = xDoc.SelectNodes("/job/printObjects/printObject/printLines/printLine");
+
+                foreach (XmlNode line in printLines)
+                {
+                    if (line.InnerXml.Contains("fixedText")) continue;
+                    
+                    if (line.InnerXml.Contains("GTIN")) 
+                    { 
+                        line.RemoveAll();
+                        line.InnerXml = $"<fixedText>{kizes[i].GTIN}</fixedText>";
+                    }
+
+                    if (line.InnerXml.Contains("Serial"))
+                    {
+                        line.RemoveAll();
+                        line.InnerXml = $"<fixedText>{kizes[i].Serial}</fixedText>";
+                    }
+                    
+                    if (line.InnerXml.Contains("Lot"))
+                    {
+                        line.RemoveAll();
+                        line.InnerXml = $"<fixedText>{lot}</fixedText>";
+                    }
+
+                    if (line.InnerXml.Contains("Eval"))
+                    {
+                        line.RemoveAll();
+                        line.InnerXml = $"<fixedText>{expiredTo}</fixedText>";
+                    }
                 }
 
-                if (line.InnerXml.Contains("Serial"))
-                {
-                    line.RemoveAll();
-                    line.InnerXml = $"<fixedText>{serial}</fixedText>";
-                }
-                */
-                if (line.InnerXml.Contains("Lot"))
-                {
-                    line.RemoveAll();
-                    line.InnerXml = $"<fixedText>{lot}</fixedText>";
-                }
-
-                if (line.InnerXml.Contains("Eval"))
-                {
-                    line.RemoveAll();
-                    line.InnerXml = $"<fixedText>{expiredTo}</fixedText>";
-                }
+                var dataMatrix = xDoc.SelectSingleNode("/job/printObjects/printObject/sourceLine");
+                dataMatrix.RemoveAll();
+                dataMatrix.InnerXml = $"01{kizes[i].GTIN}21{kizes[i].Serial}<gs1GroupSeparator>29</gs1GroupSeparator>" +
+                    $"91{kizes[i].CryptoKey}<gs1GroupSeparator>29</gs1GroupSeparator>92{kizes[i].CryptoCode}";
+                xDoc.Save(outerPath + kizes[i].SGTIN+".xml");
             }
-
-
-            //xDoc.WriteContentTo(XmlWriter xw);
-            XmlDocument preparedXdoc = new XmlDocument();
-            preparedXdoc.LoadXml(xDoc.ToString());
-            preparedXdoc.Save(xmlPath.Insert(xmlPath.Length - 4, "2"));
-
         }
     }
 }
