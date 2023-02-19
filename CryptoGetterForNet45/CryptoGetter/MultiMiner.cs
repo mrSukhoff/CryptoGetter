@@ -105,8 +105,8 @@ namespace CryptoGetterForNet45.CryptoGetter
                 dataMatrix.RemoveAll();
                 dataMatrix.InnerXml = $"01{kizes[i].GTIN}21{kizes[i].Serial}<gs1GroupSeparator>29</gs1GroupSeparator>" +
                     $"91{kizes[i].CryptoKey}<gs1GroupSeparator>29</gs1GroupSeparator>92{kizes[i].CryptoCode}";
-                
-                xDoc.Save(outerPath + kizes[i].SGTIN+".xml");
+
+                xDoc.Save(outerPath + "\\" + kizes[i].SGTIN + ".xml");
             }
         }
     }
