@@ -187,7 +187,6 @@ namespace CryptoGetterForNet45
 
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = true;
             dialog.SelectedPath = Application.StartupPath;
             if (dialog.ShowDialog() == DialogResult.OK)
