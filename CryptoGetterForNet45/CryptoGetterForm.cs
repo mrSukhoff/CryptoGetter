@@ -5,6 +5,8 @@ using DataMatrix.net;
 using CryptoGetter;
 using System.Linq;
 using CryptoGetterForNet45.CryptoGetter;
+using System.IO;
+using System.Collections.Generic;
 
 namespace CryptoGetterForNet45
 {
@@ -12,6 +14,9 @@ namespace CryptoGetterForNet45
     {
         private readonly ServerList _serverList = new ServerList();
         private DataMinerFactory _dataMinerFactory = new DataMinerFactory();
+
+        private List<(string,string)> _sgtins = new List<(string, string)> ();
+        private string _savePath;
 
         public CryptoGetterForm()
         {
@@ -82,7 +87,7 @@ namespace CryptoGetterForNet45
             DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
-            DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
+            DtmxPictureBox.Image = DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
             WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
             SUZTextBox.Text = $"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}";
         }
@@ -118,7 +123,7 @@ namespace CryptoGetterForNet45
         /// По входной строке метод рисует DatamatrixCode
         /// </summary>
         /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
-        private void DtmxCreator(string dataMatrixString)
+        private Bitmap DtmxCreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
             DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
@@ -127,10 +132,11 @@ namespace CryptoGetterForNet45
             options.MarginSize = 4;
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
             DtmxPictureBox.Image = encodedBitmap;
+            return encodedBitmap;
         }
 
         //сохраняет картинку в файл
-        private void SaveImeageButton_Click(object sender, EventArgs e)
+        private void SaveImageButton_Click(object sender, EventArgs e)
         {
             if (DtmxPictureBox.Image == null) return;
             
@@ -164,6 +170,7 @@ namespace CryptoGetterForNet45
             if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
+        //*****************************************************************************************************************************************************************************
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -171,6 +178,18 @@ namespace CryptoGetterForNet45
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 SginFileLabel.Text = dialog.FileName;
+            }
+
+            _sgtins.Clear();
+            using (StreamReader reader = new StreamReader(dialog.FileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Length == 27) _sgtins.Add((line.Substring(0, 13), line.Substring(14, 26)));
+                    else OutputTexBox.Text += $"Неверные даннные в строке {line} \r\n";
+                }
+                OutputTexBox.Text += $"Загружено {_sgtins.Count} строк \r\n";
             }
         }
 
@@ -182,6 +201,7 @@ namespace CryptoGetterForNet45
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 OutFolderPathLabel.Text = dialog.SelectedPath;
+                _savePath = dialog.SelectedPath;
             }
         }
 
@@ -189,12 +209,21 @@ namespace CryptoGetterForNet45
         {
 
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
-            
+            IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+
+            string cryptoKey, cryptoCode;
+            int counter = 0;
+            int total = _sgtins.Count;
+            Bitmap anotherDtmx;
             try
             {
-                IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
-                var mm = new MultiMiner(dataMiner);
-               // mm.GenerateXmlFiles(xmlPath, sgtinPath, outerPath, lot, expiredto);
+               foreach ((string,string) sgtin in _sgtins)
+                {
+                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin.ToString());
+                    anotherDtmx = DtmxCreator($"01{sgtin.Item1}21{sgtin.Item2}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
+                    anotherDtmx.Save(_savePath+ sgtin.ToString());
+                    OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
+                }
             }
             catch (Exception exp)
             {

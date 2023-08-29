@@ -360,7 +360,7 @@ namespace CryptoGetterForNet45
             this.SaveImageButton.TabIndex = 55;
             this.SaveImageButton.Text = "Сохранить";
             this.SaveImageButton.UseVisualStyleBackColor = true;
-            this.SaveImageButton.Click += new System.EventHandler(this.SaveImeageButton_Click);
+            this.SaveImageButton.Click += new System.EventHandler(this.SaveImageButton_Click);
             // 
             // CodeTextBox
             // 
