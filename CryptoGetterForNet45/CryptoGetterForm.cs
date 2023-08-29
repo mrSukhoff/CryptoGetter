@@ -164,17 +164,6 @@ namespace CryptoGetterForNet45
             if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
-        private void OpenXmlButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "XML-файлы (*.xml)|*.xml|Все файлы (*.*)|*.*";
-            if (dialog.ShowDialog() == DialogResult.OK) 
-            { 
-                XmlFileLabel.Text = dialog.FileName;
-            }
-
-        }
-
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -187,6 +176,7 @@ namespace CryptoGetterForNet45
 
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
+            FolderBrowserDialog dialog = new FolderBrowserDialog(); 
             dialog.ShowNewFolderButton = true;
             dialog.SelectedPath = Application.StartupPath;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -197,11 +187,6 @@ namespace CryptoGetterForNet45
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            string lot = LotTextBox.Text;
-            string expiredto = ExpiredTextBox.Text;
-            string xmlPath = XmlFileLabel.Text;
-            string sgtinPath = SginFileLabel.Text;
-            string outerPath = OutFolderPathLabel.Text;
 
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             
@@ -209,7 +194,7 @@ namespace CryptoGetterForNet45
             {
                 IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
                 var mm = new MultiMiner(dataMiner);
-                mm.GenerateXmlFiles(xmlPath, sgtinPath, outerPath, lot, expiredto);
+               // mm.GenerateXmlFiles(xmlPath, sgtinPath, outerPath, lot, expiredto);
             }
             catch (Exception exp)
             {
