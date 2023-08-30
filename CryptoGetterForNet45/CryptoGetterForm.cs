@@ -4,14 +4,16 @@ using System.Windows.Forms;
 using DataMatrix.net;
 using CryptoGetter;
 using System.Linq;
-using CryptoGetterForNet45.CryptoGetter;
+using System.Collections.Generic;
 
 namespace CryptoGetterForNet45
 {
     public partial class CryptoGetterForm : Form
     {
-        private readonly ServerList _serverList = new ServerList();
-        private DataMinerFactory _dataMinerFactory = new DataMinerFactory();
+        private readonly ServerList _serverList             = new ServerList();
+        private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
+
+        private List<(string, string)> sgitns = new List<(string, string)>();
 
         public CryptoGetterForm()
         {
@@ -164,17 +166,7 @@ namespace CryptoGetterForNet45
             if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
-        private void OpenXmlButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "XML-файлы (*.xml)|*.xml|Все файлы (*.*)|*.*";
-            if (dialog.ShowDialog() == DialogResult.OK) 
-            { 
-                XmlFileLabel.Text = dialog.FileName;
-            }
-
-        }
-
+        /******************************************************Групповая обработка****************************************************************************/
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -187,6 +179,7 @@ namespace CryptoGetterForNet45
 
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = true;
             dialog.SelectedPath = Application.StartupPath;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -199,7 +192,6 @@ namespace CryptoGetterForNet45
         {
             string lot = LotTextBox.Text;
             string expiredto = ExpiredTextBox.Text;
-            string xmlPath = XmlFileLabel.Text;
             string sgtinPath = SginFileLabel.Text;
             string outerPath = OutFolderPathLabel.Text;
 
@@ -208,8 +200,6 @@ namespace CryptoGetterForNet45
             try
             {
                 IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
-                var mm = new MultiMiner(dataMiner);
-                mm.GenerateXmlFiles(xmlPath, sgtinPath, outerPath, lot, expiredto);
             }
             catch (Exception exp)
             {
