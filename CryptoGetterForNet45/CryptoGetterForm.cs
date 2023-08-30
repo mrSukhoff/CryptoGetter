@@ -179,14 +179,21 @@ namespace CryptoGetterForNet45
             {
                 SginFileLabel.Text = dialog.FileName;
             }
+            else return;
+            
 
             _sgtins.Clear();
             using (StreamReader reader = new StreamReader(dialog.FileName))
             {
-                string line;
+                string line, gtin, serial;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.Length == 27) _sgtins.Add((line.Substring(0, 13), line.Substring(14, 26)));
+                    if (line.Length == 27)
+                    {
+                        gtin = line.Substring(0, 14);
+                        serial = line.Substring(14, 13);
+                        _sgtins.Add((gtin, serial));
+                    }
                     else OutputTexBox.Text += $"Неверные даннные в строке {line} \r\n";
                 }
                 OutputTexBox.Text += $"Загружено {_sgtins.Count} строк \r\n";
@@ -211,7 +218,7 @@ namespace CryptoGetterForNet45
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
 
-            string cryptoKey, cryptoCode;
+            string sg, cryptoKey, cryptoCode;
             int counter = 0;
             int total = _sgtins.Count;
             Bitmap anotherDtmx;
@@ -219,7 +226,8 @@ namespace CryptoGetterForNet45
             {
                foreach ((string,string) sgtin in _sgtins)
                 {
-                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin.ToString());
+                    sg = sgtin.Item1+sgtin.Item2;
+                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sg);
                     anotherDtmx = DtmxCreator($"01{sgtin.Item1}21{sgtin.Item2}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
                     anotherDtmx.Save(_savePath+ sgtin.ToString());
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
@@ -227,7 +235,7 @@ namespace CryptoGetterForNet45
             }
             catch (Exception exp)
             {
-                MessageBox.Show(exp.Message);
+                OutputTexBox.Text += exp.Message + "\r\n";
             }
             
         
