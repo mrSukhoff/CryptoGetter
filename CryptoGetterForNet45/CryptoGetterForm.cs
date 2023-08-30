@@ -7,6 +7,7 @@ using System.Linq;
 using CryptoGetterForNet45.CryptoGetter;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing.Text;
 
 namespace CryptoGetterForNet45
 {
@@ -15,7 +16,7 @@ namespace CryptoGetterForNet45
         private readonly ServerList _serverList             = new ServerList();
         private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
 
-        private List<(string,string)> _sgtins = new List<(string, string)> ();
+        private List<string> _sgtins = new List<string> ();
         private string _savePath;
 
         public CryptoGetterForm()
@@ -120,7 +121,7 @@ namespace CryptoGetterForNet45
         }
 
         /// <summary>
-        /// По входной строке метод рисует DatamatrixCode
+        /// По входной строке метод возвращает картинку DatamatrixCode
         /// </summary>
         /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
         private Bitmap DtmxCreator(string dataMatrixString)
@@ -190,9 +191,7 @@ namespace CryptoGetterForNet45
                 {
                     if (line.Length == 27)
                     {
-                        gtin = line.Substring(0, 14);
-                        serial = line.Substring(14, 13);
-                        _sgtins.Add((gtin, serial));
+                        _sgtins.Add((line));
                     }
                     else OutputTexBox.Text += $"Неверные даннные в строке {line} \r\n";
                 }
@@ -215,20 +214,19 @@ namespace CryptoGetterForNet45
         private void GenerateButton_Click(object sender, EventArgs e)
         {
 
-            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
+            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == GroupServerListComboBox.SelectedItem.ToString());
             IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
 
-            string sg, cryptoKey, cryptoCode;
+            string cryptoKey, cryptoCode;
             int counter = 0;
             int total = _sgtins.Count;
             Bitmap anotherDtmx;
             try
             {
-               foreach ((string,string) sgtin in _sgtins)
+               foreach (string sgtin in _sgtins)
                 {
-                    sg = sgtin.Item1+sgtin.Item2;
-                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sg);
-                    anotherDtmx = DtmxCreator($"01{sgtin.Item1}21{sgtin.Item2}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
+                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+                    anotherDtmx = DtmxCreator($"01{sgtin.Substring(0,14)}21{sgtin.Substring(14,13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
                     anotherDtmx.Save(_savePath+ sgtin.ToString());
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }
@@ -237,9 +235,20 @@ namespace CryptoGetterForNet45
             {
                 OutputTexBox.Text += exp.Message + "\r\n";
             }
-            
-        
-        
+        }
+        private void ClearGroupProcessingFields()
+        {
+            _sgtins.Clear();
+            _savePath = "";
+            SginFileLabel.Text = "Выберете файл с SGTIN";
+            OutFolderPathLabel.Text = "Выберете папку";
+            OutputTexBox.Clear();
+        }
+
+        private void ModeTabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            if (ModeTabControl.SelectedIndex == 0) ClearButton_Click(null, null);
+            if (ModeTabControl.SelectedIndex == 1) ClearGroupProcessingFields();
         }
     }
 

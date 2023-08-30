@@ -60,6 +60,7 @@ namespace CryptoGetterForNet45
             this.DesignerTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.MultimodeTabPage = new System.Windows.Forms.TabPage();
+            this.OutputTexBox = new System.Windows.Forms.TextBox();
             this.GroupServerListComboBox = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.GenerateButton = new System.Windows.Forms.Button();
@@ -69,7 +70,6 @@ namespace CryptoGetterForNet45
             this.label13 = new System.Windows.Forms.Label();
             this.SginFileLabel = new System.Windows.Forms.Label();
             this.OpenSgtinButton = new System.Windows.Forms.Button();
-            this.OutputTexBox = new System.Windows.Forms.TextBox();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -87,6 +87,7 @@ namespace CryptoGetterForNet45
             this.ModeTabControl.SelectedIndex = 0;
             this.ModeTabControl.Size = new System.Drawing.Size(701, 779);
             this.ModeTabControl.TabIndex = 25;
+            this.ModeTabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.ModeTabControl_Selected);
             // 
             // SingleModeTabPage
             // 
@@ -239,6 +240,7 @@ namespace CryptoGetterForNet45
             // 
             // ServerListComboBox
             // 
+            this.ServerListComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ServerListComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ServerListComboBox.FormattingEnabled = true;
             this.ServerListComboBox.Location = new System.Drawing.Point(125, 12);
@@ -447,8 +449,17 @@ namespace CryptoGetterForNet45
             this.MultimodeTabPage.TabIndex = 1;
             this.MultimodeTabPage.Text = "Групповой режим";
             // 
+            // OutputTexBox
+            // 
+            this.OutputTexBox.Location = new System.Drawing.Point(19, 227);
+            this.OutputTexBox.Multiline = true;
+            this.OutputTexBox.Name = "OutputTexBox";
+            this.OutputTexBox.Size = new System.Drawing.Size(659, 502);
+            this.OutputTexBox.TabIndex = 67;
+            // 
             // GroupServerListComboBox
             // 
+            this.GroupServerListComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GroupServerListComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.GroupServerListComboBox.FormattingEnabled = true;
             this.GroupServerListComboBox.Location = new System.Drawing.Point(424, 10);
@@ -541,14 +552,6 @@ namespace CryptoGetterForNet45
             this.OpenSgtinButton.Text = "Выбрать";
             this.OpenSgtinButton.UseVisualStyleBackColor = true;
             this.OpenSgtinButton.Click += new System.EventHandler(this.OpenSgtinButton_Click);
-            // 
-            // OutputTexBox
-            // 
-            this.OutputTexBox.Location = new System.Drawing.Point(19, 227);
-            this.OutputTexBox.Multiline = true;
-            this.OutputTexBox.Name = "OutputTexBox";
-            this.OutputTexBox.Size = new System.Drawing.Size(659, 502);
-            this.OutputTexBox.TabIndex = 67;
             // 
             // CryptoGetterForm
             // 
