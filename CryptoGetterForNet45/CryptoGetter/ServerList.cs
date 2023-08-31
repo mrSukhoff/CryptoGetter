@@ -13,7 +13,7 @@ namespace CryptoGetter
         public ServerList()
         {
             string path = "server.ini";
-            
+
             ListOfServers = new List<Server>();
 
             if (File.Exists(path))
@@ -24,11 +24,11 @@ namespace CryptoGetter
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        string[] word = line.Split(',',';');
+                        string[] word = line.Split(',', ';');
                         string name = word[0];
                         string fqn = word[1];
                         string dbname = word[2];
-                        
+
                         ServerType serverType;
                         switch (word[3])
                         {
@@ -41,7 +41,7 @@ namespace CryptoGetter
                                 break;
                             default: throw new ArgumentException("Неверный формат типа сервера в файле server.ini");
                         }
-                            
+
                         Server server = new Server
                         {
                             Name = name,

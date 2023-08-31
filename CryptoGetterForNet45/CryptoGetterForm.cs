@@ -1,20 +1,20 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using CryptoGetter;
 using DataMatrix.net;
-using CryptoGetter;
-using System.Linq;
-using System.IO;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CryptoGetterForNet45
 {
     public partial class CryptoGetterForm : Form
     {
-        private readonly ServerList _serverList             = new ServerList();
+        private readonly ServerList _serverList = new ServerList();
         private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
 
-        private List<string> _sgtins = new List<string> ();
+        private List<string> _sgtins = new List<string>();
         private string _savePath;
 
         public CryptoGetterForm()
@@ -79,11 +79,11 @@ namespace CryptoGetterForNet45
                 DesignerTextBox.Text = ex.Message;
             }
         }
-    
+
         //заполняет поля формы по имеющимся данным
         private void ShowResults(string GTIN, string Serial, string CryptoCode, string CryptoKey)
         {
-            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
+            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
             DtmxPictureBox.Image = DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
@@ -129,7 +129,7 @@ namespace CryptoGetterForNet45
 
             options.ModuleSize = 5;
             options.MarginSize = 4;
-            Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
+            Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString, options);
             DtmxPictureBox.Image = encodedBitmap;
             return encodedBitmap;
         }
@@ -138,12 +138,12 @@ namespace CryptoGetterForNet45
         private void SaveImageButton_Click(object sender, EventArgs e)
         {
             if (DtmxPictureBox.Image == null) return;
-            
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "bmp";
             saveFileDialog.FileName = SGTINTextBox.Text;
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
-            
+
             string path = saveFileDialog.FileName;
             DtmxPictureBox.Image.Save(path);
         }
@@ -166,7 +166,7 @@ namespace CryptoGetterForNet45
 
         private void SerialCopyButton_Click(object sender, EventArgs e)
         {
-            if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
+            if (SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
         //*****************************************************************************************************************************************************************************
@@ -179,7 +179,7 @@ namespace CryptoGetterForNet45
                 SginFileLabel.Text = dialog.FileName;
             }
             else return;
-            
+
 
             _sgtins.Clear();
             using (StreamReader reader = new StreamReader(dialog.FileName))
@@ -199,7 +199,7 @@ namespace CryptoGetterForNet45
 
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog(); 
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = true;
             dialog.SelectedPath = Application.StartupPath;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -221,11 +221,11 @@ namespace CryptoGetterForNet45
             Bitmap anotherDtmx;
             try
             {
-               foreach (string sgtin in _sgtins)
+                foreach (string sgtin in _sgtins)
                 {
                     (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
                     counter++;
-                    anotherDtmx = DtmxCreator($"01{sgtin.Substring(0,14)}21{sgtin.Substring(14,13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
+                    anotherDtmx = DtmxCreator($"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
                     anotherDtmx.Save(_savePath + "\\" + sgtin.ToString() + ".bmp");
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }

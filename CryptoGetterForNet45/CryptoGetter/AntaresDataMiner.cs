@@ -6,7 +6,7 @@ namespace CryptoGetter
 {
     internal class AntaresDataMiner : IDataMiner
     {
-        private readonly Server  _server;
+        private readonly Server _server;
 
         public AntaresDataMiner(Server server)
         {
@@ -17,16 +17,16 @@ namespace CryptoGetter
         {
             if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
-            string gtin = sGTIN.Substring(0,14);
+            string gtin = sGTIN.Substring(0, 14);
             string serial = sGTIN.Substring(14);
-            
+
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
-            
+
             string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM {_server.DBName}.[dbo].[ItemDetails] as i " +
                 $"JOIN [AntaresTracking_PRD].[dbo].[NtinDefinition] as n on i.NtinId = n.Id " +
                 $"where i.Serial='{serial}' and n.Ntin='{gtin}'";
-            
+
             Dictionary<string, string> results = new Dictionary<string, string>();
 
             using (var connection = new SqlConnection(connectionString))
@@ -45,7 +45,7 @@ namespace CryptoGetter
                     }
                 }
             }
-            
+
             string cryptoCode, cryptoKey;
             if (results.Count >= 2)
             {
