@@ -118,10 +118,7 @@ namespace CryptoGetterForNet45
             SUZTextBox.Clear();
         }
 
-        /// <summary>
-        /// По входной строке метод возвращает картинку DatamatrixCode
-        /// </summary>
-        /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
+        // По входной строке метод возвращает картинку DatamatrixCode
         private Bitmap DtmxCreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
@@ -215,7 +212,6 @@ namespace CryptoGetterForNet45
             }
         }
 
-
         //метод генерации кодов. Для каждого кода из списка запрашиваются криптоданные, генерируется код и записывается в папку в формате bmp
         private void GenerateButton_Click(object sender, EventArgs e)
         {
@@ -262,5 +258,4 @@ namespace CryptoGetterForNet45
             if (ModeTabControl.SelectedIndex == 1) ClearGroupProcessingFields();
         }
     }
-
 }
