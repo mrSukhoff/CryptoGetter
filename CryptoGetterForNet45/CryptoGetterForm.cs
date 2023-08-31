@@ -186,7 +186,7 @@ namespace CryptoGetterForNet45
             _sgtins.Clear();
             using (StreamReader reader = new StreamReader(dialog.FileName))
             {
-                string line, gtin, serial;
+                string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (line.Length == 27)
