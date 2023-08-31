@@ -226,8 +226,9 @@ namespace CryptoGetterForNet45
                foreach (string sgtin in _sgtins)
                 {
                     (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+                    counter++;
                     anotherDtmx = DtmxCreator($"01{sgtin.Substring(0,14)}21{sgtin.Substring(14,13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
-                    anotherDtmx.Save(_savePath+ sgtin.ToString());
+                    anotherDtmx.Save(_savePath + "\\" + sgtin.ToString() + ".bmp");
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }
             }
@@ -240,6 +241,7 @@ namespace CryptoGetterForNet45
         {
             _sgtins.Clear();
             _savePath = "";
+            GroupServerListComboBox.SelectedIndex = 0;
             SginFileLabel.Text = "Выберете файл с SGTIN";
             OutFolderPathLabel.Text = "Выберете папку";
             OutputTexBox.Clear();
