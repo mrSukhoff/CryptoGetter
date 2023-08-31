@@ -4,10 +4,8 @@ using System.Windows.Forms;
 using DataMatrix.net;
 using CryptoGetter;
 using System.Linq;
-using CryptoGetterForNet45.CryptoGetter;
 using System.IO;
 using System.Collections.Generic;
-using System.Drawing.Text;
 
 namespace CryptoGetterForNet45
 {
