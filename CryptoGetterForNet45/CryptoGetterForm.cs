@@ -154,22 +154,27 @@ namespace CryptoGetterForNet45
             if (WTSTextBox.Text.Length > 0) Clipboard.SetText(WTSTextBox.Text);
         }
 
+        //копирует в буфер обмена код в формате СУЗ
         private void SUZCopyButton_Click(object sender, EventArgs e)
         {
             if (SUZTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
         }
 
+        //копирует в буфер обмена содержимое поля GTIN
         private void GtinCopyButton_Click(object sender, EventArgs e)
         {
             if (GTINTextBox.Text.Length > 0) Clipboard.SetText(GTINTextBox.Text);
         }
 
+        //копирует в буфер обмена поле серийного номера
         private void SerialCopyButton_Click(object sender, EventArgs e)
         {
             if (SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
         //*****************************************************************************************************************************************************************************
+        
+        //открывает файл и загружает построчно SGTIN в список
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -197,6 +202,7 @@ namespace CryptoGetterForNet45
             }
         }
 
+        //выбор папки куда будут записаны файлы картинок
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -209,6 +215,8 @@ namespace CryptoGetterForNet45
             }
         }
 
+
+        //метод генерации кодов. Для каждого кода из списка запрашиваются криптоданные, генерируется код и записывается в папку в формате bmp
         private void GenerateButton_Click(object sender, EventArgs e)
         {
 
@@ -235,6 +243,8 @@ namespace CryptoGetterForNet45
                 OutputTexBox.Text += exp.Message + "\r\n";
             }
         }
+        
+        //очистка полей вкладки групповой обработки
         private void ClearGroupProcessingFields()
         {
             _sgtins.Clear();
@@ -245,6 +255,7 @@ namespace CryptoGetterForNet45
             OutputTexBox.Clear();
         }
 
+        //При изменении выбраной вкладки очищает её содержимое
         private void ModeTabControl_Selected(object sender, TabControlEventArgs e)
         {
             if (ModeTabControl.SelectedIndex == 0) ClearButton_Click(null, null);
