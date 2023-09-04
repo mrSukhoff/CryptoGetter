@@ -112,7 +112,7 @@ namespace CryptoGetterForNet45
             DesignerTextBox.Clear();
             KeyTextBox.Clear();
             CodeTextBox.Clear();
-            if (DtmxPictureBox.Image != null) DtmxPictureBox.Image.Dispose();
+            DtmxPictureBox.Image?.Dispose();
             DtmxPictureBox.Image = null;
             WTSTextBox.Clear();
             SUZTextBox.Clear();
@@ -122,10 +122,11 @@ namespace CryptoGetterForNet45
         private Bitmap DtmxCreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
-            DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
-
-            options.ModuleSize = 5;
-            options.MarginSize = 4;
+            DmtxImageEncoderOptions options = new DmtxImageEncoderOptions
+            {
+                ModuleSize = 5,
+                MarginSize = 4
+            };
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString, options);
             DtmxPictureBox.Image = encodedBitmap;
             return encodedBitmap;
@@ -136,9 +137,11 @@ namespace CryptoGetterForNet45
         {
             if (DtmxPictureBox.Image == null) return;
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = "bmp";
-            saveFileDialog.FileName = SGTINTextBox.Text;
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                DefaultExt = "bmp",
+                FileName = SGTINTextBox.Text
+            };
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
 
             string path = saveFileDialog.FileName;
@@ -174,8 +177,10 @@ namespace CryptoGetterForNet45
         //открывает файл и загружает построчно SGTIN в список
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.DefaultExt = "txt";
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                DefaultExt = "txt"
+            };
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 SginFileLabel.Text = dialog.FileName;
@@ -202,9 +207,11 @@ namespace CryptoGetterForNet45
         //выбор папки куда будут записаны файлы картинок
         private void SelectFolderButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.ShowNewFolderButton = true;
-            dialog.SelectedPath = Application.StartupPath;
+            FolderBrowserDialog dialog = new FolderBrowserDialog
+            {
+                ShowNewFolderButton = true,
+                SelectedPath = Application.StartupPath
+            };
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 OutFolderPathLabel.Text = dialog.SelectedPath;
