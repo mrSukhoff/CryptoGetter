@@ -1,23 +1,32 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using CryptoGetter;
 using DataMatrix.net;
-using CryptoGetter;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace CryptoGetterForNet45
 {
     public partial class CryptoGetterForm : Form
     {
         private readonly ServerList _serverList = new ServerList();
-        private DataMinerFactory _dataMinerFactory = new DataMinerFactory();
+        private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
+
+        private List<string> _sgtins = new List<string>();
+        private string _savePath;
 
         public CryptoGetterForm()
         {
             InitializeComponent();
             foreach (Server server in _serverList.ListOfServers)
+            {
                 ServerListComboBox.Items.Add(server.Name);
+                GroupServerListComboBox.Items.Add(server.Name);
+            }
             ServerListComboBox.SelectedIndex = 0;
+            GroupServerListComboBox.SelectedIndex = 0;
         }
 
         // При изменении SGTIN меняет поля GTIN и серийного номера
@@ -70,14 +79,14 @@ namespace CryptoGetterForNet45
                 DesignerTextBox.Text = ex.Message;
             }
         }
-    
+
         //заполняет поля формы по имеющимся данным
         private void ShowResults(string GTIN, string Serial, string CryptoCode, string CryptoKey)
         {
-            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{ CryptoCode}";
+            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
-            DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
+            DtmxPictureBox.Image = DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
             WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
             SUZTextBox.Text = $"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}";
         }
@@ -103,37 +112,38 @@ namespace CryptoGetterForNet45
             DesignerTextBox.Clear();
             KeyTextBox.Clear();
             CodeTextBox.Clear();
-            if (DtmxPictureBox.Image != null) DtmxPictureBox.Image.Dispose();
+            DtmxPictureBox.Image?.Dispose();
             DtmxPictureBox.Image = null;
             WTSTextBox.Clear();
             SUZTextBox.Clear();
         }
 
-        /// <summary>
-        /// По входной строке метод рисует DatamatrixCode
-        /// </summary>
-        /// <param name="dataMatrixString">строка, которая будет закодирована в DMC </param>
-        private void DtmxCreator(string dataMatrixString)
+        // По входной строке метод возвращает картинку DatamatrixCode
+        private Bitmap DtmxCreator(string dataMatrixString)
         {
             DmtxImageEncoder encoder = new DmtxImageEncoder();
-            DmtxImageEncoderOptions options = new DmtxImageEncoderOptions();
-
-            options.ModuleSize = 5;
-            options.MarginSize = 4;
-            Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString,options);
+            DmtxImageEncoderOptions options = new DmtxImageEncoderOptions
+            {
+                ModuleSize = 5,
+                MarginSize = 4
+            };
+            Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString, options);
             DtmxPictureBox.Image = encodedBitmap;
+            return encodedBitmap;
         }
 
-        //охраняет картинку в файл
-        private void SaveImeageButton_Click(object sender, EventArgs e)
+        //сохраняет картинку в файл
+        private void SaveImageButton_Click(object sender, EventArgs e)
         {
             if (DtmxPictureBox.Image == null) return;
-            
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = "bmp";
-            saveFileDialog.FileName = SGTINTextBox.Text;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                DefaultExt = "bmp",
+                FileName = SGTINTextBox.Text
+            };
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel) return;
-            
+
             string path = saveFileDialog.FileName;
             DtmxPictureBox.Image.Save(path);
         }
@@ -144,20 +154,115 @@ namespace CryptoGetterForNet45
             if (WTSTextBox.Text.Length > 0) Clipboard.SetText(WTSTextBox.Text);
         }
 
+        //копирует в буфер обмена код в формате СУЗ
         private void SUZCopyButton_Click(object sender, EventArgs e)
         {
             if (SUZTextBox.Text.Length > 0) Clipboard.SetText(SUZTextBox.Text);
         }
 
+        //копирует в буфер обмена содержимое поля GTIN
         private void GtinCopyButton_Click(object sender, EventArgs e)
         {
             if (GTINTextBox.Text.Length > 0) Clipboard.SetText(GTINTextBox.Text);
         }
 
+        //копирует в буфер обмена поле серийного номера
         private void SerialCopyButton_Click(object sender, EventArgs e)
         {
-            if(SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
+            if (SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
+        }
+
+        //*****************************************************************************************************************************************************************************
+        
+        //открывает файл и загружает построчно SGTIN в список
+        private void OpenSgtinButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                DefaultExt = "txt"
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                SginFileLabel.Text = dialog.FileName;
+            }
+            else return;
+
+
+            _sgtins.Clear();
+            using (StreamReader reader = new StreamReader(dialog.FileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Length == 27)
+                    {
+                        _sgtins.Add((line));
+                    }
+                    else OutputTexBox.Text += $"Неверные даннные в строке {line} \r\n";
+                }
+                OutputTexBox.Text += $"Загружено {_sgtins.Count} строк \r\n";
+            }
+        }
+
+        //выбор папки куда будут записаны файлы картинок
+        private void SelectFolderButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog
+            {
+                ShowNewFolderButton = true,
+                SelectedPath = Application.StartupPath
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                OutFolderPathLabel.Text = dialog.SelectedPath;
+                _savePath = dialog.SelectedPath;
+            }
+        }
+
+        //метод генерации кодов. Для каждого кода из списка запрашиваются криптоданные, генерируется код и записывается в папку в формате bmp
+        private void GenerateButton_Click(object sender, EventArgs e)
+        {
+
+            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == GroupServerListComboBox.SelectedItem.ToString());
+            IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+
+            string cryptoKey, cryptoCode;
+            int counter = 0;
+            int total = _sgtins.Count;
+            Bitmap anotherDtmx;
+            try
+            {
+                foreach (string sgtin in _sgtins)
+                {
+                    (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+                    counter++;
+                    anotherDtmx = DtmxCreator($"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
+                    anotherDtmx.Save(_savePath + "\\" + sgtin.ToString() + ".bmp");
+                    OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
+                }
+            }
+            catch (Exception exp)
+            {
+                OutputTexBox.Text += exp.Message + "\r\n";
+            }
+        }
+        
+        //очистка полей вкладки групповой обработки
+        private void ClearGroupProcessingFields()
+        {
+            _sgtins.Clear();
+            _savePath = "";
+            GroupServerListComboBox.SelectedIndex = 0;
+            SginFileLabel.Text = "Выберете файл с SGTIN";
+            OutFolderPathLabel.Text = "Выберете папку";
+            OutputTexBox.Clear();
+        }
+
+        //При изменении выбраной вкладки очищает её содержимое
+        private void ModeTabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            if (ModeTabControl.SelectedIndex == 0) ClearButton_Click(null, null);
+            if (ModeTabControl.SelectedIndex == 1) ClearGroupProcessingFields();
         }
     }
-
 }

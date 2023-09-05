@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FirebirdSql.Data.FirebirdClient;
+using System;
 using System.Data;
-using FirebirdSql.Data.FirebirdClient;
 
 namespace CryptoGetter
 {
@@ -24,7 +24,7 @@ namespace CryptoGetter
 
             string commanString = $"select c.gs1field91, c.gs1field92 from mark_un_code_gs1 as c join mark_un_code as g " +
                 $"on c.unid = g.unid where g.check_bar_code = '{sGTIN}'";
-           
+
             FbConnectionStringBuilder connectionStringBuilder = new FbConnectionStringBuilder
             {
                 Database = $"{_server.FQN}:{_server.DBName}",
@@ -33,10 +33,10 @@ namespace CryptoGetter
                 Charset = "UTF8",
                 Role = "RDB$ADMIN",
             };
-            
+
             string connectionString = connectionStringBuilder.ToString();
 
-            string cryptoKey = "",  cryptoCode = "";
+            string cryptoKey = "", cryptoCode = "";
 
             using (var connection = new FbConnection(connectionString))
             {
