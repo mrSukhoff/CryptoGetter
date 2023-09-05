@@ -23,9 +23,9 @@ namespace CryptoGetter
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
 
-            string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM {_server.DBName}.[dbo].[ItemDetails] as i " +
-                $"JOIN [AntaresTracking_PRD].[dbo].[NtinDefinition] as n on i.NtinId = n.Id " +
-                $"where i.Serial='{serial}' and n.Ntin='{gtin}'";
+            string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM ItemDetails as i " +
+                $"JOIN NtinDefinition as n ON i.NtinId = n.Id " +
+                $"WHERE i.Serial='{serial}' and n.Ntin='{gtin}'";
 
             Dictionary<string, string> results = new Dictionary<string, string>();
 
