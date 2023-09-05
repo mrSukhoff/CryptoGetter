@@ -27,6 +27,7 @@ namespace CryptoGetter
                 $"JOIN NtinDefinition as n ON i.NtinId = n.Id " +
                 $"WHERE i.Serial='{serial}' and n.Ntin='{gtin}'";
 
+
             Dictionary<string, string> results = new Dictionary<string, string>();
 
             using (var connection = new SqlConnection(connectionString))
