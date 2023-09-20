@@ -1,6 +1,6 @@
 ﻿namespace CryptoGetterLibrary
 {
-    public class Server
+    internal class Server
     {
         public string Name { get; set; }
         public string FQN { get; set; }
@@ -8,5 +8,5 @@
         public ServerType Type { get; set; }
     }
 
-    public enum ServerType { Antares, Medtech };
+    internal enum ServerType { Antares, Medtech };
 }
