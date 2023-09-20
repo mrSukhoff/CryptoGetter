@@ -21,12 +21,11 @@ namespace CryptoGetterLibrary
             string serial = sGTIN.Substring(14);
 
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
-                $"User ID=tav;Password=tav";
+                "User ID=tav;Password=tav";
 
-            string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM ItemDetails as i " +
-                $"JOIN NtinDefinition as n ON i.NtinId = n.Id " +
+            string cmdString = "SELECT i.VariableName ,i.VariableValue FROM ItemDetails as i " +
+                "JOIN NtinDefinition as n ON i.NtinId = n.Id " +
                 $"WHERE i.Serial='{serial}' and n.Ntin='{gtin}'";
-
 
             Dictionary<string, string> results = new Dictionary<string, string>();
 

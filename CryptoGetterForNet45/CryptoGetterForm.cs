@@ -4,14 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace CryptoGetterForNet45
 {
     public partial class CryptoGetterForm : Form
     {
-        private readonly ServerList _serverList = new ServerList();
         private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
 
         private List<string> _sgtins = new List<string>();
@@ -20,10 +18,10 @@ namespace CryptoGetterForNet45
         public CryptoGetterForm()
         {
             InitializeComponent();
-            foreach (Server server in _serverList.ListOfServers)
+            foreach (string serverName in _dataMinerFactory.ServerNames)
             {
-                ServerListComboBox.Items.Add(server.Name);
-                GroupServerListComboBox.Items.Add(server.Name);
+                ServerListComboBox.Items.Add(serverName);
+                GroupServerListComboBox.Items.Add(serverName);
             }
             ServerListComboBox.SelectedIndex = 0;
             GroupServerListComboBox.SelectedIndex = 0;
@@ -66,11 +64,9 @@ namespace CryptoGetterForNet45
         {
             ClearResultFields();
             if (SGTINTextBox.Text.Length != 27) return;
-
-            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == ServerListComboBox.SelectedItem.ToString());
             try
             {
-                IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+                IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(ServerListComboBox.SelectedItem.ToString());
                 (string cryptoKey, string cryptoCode) = dataMiner.GetCrypto(SGTINTextBox.Text);
                 ShowResults(GTINTextBox.Text, SerialTextBox.Text, cryptoCode, cryptoKey);
             }
@@ -222,9 +218,7 @@ namespace CryptoGetterForNet45
         //метод генерации кодов. Для каждого кода из списка запрашиваются криптоданные, генерируется код и записывается в папку в формате bmp
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-
-            Server selectedServer = _serverList.ListOfServers.First(s => s.Name == GroupServerListComboBox.SelectedItem.ToString());
-            IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
+            IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(GroupServerListComboBox.SelectedItem.ToString());
 
             string cryptoKey, cryptoCode;
             int counter = 0;
