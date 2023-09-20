@@ -1,4 +1,4 @@
-﻿namespace CryptoGetter
+﻿namespace CryptoGetterLibrary
 {
     public class Server
     {

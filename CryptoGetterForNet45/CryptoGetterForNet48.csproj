@@ -99,20 +99,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CryptoGetter\AntaresDataMiner.cs" />
     <Compile Include="CryptoGetterForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CryptoGetterForm.Designer.cs">
       <DependentUpon>CryptoGetterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CryptoGetter\DataMinerFactory.cs" />
-    <Compile Include="CryptoGetter\MedtechDataMiner.cs" />
-    <Compile Include="CryptoGetter\IDataMiner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CryptoGetter\ServerList.cs" />
-    <Compile Include="CryptoGetter\Server.cs" />
     <EmbeddedResource Include="CryptoGetterForm.resx">
       <DependentUpon>CryptoGetterForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +140,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoGetterLibrary\CryptoGetterLibrary.csproj">
+      <Project>{301c4253-b7eb-4322-bb4d-915b82207211}</Project>
+      <Name>CryptoGetterLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

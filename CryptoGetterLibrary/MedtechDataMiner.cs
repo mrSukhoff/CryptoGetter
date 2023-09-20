@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace CryptoGetter
+namespace CryptoGetterLibrary
 {
     internal class MedtechDataMiner : IDataMiner
     {

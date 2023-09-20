@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 
-namespace CryptoGetter
+namespace CryptoGetterLibrary
 {
     //Формат списка серверов
     public class ServerList

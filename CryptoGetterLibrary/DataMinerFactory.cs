@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CryptoGetter
+namespace CryptoGetterLibrary
 {
-    internal class DataMinerFactory
+    public class DataMinerFactory
     {
         public IDataMiner GetDataMiner(Server server)
         {
