@@ -1,4 +1,4 @@
-﻿using CryptoGetter;
+﻿using CryptoGetterLibrary;
 using DataMatrix.net;
 using System;
 using System.Collections.Generic;

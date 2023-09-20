@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace CryptoGetter
+namespace CryptoGetterLibrary
 {
     internal class AntaresDataMiner : IDataMiner
     {

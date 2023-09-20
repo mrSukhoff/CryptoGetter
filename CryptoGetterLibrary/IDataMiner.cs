@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CryptoGetter
+namespace CryptoGetterLibrary
 {
-    internal interface IDataMiner
+    public interface IDataMiner
     {
         (string, string) GetCrypto(String sGTIN);
     }
