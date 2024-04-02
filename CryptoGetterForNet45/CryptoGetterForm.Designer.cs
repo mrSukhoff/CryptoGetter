@@ -70,6 +70,7 @@ namespace CryptoGetterForNet45
             this.label13 = new System.Windows.Forms.Label();
             this.SginFileLabel = new System.Windows.Forms.Label();
             this.OpenSgtinButton = new System.Windows.Forms.Button();
+            this.CopyImageButton = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -92,6 +93,7 @@ namespace CryptoGetterForNet45
             // SingleModeTabPage
             // 
             this.SingleModeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.SingleModeTabPage.Controls.Add(this.CopyImageButton);
             this.SingleModeTabPage.Controls.Add(this.SerialCopyButton);
             this.SingleModeTabPage.Controls.Add(this.GtinCopyButton);
             this.SingleModeTabPage.Controls.Add(this.KeyTextBox);
@@ -355,7 +357,7 @@ namespace CryptoGetterForNet45
             // SaveImageButton
             // 
             this.SaveImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveImageButton.Location = new System.Drawing.Point(333, 598);
+            this.SaveImageButton.Location = new System.Drawing.Point(333, 664);
             this.SaveImageButton.Margin = new System.Windows.Forms.Padding(10);
             this.SaveImageButton.Name = "SaveImageButton";
             this.SaveImageButton.Size = new System.Drawing.Size(99, 73);
@@ -553,6 +555,18 @@ namespace CryptoGetterForNet45
             this.OpenSgtinButton.UseVisualStyleBackColor = true;
             this.OpenSgtinButton.Click += new System.EventHandler(this.OpenSgtinButton_Click);
             // 
+            // CopyImageButton
+            // 
+            this.CopyImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CopyImageButton.Location = new System.Drawing.Point(333, 549);
+            this.CopyImageButton.Margin = new System.Windows.Forms.Padding(10);
+            this.CopyImageButton.Name = "CopyImageButton";
+            this.CopyImageButton.Size = new System.Drawing.Size(99, 73);
+            this.CopyImageButton.TabIndex = 77;
+            this.CopyImageButton.Text = "Сохранить";
+            this.CopyImageButton.UseVisualStyleBackColor = true;
+            this.CopyImageButton.Click += new System.EventHandler(this.CopyImageButton_Click);
+            // 
             // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -617,6 +631,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.ComboBox GroupServerListComboBox;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox OutputTexBox;
+        private System.Windows.Forms.Button CopyImageButton;
     }
 }
 
