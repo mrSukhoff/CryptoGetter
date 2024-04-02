@@ -32,6 +32,7 @@ namespace CryptoGetterForNet45
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CryptoGetterForm));
             this.ModeTabControl = new System.Windows.Forms.TabControl();
             this.SingleModeTabPage = new System.Windows.Forms.TabPage();
+            this.CopyImageButton = new System.Windows.Forms.Button();
             this.SerialCopyButton = new System.Windows.Forms.Button();
             this.GtinCopyButton = new System.Windows.Forms.Button();
             this.KeyTextBox = new System.Windows.Forms.TextBox();
@@ -70,7 +71,6 @@ namespace CryptoGetterForNet45
             this.label13 = new System.Windows.Forms.Label();
             this.SginFileLabel = new System.Windows.Forms.Label();
             this.OpenSgtinButton = new System.Windows.Forms.Button();
-            this.CopyImageButton = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -128,6 +128,18 @@ namespace CryptoGetterForNet45
             this.SingleModeTabPage.TabIndex = 0;
             this.SingleModeTabPage.Text = "Одиночный режим";
             this.SingleModeTabPage.Click += new System.EventHandler(this.DesignerCopyButton_Click);
+            // 
+            // CopyImageButton
+            // 
+            this.CopyImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CopyImageButton.Location = new System.Drawing.Point(333, 671);
+            this.CopyImageButton.Margin = new System.Windows.Forms.Padding(10);
+            this.CopyImageButton.Name = "CopyImageButton";
+            this.CopyImageButton.Size = new System.Drawing.Size(114, 66);
+            this.CopyImageButton.TabIndex = 77;
+            this.CopyImageButton.Text = "Копировать";
+            this.CopyImageButton.UseVisualStyleBackColor = true;
+            this.CopyImageButton.Click += new System.EventHandler(this.CopyImageButton_Click);
             // 
             // SerialCopyButton
             // 
@@ -357,10 +369,10 @@ namespace CryptoGetterForNet45
             // SaveImageButton
             // 
             this.SaveImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveImageButton.Location = new System.Drawing.Point(333, 664);
+            this.SaveImageButton.Location = new System.Drawing.Point(333, 549);
             this.SaveImageButton.Margin = new System.Windows.Forms.Padding(10);
             this.SaveImageButton.Name = "SaveImageButton";
-            this.SaveImageButton.Size = new System.Drawing.Size(99, 73);
+            this.SaveImageButton.Size = new System.Drawing.Size(114, 102);
             this.SaveImageButton.TabIndex = 55;
             this.SaveImageButton.Text = "Сохранить";
             this.SaveImageButton.UseVisualStyleBackColor = true;
@@ -554,18 +566,6 @@ namespace CryptoGetterForNet45
             this.OpenSgtinButton.Text = "Выбрать";
             this.OpenSgtinButton.UseVisualStyleBackColor = true;
             this.OpenSgtinButton.Click += new System.EventHandler(this.OpenSgtinButton_Click);
-            // 
-            // CopyImageButton
-            // 
-            this.CopyImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CopyImageButton.Location = new System.Drawing.Point(333, 549);
-            this.CopyImageButton.Margin = new System.Windows.Forms.Padding(10);
-            this.CopyImageButton.Name = "CopyImageButton";
-            this.CopyImageButton.Size = new System.Drawing.Size(99, 73);
-            this.CopyImageButton.TabIndex = 77;
-            this.CopyImageButton.Text = "Сохранить";
-            this.CopyImageButton.UseVisualStyleBackColor = true;
-            this.CopyImageButton.Click += new System.EventHandler(this.CopyImageButton_Click);
             // 
             // CryptoGetterForm
             // 
