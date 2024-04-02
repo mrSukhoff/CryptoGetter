@@ -51,6 +51,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>
     </DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>52D6FB4FAC8B9C0FFBEDB0EAD02C50AAFACE8B88</ManifestCertificateThumbprint>
