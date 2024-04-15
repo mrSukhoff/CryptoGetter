@@ -172,8 +172,14 @@ namespace CryptoGetterForNet45
             if (SerialTextBox.Text.Length > 0) Clipboard.SetText(SerialTextBox.Text);
         }
 
+        //Копирует в буфер обмена изображение
+        private void CopyImageButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(DtmxPictureBox.Image);
+        }
+
         //*****************************************************************************************************************************************************************************
-        
+
         //открывает файл и загружает построчно SGTIN в список
         private void OpenSgtinButton_Click(object sender, EventArgs e)
         {
