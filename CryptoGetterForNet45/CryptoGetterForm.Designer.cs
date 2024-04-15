@@ -32,6 +32,7 @@ namespace CryptoGetterForNet45
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CryptoGetterForm));
             this.ModeTabControl = new System.Windows.Forms.TabControl();
             this.SingleModeTabPage = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.SerialCopyButton = new System.Windows.Forms.Button();
             this.GtinCopyButton = new System.Windows.Forms.Button();
             this.KeyTextBox = new System.Windows.Forms.TextBox();
@@ -70,7 +71,6 @@ namespace CryptoGetterForNet45
             this.label13 = new System.Windows.Forms.Label();
             this.SginFileLabel = new System.Windows.Forms.Label();
             this.OpenSgtinButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.ModeTabControl.SuspendLayout();
             this.SingleModeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -86,7 +86,7 @@ namespace CryptoGetterForNet45
             this.ModeTabControl.Location = new System.Drawing.Point(0, 0);
             this.ModeTabControl.Name = "ModeTabControl";
             this.ModeTabControl.SelectedIndex = 0;
-            this.ModeTabControl.Size = new System.Drawing.Size(701, 779);
+            this.ModeTabControl.Size = new System.Drawing.Size(701, 783);
             this.ModeTabControl.TabIndex = 25;
             this.ModeTabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.ModeTabControl_Selected);
             // 
@@ -124,10 +124,22 @@ namespace CryptoGetterForNet45
             this.SingleModeTabPage.Location = new System.Drawing.Point(4, 29);
             this.SingleModeTabPage.Name = "SingleModeTabPage";
             this.SingleModeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.SingleModeTabPage.Size = new System.Drawing.Size(693, 746);
+            this.SingleModeTabPage.Size = new System.Drawing.Size(693, 750);
             this.SingleModeTabPage.TabIndex = 0;
             this.SingleModeTabPage.Text = "Одиночный режим";
             this.SingleModeTabPage.Click += new System.EventHandler(this.DesignerCopyButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(333, 682);
+            this.button1.Margin = new System.Windows.Forms.Padding(10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(118, 55);
+            this.button1.TabIndex = 77;
+            this.button1.Text = "Копировать";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.CopyImageButton_Click);
             // 
             // SerialCopyButton
             // 
@@ -360,7 +372,7 @@ namespace CryptoGetterForNet45
             this.SaveImageButton.Location = new System.Drawing.Point(333, 549);
             this.SaveImageButton.Margin = new System.Windows.Forms.Padding(10);
             this.SaveImageButton.Name = "SaveImageButton";
-            this.SaveImageButton.Size = new System.Drawing.Size(113, 97);
+            this.SaveImageButton.Size = new System.Drawing.Size(118, 113);
             this.SaveImageButton.TabIndex = 55;
             this.SaveImageButton.Text = "Сохранить";
             this.SaveImageButton.UseVisualStyleBackColor = true;
@@ -555,24 +567,12 @@ namespace CryptoGetterForNet45
             this.OpenSgtinButton.UseVisualStyleBackColor = true;
             this.OpenSgtinButton.Click += new System.EventHandler(this.OpenSgtinButton_Click);
             // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(333, 666);
-            this.button1.Margin = new System.Windows.Forms.Padding(10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(113, 67);
-            this.button1.TabIndex = 77;
-            this.button1.Text = "Копировать";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.CopyImageButton_Click);
-            // 
             // CryptoGetterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(701, 779);
+            this.ClientSize = new System.Drawing.Size(701, 783);
             this.Controls.Add(this.ModeTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
