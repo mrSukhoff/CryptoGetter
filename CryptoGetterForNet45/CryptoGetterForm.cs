@@ -83,10 +83,10 @@ namespace CryptoGetterForNet45
         //заполняет поля формы по имеющимся данным
         private void ShowResults(string GTIN, string Serial, string CryptoCode, string CryptoKey)
         {
-            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{CryptoCode}";
             KeyTextBox.Text = CryptoKey;
             CodeTextBox.Text = CryptoCode;
-            DtmxPictureBox.Image = DtmxCreator($"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
+            DesignerTextBox.Text = $"01{GTIN}21{Serial}<<GS1Separator>>91{CryptoKey}<<GS1Separator>>92{CryptoCode}";
+            DtmxPictureBox.Image = DtmxCreator($"{char.ConvertFromUtf32(232)}01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}");
             WTSTextBox.Text = $"01{GTIN}21{Serial}§91{CryptoKey}§92{CryptoCode}";
             SUZTextBox.Text = $"01{GTIN}21{Serial}{char.ConvertFromUtf32(29)}91{CryptoKey}{char.ConvertFromUtf32(29)}92{CryptoCode}";
         }
