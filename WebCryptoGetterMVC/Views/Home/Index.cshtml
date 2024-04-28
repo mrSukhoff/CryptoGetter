@@ -3,15 +3,80 @@
 }
 
 
-<form>
-    <p>Сервер  <select name="Сервер">
-        <option selected value="Иркутск">Иркутск</option>
-        <option value="Тюмень">Тюмень</option>
-        <option value="Норд">Норд</option>
-        </select>
-    </p>
-    <p>SGTIN  <input type="text" name="SGTIN"></p>
-    <p>GTIN   <input type="text" name="GTIN"></p>
-    <p>Serial <input type="text" name="serial"></p>
-    <input type="button" name="GetCypto" value="Получить">
-</form>
+<<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Справочник кодов маркировки ГК «Фармасинтез»</title>
+		<style>.barcodeStyle{width: 200px;}</style>
+		<link rel="stylesheet" type="text/css" href="./getter_files/style.css">
+		<link rel="shortcut icon" href="./getter_files/images/favicon.ico" type="image/x-icon">
+	</head>
+	<body>
+		<div id="page-wrapper">
+		<article>
+			<output id="result"></output>
+		</article>
+		<div class="headername">
+			<h1>Справочник кодов маркировки</h1>
+		</div>
+		<div class="headBlock_2">
+			<a class="infolink" href="//" target="_blank">Посмотреть пример поиска 🔍</a>     
+			<a class="infolink" href="mailto:helpdesk@pharmasyntez.com">Сообщить об ошибке ⚠️</a>
+			<span class="infohotline">Техподдержка по маркировке 📟 Тел: 444 </span>
+		</div>
+		<div class="headBlock">
+			<div class="example">
+                   <div><p> Выберите сервер системы маркировки:</p>	
+                   <select name="Сервер БД" class="searchInput">
+                     <optgroup label="Иркутск">
+                      <option value="i1">Антарес</option>
+                      <option value="i2">Медтех</option>
+                     </optgroup>
+                     <optgroup label="Тюмень">
+                      <option value="t1">Антарес</option>
+                      <option value="t2">Медтех</option>
+                     </optgroup>
+	                 <optgroup label="Норд">
+                      <option value="n1">Антарес</option>
+                      <option value="n2">Медтех</option>
+                     </optgroup>
+	                 <optgroup label="Усурийск">
+                      <option value="u1">Антарес</option>
+                     </optgroup>
+                    </select>
+            <div class="tooltip">
+				<input type="button" class="btnCorp" value="Получить криптокод" onclick=""/>
+			</div>
+		</div>
+		<div>
+			</br>				
+				<input type="text" id="sgtin" class="searchInput" placeholder="Код SGTIN">
+			</br>
+		</div>
+		<div>
+			<input type="text" id="gtin" class="searchInput" placeholder="GTIN">
+					<div class="tooltip">
+						<button class="btnCorp_2" onclick="fnCopyToClip()">
+							<span class="tooltiptext" id="myTooltip">Нажмите, чтобы скопировать текст из поля поиска</span>
+							Копировать
+						</button>	
+					</div>
+		</div>
+		<div>
+			<input type="text" id="serial" class="searchInput" placeholder="Cерийный номер упаковки">
+			<div class="tooltip">
+				<button class="btnCorp_2" onclick="fnCopyToClip()">
+					<span class="tooltiptext" id="myTooltip">Нажмите, чтобы скопировать текст из поля поиска</span>
+					Копировать
+				</button>	
+			</div>
+		</div>
+<!--вывод ДМ-->
+		<div id="container" class="barcodeStyle">
+			<div class="tooltip">
+					<input type="button" class="btnCorp" value="Скачать" onclick=""><
+			</div>
+		</div>
+
+	</body>
+</html>
