@@ -124,7 +124,6 @@ namespace CryptoGetterForNet45
                 MarginSize = 4
             };
             Bitmap encodedBitmap = encoder.EncodeImage(dataMatrixString, options);
-            DtmxPictureBox.Image = encodedBitmap;
             return encodedBitmap;
         }
 

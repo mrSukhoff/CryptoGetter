@@ -8,30 +8,32 @@
 		<h1>Генератор кодов маркировки</h1>
 		<!--ввод данных SGTIN-->
 		<div class="headBlock">
-		    <p> Выберите сервер системы маркировки:</p>	
-            <select name="Сервер БД" class="searchInput" 
-				title="Выберите систему маркировки где был промаркирован препарат">
-                <option value="i1">Антарес</option>
-                <option value="i2">Медтех</option>
-            </select>
-			<p>
-			<div>
-				<input type="text" id="sgtin" class="searchInput" placeholder="Код SGTIN"
-					title="Идентификатор SGTIN должен иметь длину 27 символов и начинаться с 0">
-			</div>
-			<div>
-				<input type="text" id="gtin" class="searchInput" placeholder="GTIN" 
-					title="Идентификатор GTIN должен иметь длину 14 символов и начинаться с 0">
-			</div>
-			<div>
-				<input type="text" id="serial" class="searchInput" placeholder="Cерийный номер упаковки" 
-					title="Серийный номер должен иметь длину 13 символов">
-			</div>
-			<p>
-			<div>
-				<input type="button" class="btnCorp" value="Получить криптокод"
-					title="Выполнить запрос на сервера маркировки" />
-			</div>
+		    <form method="get" action="">
+				<p> Выберите сервер системы маркировки:</p>	
+				<select name="server" class="searchInput" 
+					title="Выберите систему маркировки где был промаркирован препарат">
+					<option value="i1">Антарес</option>
+					<option value="i2">Медтех</option>
+				</select>
+				<p>
+				<div>
+					<input type="text" name="sgtin" class="searchInput" placeholder="Код SGTIN"
+						title="Идентификатор SGTIN должен иметь длину 27 символов и начинаться с 0">
+				</div>
+				<div>
+					<input type="text" name="gtin" class="searchInput" placeholder="GTIN" 
+						title="Идентификатор GTIN должен иметь длину 14 символов и начинаться с 0">
+				</div>
+				<div>
+					<input type="text" name="serial" class="searchInput" placeholder="Cерийный номер упаковки" 
+						title="Серийный номер должен иметь длину 13 символов">
+				</div>
+				<p>
+				<div>
+					<input type="button" name="getCrypto" class="btnCorp" value="Получить криптокод"
+						title="Выполнить запрос на сервера маркировки" />
+				</div>
+			</form>
 		</div>
 		<p/>
 		<!--вывод ДМ-->
