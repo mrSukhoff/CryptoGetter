@@ -18,6 +18,13 @@ namespace WebCryptoGetterMVC.Controllers
             return View();
         }
 
+        /*
+        public string Index(string sgtin)
+        {
+            return sgtin + sgtin;
+
+		}*/
+
         public IActionResult Privacy()
         {
             return View();

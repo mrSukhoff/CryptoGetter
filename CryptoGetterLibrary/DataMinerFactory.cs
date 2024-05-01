@@ -22,7 +22,7 @@ namespace CryptoGetterLibrary
         {
             GetServerList();
             ServerNames = new List<string>();
-            foreach (Server server in _listOfServers) ServerNames.Add(server.Name);
+			foreach (Server server in _listOfServers) ServerNames.Add(server.Name);
         }
 
         private void GetServerList()

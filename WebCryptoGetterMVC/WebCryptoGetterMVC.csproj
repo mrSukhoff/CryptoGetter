@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="8.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoGetterLibrary80\CryptoGetterLibrary80.csproj" />
+  </ItemGroup>
+
 </Project>
