@@ -25,6 +25,12 @@ namespace WebCryptoGetterMVC.Controllers
 
 		}*/
 
+        [HttpPost]
+        public IActionResult SearchDMX()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

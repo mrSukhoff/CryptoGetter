@@ -2,12 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <html>
 	<body>
 		<h1>Генератор кодов маркировки</h1>
 		<!--ввод данных SGTIN-->
-		<div class="headBlock">
+		<div class="searchBlock">
 		    <form method="get" action="">
 				<p> Выберите сервер системы маркировки:</p>	
 				<select name="server" class="searchInput" 
@@ -30,16 +29,19 @@
 				</div>
 				<p>
 				<div>
-					<input type="button" name="getCrypto" class="btnCorp" value="Получить криптокод"
-						title="Выполнить запрос на сервера маркировки" />
+					<button type="button" name="getCrypto" id="serachButton " class="btnCorp" 
+						title="Выполнить запрос криптоданных на сервера маркировки"
+							onclick="SearchDMX()">
+						Получить криптокод 
+					</button>
 				</div>
 			</form>
 		</div>
 		<p/>
 		<!--вывод ДМ-->
-		<div class="headBlock">
+		<div class="pictureBlock">
 			<div>
-				<img alt="DMX" height=100 align ="middle">
+				<img  height=100 align ="middle">
 			</div>
 			<p>
 			<div id="container" class="barcodeStyle">
@@ -51,11 +53,9 @@
 		</div>
 		<p>
 		<!--полезности-->
-		<div class="headBlock">
-			<a class="infolink" href="//" target="_blank">Посмотреть пример поиска 🔍</a>
+		<div class="tipsBlock">
 			<a class="infolink" href="mailto:m.sukharev@pharmasyntez.com">Сообщить об ошибке ⚠️</a>
 			<span class="infohotline">Дежурный по маркировке 📟 Тел: 444 </span>
 		</div>
-</body>
-
+	</body>
 </html>
