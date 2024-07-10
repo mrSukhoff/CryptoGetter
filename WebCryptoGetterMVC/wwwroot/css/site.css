@@ -49,7 +49,7 @@ a {
 }
 
 /* Стили для первого блока */
-.headBlock {
+.pictureBlock, .searchBlock {
     padding: 30px;
     background-color: #fff;
     border-radius: 6px;
