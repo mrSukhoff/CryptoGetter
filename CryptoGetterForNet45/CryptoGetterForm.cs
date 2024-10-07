@@ -235,17 +235,22 @@ namespace CryptoGetterForNet45
             string cryptoKey, cryptoCode;
             int counter = 0;
             int total = _sgtins.Count;
+            string dataForMatrix;
             Bitmap anotherDtmx;
-            try
+            List<string> codes = new List<string>();  
+			try
             {
                 foreach (string sgtin in _sgtins)
                 {
                     (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
                     counter++;
-                    anotherDtmx = DtmxCreator($"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}");
+                    dataForMatrix = $"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
+					anotherDtmx = DtmxCreator(dataForMatrix);
                     anotherDtmx.Save(_savePath + "\\" + sgtin.ToString() + ".bmp");
+                    codes.Add (dataForMatrix);
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }
+                SaveCodesToFile(codes);
             }
             catch (Exception exp)
             {
@@ -253,8 +258,23 @@ namespace CryptoGetterForNet45
             }
         }
         
-        //очистка полей вкладки групповой обработки
-        private void ClearGroupProcessingFields()
+        private void SaveCodesToFile(List<string> codes)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_savePath + "\\all_codes.txt", false))
+                {
+                    foreach (string code in codes) writer.WriteLine(code);
+                }
+			}
+			catch (Exception exp)
+			{
+				OutputTexBox.Text += exp.Message + "\r\n";
+			}
+		}
+
+		//очистка полей вкладки групповой обработки
+		private void ClearGroupProcessingFields()
         {
             _sgtins.Clear();
             _savePath = "";
