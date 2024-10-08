@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
-      <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.10.0.0\lib\net48\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=10.3.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.10.3.1\lib\net48\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
