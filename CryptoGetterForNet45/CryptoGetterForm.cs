@@ -238,10 +238,9 @@ namespace CryptoGetterForNet45
             Server selectedServer = _serverList.ListOfServers.First(s => s.Name == GroupServerListComboBox.SelectedItem.ToString());
             IDataMiner dataMiner = _dataMinerFactory.GetDataMiner(selectedServer);
 
-            string cryptoKey, cryptoCode;
+            string cryptoKey, cryptoCode, dataForMatrix, fileName;
             int counter = 0;
             int total = _sgtins.Count;
-            string dataForMatrix;
             Bitmap anotherDtmx;
             List<string> codes = new List<string>();  
 			try
@@ -252,7 +251,13 @@ namespace CryptoGetterForNet45
                     counter++;
                     dataForMatrix = $"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
 					anotherDtmx = DtmxCreator(dataForMatrix);
-                    anotherDtmx.Save(_savePath + "\\" + sgtin.ToString() + ".bmp");
+                    fileName = _savePath + "\\" + sgtin.ToString() + ".bmp";
+                    if (File.Exists(fileName))
+                    {
+                        File.Delete(fileName);
+                        OutputTexBox.Text += $"Файл {fileName} был заменён" + "\r\n";
+                    }
+					anotherDtmx.Save(fileName);
                     codes.Add (dataForMatrix);
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }
