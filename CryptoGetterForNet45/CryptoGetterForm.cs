@@ -250,18 +250,21 @@ namespace CryptoGetterForNet45
                     (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
                     counter++;
                     dataForMatrix = $"01{sgtin.Substring(0, 14)}21{sgtin.Substring(14, 13)}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
-					anotherDtmx = DtmxCreator(dataForMatrix);
-                    fileName = _savePath + "\\" + sgtin.ToString() + ".bmp";
-                    if (File.Exists(fileName))
+                    if (MakeImagesCheckBox.Checked)
                     {
-                        File.Delete(fileName);
-                        OutputTexBox.Text += $"Файл {fileName} был заменён" + "\r\n";
+                        anotherDtmx = DtmxCreator(dataForMatrix);
+                        fileName = _savePath + "\\" + sgtin.ToString() + ".bmp";
+                        if (File.Exists(fileName))
+                        {
+                            File.Delete(fileName);
+                            OutputTexBox.Text += $"Файл {fileName} был заменён" + "\r\n";
+                        }
+                        anotherDtmx.Save(fileName);
                     }
-					anotherDtmx.Save(fileName);
-                    codes.Add (dataForMatrix);
+					codes.Add (dataForMatrix);
                     OutputTexBox.Text += $"Сохранено {counter} из {total} кодов \r\n";
                 }
-                SaveCodesToFile(codes);
+                if (MakeFileCheckBox.Checked) SaveCodesToFile(codes);
             }
             catch (Exception exp)
             {
