@@ -472,6 +472,7 @@ namespace CryptoGetterForNet45
 			this.OutputTexBox.Location = new System.Drawing.Point(19, 306);
 			this.OutputTexBox.Multiline = true;
 			this.OutputTexBox.Name = "OutputTexBox";
+			this.OutputTexBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.OutputTexBox.Size = new System.Drawing.Size(659, 423);
 			this.OutputTexBox.TabIndex = 67;
 			// 
