@@ -210,8 +210,14 @@ namespace CryptoGetterForNet45
             }
         }
 
-        //выбор папки куда будут записаны файлы картинок
-        private void SelectFolderButton_Click(object sender, EventArgs e)
+        // при изменениях чекбоксов изменяет доступность кнопки
+		private void CheckBoxHandler(object sender, EventArgs e)
+		{
+            GenerateButton.Enabled = (MakeFileCheckBox.Checked || MakeImagesCheckBox.Checked) & (_sgtins.Count > 0);
+		}
+
+		//выбор папки куда будут записаны файлы картинок
+		private void SelectFolderButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog
             {
@@ -282,6 +288,8 @@ namespace CryptoGetterForNet45
             SginFileLabel.Text = "Выберете файл с SGTIN";
             OutFolderPathLabel.Text = "Выберете папку";
             OutputTexBox.Clear();
+            MakeFileCheckBox.Checked = false;
+            MakeImagesCheckBox.Checked = false;
         }
 
         //При изменении выбраной вкладки очищает её содержимое
@@ -290,5 +298,5 @@ namespace CryptoGetterForNet45
             if (ModeTabControl.SelectedIndex == 0) ClearButton_Click(null, null);
             if (ModeTabControl.SelectedIndex == 1) ClearGroupProcessingFields();
         }
-    }
+	}
 }
