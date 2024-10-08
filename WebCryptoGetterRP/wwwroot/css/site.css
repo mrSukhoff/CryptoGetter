@@ -1,0 +1,388 @@
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f7f7f7;
+}
+
+h1 {
+    color: #333333;
+    font-family: arial;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    line-height: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-family: arial;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    line-height: 130%;
+}
+
+p {
+    font: 14px Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Стили для первого блока */
+.pictureBlock, .searchBlock {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 6px;
+    -webkit-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    -moz-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    min-width: 940px;
+}
+
+.note {
+    font-size: 12px;
+    color: #5F6E73;
+}
+
+.attention {
+    font-size: 14px;
+    color: #8A0007;
+    font-weight: bold;
+}
+
+.searchInput {
+    width: 30%;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding-left: 10px;
+    margin-bottom: 6px;
+}
+
+.searchInput_wide {
+    width: 250px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding-left: 10px;
+    margin-bottom: 6px;
+}
+
+.btnCorp {
+    background-color: #00953d; /* Green */
+    border: none;
+    color: white;
+    padding: 0px 32px;
+    padding: 0px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+    .btnCorp:hover {
+        background-color: #1C703E;
+        -webkit-transition: all .3s linear;
+        -moz-transition: all .3s linear;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+.btnCorp_2 {
+    background-color: #3797C1;
+    border: none;
+    color: white;
+    padding: 0px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+    .btnCorp_2:hover {
+        background-color: #065D83;
+        -webkit-transition: all .3s linear;
+        -moz-transition: all .3s linear;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+.searchInput:focus {
+    outline: none !important;
+    border-color: #00953d;
+    box-shadow: 0;
+}
+
+.searchInput_wide:focus {
+    outline: none !important;
+    border-color: #00953d;
+    box-shadow: 0;
+}
+
+th .searchInput {
+    width: 100%;
+}
+
+.divResult {
+    padding: 30px;
+    font: 10px;
+    color: #5F6E73;
+    background-color: fff;
+    border-radius: 6px;
+    -webkit-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    -moz-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    margin-bottom: 20px;
+    min-width: 940px;
+    margin-top: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+    color: #333333;
+    font: 12px Arial, sans-serif;
+}
+
+    li p {
+        color: #000000;
+    }
+
+ol {
+    list-style: decimal;
+}
+
+.example {
+    display: inline;
+}
+
+details {
+    display: inline;
+}
+/* Display photo */
+td .hover-img {
+    position: relative;
+}
+
+    td .hover-img .photo-span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        z-index: 9999;
+    }
+
+td:hover .hover-img .photo-span {
+    top: -120px;
+    left: 260px;
+    float: left;
+    ;
+}
+
+.photo-pic {
+    height: 1em;
+    float: right;
+}
+
+td .hover-img span img {
+    border-radius: 15%;
+    float: right;
+}
+/* Highlight founded string */
+.highlight {
+    background-color: #00ff6e54;
+}
+/* Для элемента input c type="checkbox" */
+.custom-checkbox {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+    /* Для элемента label, связанного с .custom-checkbox */
+    .custom-checkbox + label {
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+        margin-top: 7px;
+        margin-left: 1em;
+        font-family: arial;
+        font-size: 12px;
+    }
+        /* Создание в label псевдоэлемента before со следующими стилями */
+        .custom-checkbox + label::before {
+            content: '';
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            flex-shrink: 0;
+            flex-grow: 0;
+            border: 1px solid #adb5bd;
+            border-radius: 0.25em;
+            margin-right: 0.5em;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 50% 50%;
+        }
+    /* Стили при наведении курсора на checkbox */
+    .custom-checkbox:not(:disabled):not(:checked) + label:hover::before {
+        border-color: #b3d7ff;
+    }
+    /* Стили для активного чекбокса (при нажатии на него) */
+    .custom-checkbox:not(:disabled):active + label::before {
+        background-color: #00953d;
+        border-color: #00953d;
+    }
+    /* Стили для чекбокса, находящегося в фокусе */
+    .custom-checkbox:focus + label::before {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    /* Стили для чекбокса, находящегося в фокусе не находящегося в состоянии checked */
+    .custom-checkbox:focus:not(:checked) + label::before {
+        border-color: #80bdff;
+    }
+    /* Стили для чекбокса, находящегося в состоянии checked */
+    .custom-checkbox:checked + label::before {
+        border-color: #00953d;
+        background-color: #00953d;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+    }
+    /* Стили для чекбокса, находящегося в состоянии disabled */
+    .custom-checkbox:disabled + label::before {
+        background-color: #e9ecef;
+    }
+
+.checkbox {
+    margin-bottom: 1em;
+}
+
+
+.headBlock_2 {
+    padding-bottom: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    border-radius: 6px;
+    font-family: arial;
+    font-size: 12px;
+    min-width: 940px;
+}
+
+.infolink {
+    font-family: arial;
+    line-height: 40px;
+    font-size: 12px;
+    color: #8e8e8e;
+    text-decoration: none;
+    min-width: 940px;
+    border-radius: 6px;
+    padding: 7px 12px;
+    margin-left: 8px;
+    background-color: #ffffff;
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+    .infolink:hover {
+        color: #000000;
+        -webkit-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+        -moz-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+        box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    }
+
+.headername {
+    padding: 30px;
+    min-width: 940px;
+}
+
+
+summary {
+    outline: 0;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 140px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+.infohotline {
+    font-family: arial;
+    line-height: 40px;
+    font-size: 12px;
+    color: #8e8e8e;
+    text-decoration: none;
+    min-width: 940px;
+    border-radius: 6px;
+    padding: 7px 12px;
+    margin-left: 8px;
+    background-color: #ffffff;
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+    .infohotline:hover {
+        color: #000000;
+        -webkit-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+        -moz-box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+        box-shadow: 0px 9px 20px -6px rgba(34, 60, 80, 0.22);
+    } 

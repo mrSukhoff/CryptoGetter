@@ -1,0 +1,63 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+<html>
+	<body>
+		<h1>Генератор кодов маркировки</h1>
+		<!--ввод данных SGTIN-->
+		<form>
+			<div class="searchBlock">
+				<p> Выберите сервер системы маркировки:</p>
+				<div>
+					<select class="searchInput" title="Выберите систему маркировки где был промаркирован препарат">
+						<option value="i1">Антарес</option>
+						<option value="i2">Медтех</option>
+						</select>
+				</div><br />
+				<div>
+					<p> SGTIN </p>
+					<input type="text" class="searchInput" name="SGTIN" value="@Model.SGTIN"
+						   title="Идентификатор SGTIN должен иметь длину 27 символов и начинаться с 0">
+				</div><br />
+				<div>
+					<p> GTIN </p>
+					<input type="text" class="searchInput" name="GTIN" value="@Model.GTIN"
+							   title="Идентификатор GTIN должен иметь длину 14 символов и начинаться с 0">
+				</div><br />
+				<div>
+					<p> Серийный номер </p>
+				<input type="text" class="searchInput" name="Serial" value="@Model.Serial"
+							   title="Серийный номер должен иметь длину 13 символов">
+				</div><br />
+				<div>
+					<input type="submit" class="btnCorp" value="Получить криптокод" title="Выполнить запрос криптоданных на сервера маркировки"
+							onclick="SearchDMX()">
+				</div>
+			</div>
+			<p />
+		</form>
+		<!--вывод ДМ-->
+		<div class="pictureBlock">
+			<div>
+				<img height=100 align="middle">
+			</div>
+			<p>
+				<div id="container" class="barcodeStyle">
+					<input type="button" class="btnCorp" value="Скачать"
+						   title="Сохранить файл на компьютер" />
+					<input type="button" class="btnCorp" value="Скопировать"
+						   title="Скопировать в буфер обмена" />
+				</div>
+		</div>
+		<p>
+		<!--полезности-->
+		<div class="tipsBlock">
+			<a class="infolink" href="mailto:m.sukharev@pharmasyntez.com">Сообщить об ошибке ⚠️</a>
+			<span class="infohotline">Дежурный по маркировке 📟 Тел: 444 </span>
+		</div>
+	</body>
+</html>
