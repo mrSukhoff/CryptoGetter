@@ -32,7 +32,7 @@ namespace CryptoGetterForNet45
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CryptoGetterForm));
 			this.ModeTabControl = new System.Windows.Forms.TabControl();
 			this.SingleModeTabPage = new System.Windows.Forms.TabPage();
-			this.button1 = new System.Windows.Forms.Button();
+			this.CopyImageButton = new System.Windows.Forms.Button();
 			this.SerialCopyButton = new System.Windows.Forms.Button();
 			this.GtinCopyButton = new System.Windows.Forms.Button();
 			this.KeyTextBox = new System.Windows.Forms.TextBox();
@@ -61,6 +61,8 @@ namespace CryptoGetterForNet45
 			this.DesignerTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.MultimodeTabPage = new System.Windows.Forms.TabPage();
+			this.MakeFileCheckBox = new System.Windows.Forms.CheckBox();
+			this.MakeImagesCheckBox = new System.Windows.Forms.CheckBox();
 			this.OutputTexBox = new System.Windows.Forms.TextBox();
 			this.GroupServerListComboBox = new System.Windows.Forms.ComboBox();
 			this.label15 = new System.Windows.Forms.Label();
@@ -71,8 +73,6 @@ namespace CryptoGetterForNet45
 			this.label13 = new System.Windows.Forms.Label();
 			this.SginFileLabel = new System.Windows.Forms.Label();
 			this.OpenSgtinButton = new System.Windows.Forms.Button();
-			this.MakeImagesCheckBox = new System.Windows.Forms.CheckBox();
-			this.MakeFileCheckBox = new System.Windows.Forms.CheckBox();
 			this.ModeTabControl.SuspendLayout();
 			this.SingleModeTabPage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.DtmxPictureBox)).BeginInit();
@@ -95,7 +95,7 @@ namespace CryptoGetterForNet45
 			// SingleModeTabPage
 			// 
 			this.SingleModeTabPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.SingleModeTabPage.Controls.Add(this.button1);
+			this.SingleModeTabPage.Controls.Add(this.CopyImageButton);
 			this.SingleModeTabPage.Controls.Add(this.SerialCopyButton);
 			this.SingleModeTabPage.Controls.Add(this.GtinCopyButton);
 			this.SingleModeTabPage.Controls.Add(this.KeyTextBox);
@@ -131,17 +131,17 @@ namespace CryptoGetterForNet45
 			this.SingleModeTabPage.Text = "Одиночный режим";
 			this.SingleModeTabPage.Click += new System.EventHandler(this.DesignerCopyButton_Click);
 			// 
-			// button1
+			// CopyImageButton
 			// 
-			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.button1.Location = new System.Drawing.Point(333, 682);
-			this.button1.Margin = new System.Windows.Forms.Padding(10);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(118, 55);
-			this.button1.TabIndex = 77;
-			this.button1.Text = "Копировать";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.CopyImageButton_Click);
+			this.CopyImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.CopyImageButton.Location = new System.Drawing.Point(333, 682);
+			this.CopyImageButton.Margin = new System.Windows.Forms.Padding(10);
+			this.CopyImageButton.Name = "CopyImageButton";
+			this.CopyImageButton.Size = new System.Drawing.Size(118, 55);
+			this.CopyImageButton.TabIndex = 77;
+			this.CopyImageButton.Text = "Копировать";
+			this.CopyImageButton.UseVisualStyleBackColor = true;
+			this.CopyImageButton.Click += new System.EventHandler(this.CopyImageButton_Click);
 			// 
 			// SerialCopyButton
 			// 
@@ -467,6 +467,30 @@ namespace CryptoGetterForNet45
 			this.MultimodeTabPage.TabIndex = 1;
 			this.MultimodeTabPage.Text = "Групповой режим";
 			// 
+			// MakeFileCheckBox
+			// 
+			this.MakeFileCheckBox.AutoSize = true;
+			this.MakeFileCheckBox.Location = new System.Drawing.Point(27, 204);
+			this.MakeFileCheckBox.Margin = new System.Windows.Forms.Padding(10);
+			this.MakeFileCheckBox.Name = "MakeFileCheckBox";
+			this.MakeFileCheckBox.Size = new System.Drawing.Size(321, 24);
+			this.MakeFileCheckBox.TabIndex = 69;
+			this.MakeFileCheckBox.Text = "Генерировать файл с криптоданными";
+			this.MakeFileCheckBox.UseVisualStyleBackColor = true;
+			this.MakeFileCheckBox.CheckedChanged += new System.EventHandler(this.CheckBoxHandler);
+			// 
+			// MakeImagesCheckBox
+			// 
+			this.MakeImagesCheckBox.AutoSize = true;
+			this.MakeImagesCheckBox.Location = new System.Drawing.Point(27, 160);
+			this.MakeImagesCheckBox.Margin = new System.Windows.Forms.Padding(10);
+			this.MakeImagesCheckBox.Name = "MakeImagesCheckBox";
+			this.MakeImagesCheckBox.Size = new System.Drawing.Size(210, 24);
+			this.MakeImagesCheckBox.TabIndex = 68;
+			this.MakeImagesCheckBox.Text = "Генерировать картинки";
+			this.MakeImagesCheckBox.UseVisualStyleBackColor = true;
+			this.MakeImagesCheckBox.CheckedChanged += new System.EventHandler(this.CheckBoxHandler);
+			// 
 			// OutputTexBox
 			// 
 			this.OutputTexBox.Location = new System.Drawing.Point(19, 306);
@@ -573,30 +597,6 @@ namespace CryptoGetterForNet45
 			this.OpenSgtinButton.UseVisualStyleBackColor = true;
 			this.OpenSgtinButton.Click += new System.EventHandler(this.OpenSgtinButton_Click);
 			// 
-			// MakeImagesCheckBox
-			// 
-			this.MakeImagesCheckBox.AutoSize = true;
-			this.MakeImagesCheckBox.Location = new System.Drawing.Point(27, 160);
-			this.MakeImagesCheckBox.Margin = new System.Windows.Forms.Padding(10);
-			this.MakeImagesCheckBox.Name = "MakeImagesCheckBox";
-			this.MakeImagesCheckBox.Size = new System.Drawing.Size(210, 24);
-			this.MakeImagesCheckBox.TabIndex = 68;
-			this.MakeImagesCheckBox.Text = "Генерировать картинки";
-			this.MakeImagesCheckBox.UseVisualStyleBackColor = true;
-			this.MakeImagesCheckBox.CheckedChanged += new System.EventHandler(this.CheckBoxHandler);
-			// 
-			// MakeFileCheckBox
-			// 
-			this.MakeFileCheckBox.AutoSize = true;
-			this.MakeFileCheckBox.Location = new System.Drawing.Point(27, 204);
-			this.MakeFileCheckBox.Margin = new System.Windows.Forms.Padding(10);
-			this.MakeFileCheckBox.Name = "MakeFileCheckBox";
-			this.MakeFileCheckBox.Size = new System.Drawing.Size(321, 24);
-			this.MakeFileCheckBox.TabIndex = 69;
-			this.MakeFileCheckBox.Text = "Генерировать файл с криптоданными";
-			this.MakeFileCheckBox.UseVisualStyleBackColor = true;
-			this.MakeFileCheckBox.CheckedChanged += new System.EventHandler(this.CheckBoxHandler);
-			// 
 			// CryptoGetterForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -661,7 +661,7 @@ namespace CryptoGetterForNet45
         private System.Windows.Forms.ComboBox GroupServerListComboBox;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox OutputTexBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button CopyImageButton;
 		private System.Windows.Forms.CheckBox MakeFileCheckBox;
 		private System.Windows.Forms.CheckBox MakeImagesCheckBox;
 	}
