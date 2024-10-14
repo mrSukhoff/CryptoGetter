@@ -11,7 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoGetterLibrary80", "Cr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebCryptoGetterMVC", "WebCryptoGetterMVC\WebCryptoGetterMVC.csproj", "{B679B3BA-D74A-41B6-936A-5061D17FF2C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCryptoGetterRP", "WebCryptoGetterRP\WebCryptoGetterRP.csproj", "{A196D8E0-E2EE-4A56-BC6D-96CD6F521B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebCryptoGetterRP", "WebCryptoGetterRP\WebCryptoGetterRP.csproj", "{A196D8E0-E2EE-4A56-BC6D-96CD6F521B22}"
+	ProjectSection(ProjectDependencies) = postProject
+		{90AD9CAA-8FC4-4806-9EBF-A8BAB7FA65D6} = {90AD9CAA-8FC4-4806-9EBF-A8BAB7FA65D6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
