@@ -1,0 +1,57 @@
+﻿@page "/"
+
+<h3>Простой сайт на Blazor</h3>
+
+<div class="form-group">
+    <label for="serverSelect">Выберите сервер:</label>
+    <select id="serverSelect" class="form-control" @bind="SelectedServer">
+        <option value="">-- Выберите сервер --</option>
+        @foreach (var server in Servers)
+        {
+            <option value="@server">@server</option>
+        }
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="gtinInput">GTIN:</label>
+    <input id="gtinInput" class="form-control" @bind="Gtin" placeholder="Введите GTIN" />
+</div>
+
+<div class="form-group">
+    <label for="snInput">SN:</label>
+    <input id="snInput" class="form-control" @bind="Sn" placeholder="Введите SN" />
+</div>
+
+<button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
+
+@if (!string.IsNullOrEmpty(ImageUrl))
+{
+    <div class="image-output">
+        <h4>Результат:</h4>
+        <img src="@ImageUrl" alt="Generated Image" style="max-width: 300px;" />
+    </div>
+}
+
+@code {
+    private List<string> Servers = new List<string> { "Server1", "Server2", "Server3" };
+    private string SelectedServer { get; set; } = "";
+    private string Gtin { get; set; } = "";
+    private string Sn { get; set; } = "";
+    private string ImageUrl { get; set; } = "";
+
+    private void GenerateImage()
+    {
+        // Здесь можно добавить логику генерации изображения
+        // Для примера используем заглушку или внешний сервис
+        if (!string.IsNullOrEmpty(SelectedServer) && !string.IsNullOrEmpty(Gtin) && !string.IsNullOrEmpty(Sn))
+        {
+            // Пример: подставляем данные в URL (например, для QR-кода)
+            ImageUrl = $"https://via.placeholder.com/300x300.png?text={SelectedServer}+GTIN:{Gtin}+SN:{Sn}";
+        }
+        else
+        {
+            ImageUrl = "https://via.placeholder.com/300x300.png?text=Заполните+все+поля";
+        }
+    }
+}
