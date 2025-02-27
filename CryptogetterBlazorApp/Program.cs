@@ -1,4 +1,8 @@
 using CryptogetterBlazorApp.Components;
+using CryptoGetter;
+
+//private readonly ServerList _serverList = new ServerList();
+//private readonly DataMinerFactory _dataMinerFactory = new DataMinerFactory();
 
 var builder = WebApplication.CreateBuilder(args);
 
