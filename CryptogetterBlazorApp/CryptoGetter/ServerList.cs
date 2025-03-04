@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-
-namespace CryptoGetter
+﻿namespace CryptoGetter
 {
     //Формат списка серверов
     public class ServerList
@@ -14,12 +9,11 @@ namespace CryptoGetter
         {
             string path = "server.ini";
 
-            ListOfServers = new List<Server>();
+            ListOfServers = [];
 
             if (File.Exists(path))
             {
-                List<string> lines = new List<string>();
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new(path))
                 {
                     string line;
                     while ((line = sr.ReadLine()) != null)
@@ -28,21 +22,13 @@ namespace CryptoGetter
                         string name = word[0];
                         string fqn = word[1];
                         string dbname = word[2];
-
-                        ServerType serverType;
-                        switch (word[3])
-                        {
-                            case /*ServerType.Antares.ToString()*/"Antares":
-                                serverType = ServerType.Antares;
-                                break;
-
-                            case /*ServerType.Medtech.ToString()*/"Medtech":
-                                serverType = ServerType.Medtech;
-                                break;
-                            default: throw new ArgumentException("Неверный формат типа сервера в файле server.ini");
-                        }
-
-                        Server server = new Server
+						var serverType = word[3] switch
+						{
+							"Antares" => ServerType.Antares,
+							"Medtech" => ServerType.Medtech,
+							_ => throw new ArgumentException("Неверный формат типа сервера в файле server.ini"),
+						};
+						Server server = new Server
                         {
                             Name = name,
                             FQN = fqn,
