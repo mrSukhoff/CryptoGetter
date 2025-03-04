@@ -1,14 +1,16 @@
 ﻿@page "/"
+@using CryptoGetter
+@inject ServerList ServerList
 
 <h3>Простой сайт на Blazor</h3>
 
 <div class="form-group">
     <label for="serverSelect">Выберите сервер:</label>
-    <select id="serverSelect" class="form-control" @bind="SelectedServer">
+    <select id="serverSelect" class="form-control" @bind="SelectedServerName">
         <option value="">-- Выберите сервер --</option>
-        @foreach (var server in Servers)
+        @foreach (var server in ServerList.ListOfServers)
         {
-            <option value="@server">@server</option>
+            <option value="@server.Name">@server.Name</option>
         }
     </select>
 </div>
@@ -34,20 +36,16 @@
 }
 
 @code {
-    private List<string> Servers = new List<string> { "Server1", "Server2", "Server3" };
-    private string SelectedServer { get; set; } = "";
+    private string SelectedServerName { get; set; } = "";
     private string Gtin { get; set; } = "";
     private string Sn { get; set; } = "";
     private string ImageUrl { get; set; } = "";
 
     private void GenerateImage()
     {
-        // Здесь можно добавить логику генерации изображения
-        // Для примера используем заглушку или внешний сервис
-        if (!string.IsNullOrEmpty(SelectedServer) && !string.IsNullOrEmpty(Gtin) && !string.IsNullOrEmpty(Sn))
+        if (!string.IsNullOrEmpty(SelectedServerName) && !string.IsNullOrEmpty(Gtin) && !string.IsNullOrEmpty(Sn))
         {
-            // Пример: подставляем данные в URL (например, для QR-кода)
-            ImageUrl = $"https://via.placeholder.com/300x300.png?text={SelectedServer}+GTIN:{Gtin}+SN:{Sn}";
+            ImageUrl = $"https://via.placeholder.com/300x300.png?text={SelectedServerName}+GTIN:{Gtin}+SN:{Sn}";
         }
         else
         {
