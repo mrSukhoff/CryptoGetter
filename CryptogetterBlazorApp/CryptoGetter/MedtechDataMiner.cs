@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace CryptoGetter
+namespace CryptogetterBlazorApp.CryptoGetter
 {
     internal class MedtechDataMiner : IDataMiner
     {

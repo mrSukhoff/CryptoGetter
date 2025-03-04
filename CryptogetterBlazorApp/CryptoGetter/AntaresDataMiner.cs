@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
-namespace CryptoGetter
+namespace CryptogetterBlazorApp.CryptoGetter
 {
     internal class AntaresDataMiner : IDataMiner
     {

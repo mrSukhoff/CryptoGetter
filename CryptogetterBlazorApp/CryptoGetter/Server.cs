@@ -1,4 +1,4 @@
-﻿namespace CryptoGetter
+﻿namespace CryptogetterBlazorApp.CryptoGetter
 {
     public class Server
     {

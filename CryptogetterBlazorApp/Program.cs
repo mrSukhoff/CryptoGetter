@@ -1,5 +1,5 @@
 using CryptogetterBlazorApp.Components;
-using CryptoGetter;
+using CryptogetterBlazorApp.CryptoGetter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +25,7 @@ builder.Services.AddTransient<IDataMiner>(serviceProvider =>
 		throw new InvalidOperationException("Список серверов пуст. Проверьте server.ini или логику ServerList.");
 	}
 
-	return factory.GetDataMiner(server);
+	return DataMinerFactory.GetDataMiner(server);
 });
 
 var app = builder.Build();

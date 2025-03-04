@@ -1,4 +1,4 @@
-﻿namespace CryptoGetter
+﻿namespace CryptogetterBlazorApp.CryptoGetter
 {
     //Формат списка серверов
     public class ServerList
