@@ -1,5 +1,4 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
-using System;
 using System.Data;
 
 namespace CryptogetterBlazorApp.CryptoGetter
@@ -17,16 +16,16 @@ namespace CryptogetterBlazorApp.CryptoGetter
         {
             if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
-            string gtin = sGTIN.Substring(0, 14);
-            string serial = sGTIN.Substring(14);
+            string gtin = sGTIN[..14];
+            string serial = sGTIN[14..];
 
             sGTIN = "01" + gtin + "21" + serial;
 
             string commanString = $"select c.gs1field91, c.gs1field92 from mark_un_code_gs1 as c join mark_un_code as g " +
                 $"on c.unid = g.unid where g.check_bar_code = '{sGTIN}'";
 
-            FbConnectionStringBuilder connectionStringBuilder = new FbConnectionStringBuilder
-            {
+            FbConnectionStringBuilder connectionStringBuilder = new()
+			{
                 Database = $"{_server.FQN}:{_server.DBName}",
                 UserID = "FS_ADMIN",
                 Password = "NdVj4K?9",

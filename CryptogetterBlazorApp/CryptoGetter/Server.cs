@@ -2,9 +2,9 @@
 {
     public class Server
     {
-        public string Name { get; set; }
-        public string FQN { get; set; }
-        public string DBName { get; set; }
+        public required string Name { get; set; }
+        public required string FQN { get; set; }
+        public required string DBName { get; set; }
         public ServerType Type { get; set; }
     }
 

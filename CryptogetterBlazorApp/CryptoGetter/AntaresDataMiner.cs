@@ -15,8 +15,8 @@ namespace CryptogetterBlazorApp.CryptoGetter
         {
             if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
-            string gtin = sGTIN.Substring(0, 14);
-            string serial = sGTIN.Substring(14);
+            string gtin = sGTIN[..14];
+            string serial = sGTIN[14..];
 
             string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
                 $"User ID=tav;Password=tav";
@@ -26,7 +26,7 @@ namespace CryptogetterBlazorApp.CryptoGetter
                 $"WHERE i.Serial='{serial}' and n.Ntin='{gtin}'";
 
 
-            Dictionary<string, string> results = new Dictionary<string, string>();
+            Dictionary<string, string> results = [];
 
             using (var connection = new SqlConnection(connectionString))
             {
