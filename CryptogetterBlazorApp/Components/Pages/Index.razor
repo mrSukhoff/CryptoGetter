@@ -1,23 +1,136 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using CryptoGetter
+@using ZXing
+@using ZXing.Common
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+
+@inject ServerList ServerList
+@inject DataMinerFactory DataMinerFactory
 @inject IJSRuntime JSRuntime
 
-<h3>Тест событий</h3>
+<h3>Простой сайт на Blazor</h3>
 
-<button class="btn btn-primary" @onclick="TestClick">Нажми меня</button>
+<div class="form-group">
+    <label for="serverSelect">Выберите сервер:</label>
+    <select id="serverSelect" class="form-control" @bind="SelectedServerName">
+        <option value="">-- Выберите сервер --</option>
+        @foreach (var server in ServerList.ListOfServers)
+        {
+            <option value="@server.Name">@server.Name</option>
+        }
+    </select>
+</div>
 
-@if (!string.IsNullOrEmpty(Message))
+<div class="form-group">
+    <label for="gtinInput">GTIN:</label>
+    <input id="gtinInput" class="form-control" @bind="Gtin" placeholder="Введите GTIN" />
+</div>
+
+<div class="form-group">
+    <label for="snInput">SN:</label>
+    <input id="snInput" class="form-control" @bind="Sn" placeholder="Введите SN" />
+</div>
+
+<button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <div class="alert alert-info mt-3">@Message</div>
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(ImageUrl))
+{
+    <div class="image-output mt-3">
+        <h4>Результат:</h4>
+        <img src="@ImageUrl" alt="Generated Image" style="max-width: 300px;" />
+    </div>
 }
 
 @code {
-    private string Message { get; set; } = "";
+    private string SelectedServerName { get; set; } = "";
+    private string Gtin { get; set; } = "";
+    private string Sn { get; set; } = "";
+    private string ImageUrl { get; set; } = "";
+    private string ErrorMessage { get; set; } = "";
 
-    private async Task TestClick()
+    private async Task GenerateImage()
     {
-        Message = "Кнопка нажата!";
-        await JSRuntime.InvokeVoidAsync("console.log", "Тестовая кнопка сработала!");
-        StateHasChanged();
+        ErrorMessage = "";
+        ImageUrl = "";
+
+        await JSRuntime.InvokeVoidAsync("console.log", "GenerateImage вызван!");
+        await JSRuntime.InvokeVoidAsync("console.log", $"Server: {SelectedServerName}, GTIN: {Gtin}, SN: {Sn}");
+
+        if (string.IsNullOrEmpty(SelectedServerName) || string.IsNullOrEmpty(Gtin) || string.IsNullOrEmpty(Sn))
+        {
+            ErrorMessage = "Пожалуйста, заполните все поля.";
+            await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: поля не заполнены");
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("console.log", "Servers: " + string.Join(", ", ServerList.ListOfServers.Select(s => s.Name)));
+            var selectedServer = ServerList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
+            if (selectedServer == null)
+            {
+                ErrorMessage = "Выбранный сервер не найден.";
+                await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: сервер не найден");
+                StateHasChanged();
+                return;
+            }
+
+            var dataMiner = DataMinerFactory.GetDataMiner(selectedServer);
+
+            string sgtin = Gtin + Sn;
+            await JSRuntime.InvokeVoidAsync("console.log", $"SGTIN: {sgtin}, Length: {sgtin.Length}");
+            if (sgtin.Length != 27)
+            {
+                ErrorMessage = "Неверная длина SGTIN (GTIN + SN должна быть 27 символов).";
+                await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: неверная длина SGTIN");
+                StateHasChanged();
+                return;
+            }
+
+            var (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+            await JSRuntime.InvokeVoidAsync("console.log", $"CryptoKey: {cryptoKey}, CryptoCode: {cryptoCode}");
+
+            // Формируем строку в формате GS1 DataMatrix без кириллицы
+            string data = $"01{Gtin}21{Sn}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
+            await JSRuntime.InvokeVoidAsync("console.log", $"Data for DataMatrix: {data}");
+
+            // Используем BarcodeWriter<Bitmap>
+            var writer = new BarcodeWriter<Bitmap>
+                {
+                    Format = BarcodeFormat.DATA_MATRIX,
+                    Options = new EncodingOptions
+                    {
+                        Width = 300,
+                        Height = 300
+                    }
+                };
+
+            await JSRuntime.InvokeVoidAsync("console.log", "BarcodeWriter создан, начинаем генерацию...");
+            using (var bitmap = writer.Write(data))
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png); // Сохраняем как PNG
+                var imageBytes = stream.ToArray();
+                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+                await JSRuntime.InvokeVoidAsync("console.log", "Изображение сгенерировано!");
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка: {ex.Message}";
+            await JSRuntime.InvokeVoidAsync("console.log", $"Ошибка: {ex.Message}, StackTrace: {ex.StackTrace}");
+            StateHasChanged();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
