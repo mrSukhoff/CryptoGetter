@@ -8,6 +8,7 @@
 
 @inject ServerList ServerList
 @inject DataMinerFactory DataMinerFactory
+@inject IJSRuntime JSRuntime
 
 <h3>Простой сайт на Blazor</h3>
 
@@ -34,6 +35,7 @@
 
 <button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
 
+<button class="btn btn-secondary" @onclick="TestButton">Тестовая кнопка</button> <!-- Добавлена для проверки -->
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="alert alert-danger mt-3">@ErrorMessage</div>
@@ -54,67 +56,84 @@
     private string ImageUrl { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
 
-    private void GenerateImage()
+    private async Task TestButton()
     {
-        ErrorMessage = "";
+        await JSRuntime.InvokeVoidAsync("console.log", "Тестовая кнопка нажата!");
+        ErrorMessage = "Тестовая кнопка сработала";
+        StateHasChanged();
+    }
+
+    private async Task GenerateImage()
+    {
+        await JSRuntime.InvokeVoidAsync("console.log", "GenerateImage вызван!");
+        ErrorMessage = "Метод GenerateImage запущен";
         ImageUrl = "";
+
+        await JSRuntime.InvokeVoidAsync("console.log", $"Server: {SelectedServerName}, GTIN: {Gtin}, SN: {Sn}");
 
         if (string.IsNullOrEmpty(SelectedServerName) || string.IsNullOrEmpty(Gtin) || string.IsNullOrEmpty(Sn))
         {
             ErrorMessage = "Пожалуйста, заполните все поля.";
+            await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: поля не заполнены");
+            StateHasChanged();
             return;
         }
 
         try
         {
-            // Находим выбранный сервер
+            await JSRuntime.InvokeVoidAsync("console.log", "Servers: " + string.Join(", ", ServerList.ListOfServers.Select(s => s.Name)));
             var selectedServer = ServerList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
             if (selectedServer == null)
             {
                 ErrorMessage = "Выбранный сервер не найден.";
+                await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: сервер не найден");
+                StateHasChanged();
                 return;
             }
 
-            // Создаем DataMiner для выбранного сервера
             var dataMiner = DataMinerFactory.GetDataMiner(selectedServer);
 
-            // Предполагаем, что SGTIN = GTIN + SN (длина должна быть 27)
             string sgtin = Gtin + Sn;
+            await JSRuntime.InvokeVoidAsync("console.log", $"SGTIN: {sgtin}, Length: {sgtin.Length}");
             if (sgtin.Length != 27)
             {
                 ErrorMessage = "Неверная длина SGTIN (GTIN + SN должна быть 27 символов).";
+                await JSRuntime.InvokeVoidAsync("console.log", "Ошибка: неверная длина SGTIN");
+                StateHasChanged();
                 return;
             }
 
-            // Получаем криптоданные
             var (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+            await JSRuntime.InvokeVoidAsync("console.log", $"CryptoKey: {cryptoKey}, CryptoCode: {cryptoCode}");
 
-            // Формируем строку для DataMatrix
             string data = $"{SelectedServerName}: GTIN:{Gtin} SN:{Sn} Key:{cryptoKey} Code:{cryptoCode}";
+            await JSRuntime.InvokeVoidAsync("console.log", $"Data for DataMatrix: {data}");
 
-            // Создаем писатель для DataMatrix
             var writer = new BarcodeWriter<Bitmap>
                 {
                     Format = BarcodeFormat.DATA_MATRIX,
                     Options = new EncodingOptions
                     {
-                        Width = 300,  // Ширина изображения
-                        Height = 300  // Высота изображения
+                        Width = 300,
+                        Height = 300
                     }
                 };
 
-            // Генерируем изображение (Bitmap)
             using (var bitmap = writer.Write(data))
             using (var stream = new MemoryStream())
             {
                 bitmap.Save(stream, ImageFormat.Png);
                 var imageBytes = stream.ToArray();
                 ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+                await JSRuntime.InvokeVoidAsync("console.log", "Изображение сгенерировано!");
+                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Ошибка: {ex.Message}";
+            await JSRuntime.InvokeVoidAsync("console.log", $"Ошибка: {ex.Message}, StackTrace: {ex.StackTrace}");
+            StateHasChanged();
         }
     }
 }
