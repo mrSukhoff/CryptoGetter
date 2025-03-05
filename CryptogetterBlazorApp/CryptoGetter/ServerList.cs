@@ -7,9 +7,9 @@
 
         public ServerList()
         {
-            string path = "server.ini";
+			string path = Path.Combine(Directory.GetCurrentDirectory(), "server.ini");
 
-            ListOfServers = [];
+			ListOfServers = [];
 
             if (File.Exists(path))
             {
