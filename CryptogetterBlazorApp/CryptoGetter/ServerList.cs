@@ -3,13 +3,15 @@
     //Формат списка серверов
     public class ServerList
     {
-        public List<Server> ListOfServers;
+		private List<Server> listOfServers;
 
-        public ServerList()
+		public List<Server> ListOfServers { get => listOfServers;}
+
+		public ServerList()
         {
 			string path = Path.Combine(Directory.GetCurrentDirectory(), "server.ini");
 
-			ListOfServers = [];
+			listOfServers = [];
 
             if (File.Exists(path))
             {
@@ -35,17 +37,15 @@
                             DBName = dbname,
                             Type = serverType
                         };
-                        ListOfServers.Add(server);
+                        listOfServers.Add(server);
                     }
                 }
             }
             else
             // Если ничего не нашли создаём сервер по умолчанию
             {
-                ListOfServers.Add(new Server { Name = "Иркутск_ТСТ", FQN = "irk-sql-tst", DBName = "AntaresTracking_QA", Type = ServerType.Antares });
+                listOfServers.Add(new Server { Name = "Иркутск_ТСТ", FQN = "irk-sql-tst", DBName = "AntaresTracking_QA", Type = ServerType.Antares });
             }
         }
-    }
-
-
+	}
 }

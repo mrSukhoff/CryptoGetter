@@ -1,13 +1,13 @@
 ﻿@page "/"
-@using CryptoGetter
+@using CryptogetterBlazorApp.CryptoGetter
 @using ZXing
 @using ZXing.Common
 @using System.Drawing
 @using System.Drawing.Imaging
 @using System.IO
 
-@inject ServerList ServerList
-@inject DataMinerFactory DataMinerFactory
+@inject ServerList serverList
+@inject DataMinerFactory dataMinerFactory
 @inject IJSRuntime JSRuntime
 
 <h3>Простой сайт на Blazor</h3>
@@ -16,7 +16,7 @@
     <label for="serverSelect">Выберите сервер:</label>
     <select id="serverSelect" class="form-control" @bind="SelectedServerName">
         <option value="">-- Выберите сервер --</option>
-        @foreach (var server in ServerList.ListOfServers)
+        @foreach (var server in serverList.ListOfServers)
         {
             <option value="@server.Name">@server.Name</option>
         }
@@ -81,8 +81,8 @@
 
         try
         {
-            await JSRuntime.InvokeVoidAsync("console.log", "Servers: " + string.Join(", ", ServerList.ListOfServers.Select(s => s.Name)));
-            var selectedServer = ServerList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
+            await JSRuntime.InvokeVoidAsync("console.log", "Servers: " + string.Join(", ", serverList.ListOfServers.Select(s => s.Name)));
+            var selectedServer = serverList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
             if (selectedServer == null)
             {
                 ErrorMessage = "Выбранный сервер не найден.";
