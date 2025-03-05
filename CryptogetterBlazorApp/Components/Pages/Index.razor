@@ -1,6 +1,13 @@
 ﻿@page "/"
 @using CryptoGetter
+@using ZXing
+@using ZXing.Common
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+
 @inject ServerList ServerList
+@inject DataMinerFactory DataMinerFactory
 
 <h3>Простой сайт на Blazor</h3>
 
@@ -27,9 +34,14 @@
 
 <button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
 
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
 @if (!string.IsNullOrEmpty(ImageUrl))
 {
-    <div class="image-output">
+    <div class="image-output mt-3">
         <h4>Результат:</h4>
         <img src="@ImageUrl" alt="Generated Image" style="max-width: 300px;" />
     </div>
@@ -40,16 +52,69 @@
     private string Gtin { get; set; } = "";
     private string Sn { get; set; } = "";
     private string ImageUrl { get; set; } = "";
+    private string ErrorMessage { get; set; } = "";
 
     private void GenerateImage()
     {
-        if (!string.IsNullOrEmpty(SelectedServerName) && !string.IsNullOrEmpty(Gtin) && !string.IsNullOrEmpty(Sn))
+        ErrorMessage = "";
+        ImageUrl = "";
+
+        if (string.IsNullOrEmpty(SelectedServerName) || string.IsNullOrEmpty(Gtin) || string.IsNullOrEmpty(Sn))
         {
-            ImageUrl = $"https://via.placeholder.com/300x300.png?text={SelectedServerName}+GTIN:{Gtin}+SN:{Sn}";
+            ErrorMessage = "Пожалуйста, заполните все поля.";
+            return;
         }
-        else
+
+        try
         {
-            ImageUrl = "https://via.placeholder.com/300x300.png?text=Заполните+все+поля";
+            // Находим выбранный сервер
+            var selectedServer = ServerList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
+            if (selectedServer == null)
+            {
+                ErrorMessage = "Выбранный сервер не найден.";
+                return;
+            }
+
+            // Создаем DataMiner для выбранного сервера
+            var dataMiner = DataMinerFactory.GetDataMiner(selectedServer);
+
+            // Предполагаем, что SGTIN = GTIN + SN (длина должна быть 27)
+            string sgtin = Gtin + Sn;
+            if (sgtin.Length != 27)
+            {
+                ErrorMessage = "Неверная длина SGTIN (GTIN + SN должна быть 27 символов).";
+                return;
+            }
+
+            // Получаем криптоданные
+            var (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
+
+            // Формируем строку для DataMatrix
+            string data = $"{SelectedServerName}: GTIN:{Gtin} SN:{Sn} Key:{cryptoKey} Code:{cryptoCode}";
+
+            // Создаем писатель для DataMatrix
+            var writer = new BarcodeWriter<Bitmap>
+                {
+                    Format = BarcodeFormat.DATA_MATRIX,
+                    Options = new EncodingOptions
+                    {
+                        Width = 300,  // Ширина изображения
+                        Height = 300  // Высота изображения
+                    }
+                };
+
+            // Генерируем изображение (Bitmap)
+            using (var bitmap = writer.Write(data))
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+                var imageBytes = stream.ToArray();
+                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка: {ex.Message}";
         }
     }
 }
