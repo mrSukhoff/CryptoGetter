@@ -1,4 +1,4 @@
-﻿using System.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 namespace CryptogetterBlazorApp.CryptoGetter
 {
@@ -31,13 +31,13 @@ namespace CryptogetterBlazorApp.CryptoGetter
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(cmdString, connection))
+                using (SqlCommand cmd = new(cmdString, connection))
                 {
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            string key = reader.GetValue(0).ToString();
+                            string key   = reader.GetValue(0).ToString();
                             string value = reader.GetValue(1).ToString();
                             results.Add(key, value);
                         }
