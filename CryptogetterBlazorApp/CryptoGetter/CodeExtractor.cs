@@ -12,11 +12,11 @@ namespace CryptogetterBlazorApp.CryptoGetter
 			_dataMiner = new DataMinerFactory();
 		}
 
-		public string ExtractCode (string kiz)
+		public async Task<string> ExtractCode (string kiz)
 		{
 			Server server = DefineServer(kiz);
 			var dataMiner = _dataMiner.GetDataMiner(server);
-			var (cryptoKey, cryptoCode) = dataMiner.GetCrypto(kiz);
+			var (cryptoKey, cryptoCode) = await dataMiner.GetCrypto(kiz);
 			return $"01{kiz[..14]}21{kiz[14..]}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
 		}
 

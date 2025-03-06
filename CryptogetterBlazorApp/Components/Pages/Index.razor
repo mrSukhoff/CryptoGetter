@@ -8,8 +8,7 @@
 @using System.Drawing.Imaging
 @using System.IO
 
-@inject ServerList ServerList
-@inject CodeExtractor CodeExtractor // Внедряем CodeExtractor
+@inject CodeExtractor CodeExtractor
 @inject IJSRuntime JSRuntime
 
 <h3>Генератор кодов Datamatrix</h3>
@@ -24,7 +23,7 @@
     <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
 </div>
 
-<button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
+<button class="btn btn-primary mt-3" @onclick="GenerateImage">Сгенерировать изображение</button>
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -45,13 +44,20 @@
     private string Recipient { get; set; } = "";
     private string ImageUrl { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
-    private byte[] ImageBytes { get; set; }
+    private byte[]? ImageBytes { get; set; }
 
     private async Task GenerateImage()
     {
         ErrorMessage = "";
         ImageUrl = "";
-        
+
+        if (string.IsNullOrEmpty(Kiz) || string.IsNullOrEmpty(Recipient))
+        {
+            ErrorMessage = "Пожалуйста, заполните все поля.";
+            StateHasChanged();
+            return;
+        }
+
         try
         {
             if (Kiz.Length != 27)
@@ -61,28 +67,33 @@
                 return;
             }
 
-            // Используем CodeExtractor для получения строки данных
-            string data = CodeExtractor.ExtractCode(Kiz);
+            // Асинхронный вызов ExtractCode
+            string data = await CodeExtractor.ExtractCode(Kiz);
 
-            var writer = new BarcodeWriter<Bitmap>
-                {
-                    Format = BarcodeFormat.DATA_MATRIX,
-                    Options = new EncodingOptions
-                    {
-                        Width = 300,
-                        Height = 300
-                    },
-                    Renderer = new BitmapRenderer()
-                };
-
-            using (var bitmap = writer.Write(data))
-            using (var stream = new MemoryStream())
+            // Генерация изображения в фоновом потоке
+            await Task.Run(() =>
             {
-                bitmap.Save(stream, ImageFormat.Png);
-                ImageBytes = stream.ToArray();
-                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
-                StateHasChanged();
-            }
+                var writer = new BarcodeWriter<Bitmap>
+                    {
+                        Format = BarcodeFormat.DATA_MATRIX,
+                        Options = new EncodingOptions
+                        {
+                            Width = 300,
+                            Height = 300
+                        },
+                        Renderer = new BitmapRenderer()
+                    };
+
+                using (var bitmap = writer.Write(data))
+                using (var stream = new MemoryStream())
+                {
+                    bitmap.Save(stream, ImageFormat.Png);
+                    ImageBytes = stream.ToArray();
+                    ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
+                }
+            });
+
+            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -109,8 +120,6 @@
                 bitmap.Save(bmpStream, ImageFormat.Bmp);
                 var bmpBytes = bmpStream.ToArray();
                 var base64String = Convert.ToBase64String(bmpBytes);
-
-                // Имя файла — номер КИЗ
                 await JSRuntime.InvokeVoidAsync("saveAsFile", $"{Kiz}.bmp", base64String);
             }
         }

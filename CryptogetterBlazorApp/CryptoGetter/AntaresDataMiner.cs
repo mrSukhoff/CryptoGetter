@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace CryptogetterBlazorApp.CryptoGetter
 {
@@ -11,7 +12,7 @@ namespace CryptogetterBlazorApp.CryptoGetter
 			_server = server;
 		}
 
-		public (string, string) GetCrypto(string sGTIN)
+		public async Task<(string, string)> GetCrypto(string sGTIN)
 		{
 			if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
@@ -29,19 +30,19 @@ namespace CryptogetterBlazorApp.CryptoGetter
 
 			using (var connection = new SqlConnection(connectionString))
 			{
-				connection.Open();
+				await connection.OpenAsync(); // Асинхронное открытие соединения
 				using (SqlCommand cmd = new(cmdString, connection))
 				{
 					cmd.Parameters.AddWithValue("@Serial", serial);
 					cmd.Parameters.AddWithValue("@Ntin", gtin);
-					using (SqlDataReader reader = cmd.ExecuteReader())
+					using (SqlDataReader reader = await cmd.ExecuteReaderAsync()) // Асинхронное чтение
 					{
-						while (reader.Read())
+						while (await reader.ReadAsync()) // Асинхронный перебор строк
 						{
 							string key = reader.GetValue(0)?.ToString() ?? throw new Exception("Поле VariableName не может быть NULL");
 							string value = reader.GetValue(1)?.ToString() ?? throw new Exception("Поле VariableValue не может быть NULL");
 							if (results.ContainsKey(key))
-								results[key] = value; // Перезаписываем дубли
+								results[key] = value;
 							else
 								results.Add(key, value);
 						}
