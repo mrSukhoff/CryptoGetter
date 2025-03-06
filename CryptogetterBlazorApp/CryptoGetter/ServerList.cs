@@ -3,15 +3,13 @@
     //Формат списка серверов
     public class ServerList
     {
-		private List<Server> listOfServers;
-
-		public List<Server> ListOfServers { get => listOfServers;}
+		public readonly List<Server> ListOfServers;
 
 		public ServerList()
         {
 			string path = Path.Combine(Directory.GetCurrentDirectory(), "server.ini");
 
-			listOfServers = [];
+			ListOfServers = [];
 
             if (File.Exists(path))
             {
@@ -30,21 +28,30 @@
 							"Medtech" => ServerType.Medtech,
 							_ => throw new ArgumentException("Неверный формат типа сервера в файле server.ini"),
 						};
+						string gs1Prefix = word[4]; // Читаем префикс GS1
 						Server server = new Server
                         {
                             Name = name,
                             FQN = fqn,
                             DBName = dbname,
-                            Type = serverType
-                        };
-                        listOfServers.Add(server);
+                            Type = serverType,
+							GS1Prefix = gs1Prefix
+						};
+						ListOfServers.Add(server);
                     }
                 }
             }
             else
             // Если ничего не нашли создаём сервер по умолчанию
             {
-                listOfServers.Add(new Server { Name = "Иркутск_ТСТ", FQN = "irk-sql-tst", DBName = "AntaresTracking_QA", Type = ServerType.Antares });
+				ListOfServers.Add(new Server 
+                { 
+                    Name = "Иркутск_ТСТ", 
+                    FQN = "irk-sql-tst", 
+                    DBName = "AntaresTracking_QA", 
+                    Type = ServerType.Antares,
+					GS1Prefix = "4605310"
+				});
             }
         }
 	}

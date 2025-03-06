@@ -9,29 +9,19 @@
 @using System.IO
 
 @inject ServerList ServerList
-@inject DataMinerFactory DataMinerFactory
+@inject CodeExtractor CodeExtractor // Внедряем CodeExtractor
+@inject IJSRuntime JSRuntime
 
 <h3>Генератор кодов Datamatrix</h3>
 
 <div class="form-group">
-    <label for="serverSelect">Выберите сервер:</label>
-    <select id="serverSelect" class="form-control" @bind="SelectedServerName">
-        <option value="">-- Выберите сервер --</option>
-        @foreach (var server in ServerList.ListOfServers)
-        {
-            <option value="@server.Name">@server.Name</option>
-        }
-    </select>
+    <label for="kizInput">КИЗ:</label>
+    <input id="kizInput" class="form-control" @bind="Kiz" placeholder="Введите КИЗ (GTIN + SN)" />
 </div>
 
 <div class="form-group">
-    <label for="gtinInput">GTIN:</label>
-    <input id="gtinInput" class="form-control" @bind="Gtin" placeholder="Введите GTIN" />
-</div>
-
-<div class="form-group">
-    <label for="snInput">SN:</label>
-    <input id="snInput" class="form-control" @bind="Sn" placeholder="Введите SN" />
+    <label for="recipientInput">Для кого:</label>
+    <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
 </div>
 
 <button class="btn btn-primary" @onclick="GenerateImage">Сгенерировать изображение</button>
@@ -46,49 +36,33 @@
     <div class="image-output mt-3">
         <h4>Результат:</h4>
         <img src="@ImageUrl" alt="Generated Image" style="max-width: 300px;" />
+        <button class="btn btn-secondary mt-2" @onclick="SaveImage">Сохранить как BMP</button>
     </div>
 }
 
 @code {
-    private string SelectedServerName { get; set; } = "";
-    private string Gtin { get; set; } = "";
-    private string Sn { get; set; } = "";
+    private string Kiz { get; set; } = "";
+    private string Recipient { get; set; } = "";
     private string ImageUrl { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
+    private byte[] ImageBytes { get; set; }
 
     private async Task GenerateImage()
     {
         ErrorMessage = "";
         ImageUrl = "";
-
-        if (string.IsNullOrEmpty(SelectedServerName) || string.IsNullOrEmpty(Gtin) || string.IsNullOrEmpty(Sn))
-        {
-            ErrorMessage = "Пожалуйста, заполните все поля.";
-            StateHasChanged();
-            return;
-        }
-
+        
         try
         {
-            var selectedServer = ServerList.ListOfServers.FirstOrDefault(s => s.Name == SelectedServerName);
-            if (selectedServer == null)
+            if (Kiz.Length != 27)
             {
-                ErrorMessage = "Выбранный сервер не найден.";
+                ErrorMessage = "Неверная длина КИЗ (должна быть 27 символов).";
                 StateHasChanged();
                 return;
             }
 
-            var dataMiner = DataMinerFactory.GetDataMiner(selectedServer);
-            string sgtin = Gtin + Sn;
-            if (sgtin.Length != 27)
-            {
-                ErrorMessage = "Неверная длина SGTIN (GTIN + SN должна быть 27 символов).";
-                StateHasChanged();
-                return;
-            }
-
-            var (cryptoKey, cryptoCode) = dataMiner.GetCrypto(sgtin);
-            string data = $"01{Gtin}21{Sn}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
+            // Используем CodeExtractor для получения строки данных
+            string data = CodeExtractor.ExtractCode(Kiz);
 
             var writer = new BarcodeWriter<Bitmap>
                 {
@@ -105,7 +79,8 @@
             using (var stream = new MemoryStream())
             {
                 bitmap.Save(stream, ImageFormat.Png);
-                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(stream.ToArray())}";
+                ImageBytes = stream.ToArray();
+                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
                 StateHasChanged();
             }
         }
@@ -115,4 +90,51 @@
             StateHasChanged();
         }
     }
+
+    private async Task SaveImage()
+    {
+        if (ImageBytes == null)
+        {
+            ErrorMessage = "Сначала сгенерируйте изображение.";
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            using (var ms = new MemoryStream(ImageBytes))
+            using (var bitmap = new Bitmap(ms))
+            using (var bmpStream = new MemoryStream())
+            {
+                bitmap.Save(bmpStream, ImageFormat.Bmp);
+                var bmpBytes = bmpStream.ToArray();
+                var base64String = Convert.ToBase64String(bmpBytes);
+
+                // Имя файла — номер КИЗ
+                await JSRuntime.InvokeVoidAsync("saveAsFile", $"{Kiz}.bmp", base64String);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка при сохранении: {ex.Message}";
+            StateHasChanged();
+        }
+    }
 }
+
+<script>
+    window.saveAsFile = (filename, base64String) => {
+        const byteCharacters = atob(base64String);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/bmp' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+</script>

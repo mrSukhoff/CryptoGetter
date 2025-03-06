@@ -2,60 +2,64 @@
 
 namespace CryptogetterBlazorApp.CryptoGetter
 {
-    internal class AntaresDataMiner : IDataMiner
-    {
-        private readonly Server _server;
+	internal class AntaresDataMiner : IDataMiner
+	{
+		private readonly Server _server;
 
-        public AntaresDataMiner(Server server)
-        {
-            _server = server;
-        }
+		public AntaresDataMiner(Server server)
+		{
+			_server = server;
+		}
 
-        public (string, string) GetCrypto(string sGTIN)
-        {
-            if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
+		public (string, string) GetCrypto(string sGTIN)
+		{
+			if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
 
-            string gtin = sGTIN[..14];
-            string serial = sGTIN[14..];
+			string gtin = sGTIN[..14];
+			string serial = sGTIN[14..];
 
-            string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
-                $"User ID=tav;Password=tav";
+			string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
+				$"User ID=tav;Password=tav;TrustServerCertificate=True";
 
-            string cmdString = $"SELECT i.VariableName ,i.VariableValue FROM ItemDetails as i " +
-                $"JOIN NtinDefinition as n ON i.NtinId = n.Id " +
-                $"WHERE i.Serial='{serial}' and n.Ntin='{gtin}'";
+			string cmdString = $"SELECT i.VariableName, i.VariableValue FROM [{_server.DBName}].[dbo].[ItemDetails] AS i " +
+				$"JOIN [{_server.DBName}].[dbo].[NtinDefinition] AS n ON i.NtinId = n.Id " +
+				$"WHERE i.Serial = @Serial AND n.Ntin = @Ntin";
 
+			Dictionary<string, string> results = [];
 
-            Dictionary<string, string> results = [];
+			using (var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand cmd = new(cmdString, connection))
+				{
+					cmd.Parameters.AddWithValue("@Serial", serial);
+					cmd.Parameters.AddWithValue("@Ntin", gtin);
+					using (SqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							string key = reader.GetValue(0)?.ToString() ?? throw new Exception("Поле VariableName не может быть NULL");
+							string value = reader.GetValue(1)?.ToString() ?? throw new Exception("Поле VariableValue не может быть NULL");
+							if (results.ContainsKey(key))
+								results[key] = value; // Перезаписываем дубли
+							else
+								results.Add(key, value);
+						}
+					}
+				}
+			}
 
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                using (SqlCommand cmd = new(cmdString, connection))
-                {
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string key   = reader.GetValue(0).ToString();
-                            string value = reader.GetValue(1).ToString();
-                            results.Add(key, value);
-                        }
-                    }
-                }
-            }
-
-            string cryptoCode, cryptoKey;
-            if (results.Count >= 2)
-            {
-                cryptoKey = results["cryptokey"];
-                cryptoCode = results["cryptocode"];
-            }
-            else
-            {
-                throw new Exception("Криптоданные не найдены");
-            }
-            return (cryptoKey, cryptoCode);
-        }
-    }
+			string cryptoCode, cryptoKey;
+			if (results.Count >= 2 && results.ContainsKey("cryptokey") && results.ContainsKey("cryptocode"))
+			{
+				cryptoKey = results["cryptokey"];
+				cryptoCode = results["cryptocode"];
+			}
+			else
+			{
+				throw new Exception($"Криптоданные для КИЗ {sGTIN} не найдены в базе {_server.DBName}");
+			}
+			return (cryptoKey, cryptoCode);
+		}
+	}
 }

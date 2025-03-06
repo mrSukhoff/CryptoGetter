@@ -2,7 +2,7 @@
 {
     internal class DataMinerFactory
     {
-        public static IDataMiner GetDataMiner(Server server)
+        public IDataMiner GetDataMiner(Server server)
         {
             if (server.Type == ServerType.Antares) return new AntaresDataMiner(server);
             if (server.Type == ServerType.Medtech) return new MedtechDataMiner(server);
