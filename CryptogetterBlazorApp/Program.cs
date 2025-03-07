@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
-
-// Добавляем поддержку Blazor Server для аутентификации
 builder.Services.AddServerSideBlazor();
 
 // Регистрируем сервисы для генерации DataMatrix
@@ -24,7 +22,7 @@ builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
 	options.AddPolicy("DmxGeneratorsPolicy", policy =>
-		policy.RequireRole("pharmasyntez.com\\Marking\\Groups\\dmx.generators"));
+		policy.RequireRole("PS\\dmx.generators"));
 });
 
 var app = builder.Build();
@@ -39,7 +37,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Включение middleware для аутентификации и авторизации
 app.UseAuthentication();
 app.UseAuthorization();
 

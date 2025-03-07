@@ -7,13 +7,21 @@
 <h1>Hello, world!</h1>
 Welcome to your new app.
 
+<p>User: @userName</p>
+<p>In dmx.generators group: @isInGroup</p>
+
 @code {
+    private string userName;
+    private bool isInGroup;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+        userName = user.Identity?.Name ?? "Not authenticated";
+        isInGroup = user.IsInRole("PS\\dmx.generators"); // Проверяем краткое имя
 
-        Console.WriteLine($"User: {user.Identity.Name}");
-        Console.WriteLine($"Is in dmx.generators: {user.IsInRole("pharmasyntez.com\\Marking\\Groups\\dmx.generators")}");
+        Console.WriteLine($"User: {userName}");
+        Console.WriteLine($"Is in dmx.generators: {isInGroup}");
     }
 }
