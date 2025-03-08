@@ -5,7 +5,7 @@
     "anonymousAuthentication": false, // Отключаем анонимный доступ
     "iisExpress": {
       "applicationUrl": "http://localhost:1866",
-      "sslPort": 44345
+      "sslPort": 44346
     }
   },
   "profiles": {
