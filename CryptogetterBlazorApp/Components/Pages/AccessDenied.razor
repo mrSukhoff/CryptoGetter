@@ -1,6 +1,17 @@
 ﻿@page "/access-denied"
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 
 <h3>Доступ запрещён</h3>
-<p>У вас нет прав для доступа к этой странице. Вы должны быть членом группы <strong>PS\dmx.generators</strong>.</p>
+
+@if (HttpContextAccessor.HttpContext?.Request.Path == "/generation-log")
+{
+    <p>У вас нет прав для доступа к этой странице. Вы должны быть членом группы <strong>pharmasyntez.com\Marking\Groups\dmx.logs.read</strong>.</p>
+}
+else
+{
+    <p>У вас нет прав для доступа к этой странице. Вы должны быть членом одной из групп: <strong>PS\dmx.generators</strong> или <strong>pharmasyntez.com\Marking\Groups\dmx.logs.read</strong>.</p>
+}
+
 <p>Обратитесь к администратору, если считаете, что это ошибка.</p>
 <a href="/">Вернуться на главную</a>

@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Policy = "DmxGeneratorsPolicy")]
+@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
 
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -14,19 +14,18 @@
 @using System.Drawing.Imaging
 @using System.IO
 
-@inject CodeExtractor CodeExtractor
 @inject IJSRuntime JSRuntime
+@inject CodeExtractor CodeExtractor
 
 <h3>Генератор кодов Datamatrix</h3>
-<p>User: @userName</p>
-<p>In dmx.generators group: @isInGroup</p>
+
 <div class="form-group">
     <label for="kizInput">КИЗ:</label>
     <input id="kizInput" class="form-control" @bind="Kiz" placeholder="Введите КИЗ (GTIN + SN)" />
 </div>
 
 <div class="form-group">
-    <label for="recipientInput">Для кого:</label>
+    <label for="recipientInput">Наименование орагнизации запросившей код:</label>
     <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
 </div>
 

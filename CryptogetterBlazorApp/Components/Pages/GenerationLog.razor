@@ -1,4 +1,6 @@
 ﻿@page "/generationLog"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "LogsReadPolicy")]
 
 <h3>Лог генерации кодов Datamatrix</h3>
 @code {

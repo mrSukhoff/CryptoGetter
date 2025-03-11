@@ -3,52 +3,56 @@ using CryptogetterBlazorApp.CryptoGetter;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 builder.Services.AddServerSideBlazor();
 
-// Регистрируем сервисы для генерации DataMatrix
 builder.Services.AddSingleton<ServerList>();
 builder.Services.AddSingleton<CodeExtractor>();
 
-// Включение Windows Authentication
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 	.AddNegotiate();
 
-// Настройка политики авторизации для группы AD
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy("DmxGeneratorsPolicy", policy =>
-		policy.RequireRole("PS\\dmx.generators"));
-	// Указываем страницу для неавторизованных пользователей
+	options.AddPolicy("GeneratorAccessPolicy", policy =>
+		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"));
+	options.AddPolicy("LogsReadPolicy", policy =>
+		policy.RequireRole("PS\\dmx.logs.read"));
 	options.FallbackPolicy = new AuthorizationPolicyBuilder()
-		.RequireAuthenticatedUser() // Требуем аутентификацию
+		.RequireAuthenticatedUser()
 		.Build();
 });
 
-// Добавляем обработку ошибок авторизации
-builder.Services.AddScoped<CustomAuthorizationMiddlewareResultHandler>();
+builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Error", createScopeForErrors: true);
 	app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseStatusCodePages(async context =>
+{
+	if (context.HttpContext.Response.StatusCode == StatusCodes.Status403Forbidden)
+	{
+		context.HttpContext.Response.StatusCode = StatusCodes.Status307TemporaryRedirect;
+		context.HttpContext.Response.Headers.Location = "/access-denied";
+		await context.HttpContext.Response.StartAsync();
+	}
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
@@ -56,39 +60,21 @@ app.MapRazorComponents<App>()
 
 app.Run();
 
-// Кастомный middleware для перенаправления на страницу AccessDenied
-public class CustomAuthorizationMiddleware
-{
-	private readonly RequestDelegate _next;
-
-	public CustomAuthorizationMiddleware(RequestDelegate next)
-	{
-		_next = next;
-	}
-
-	public async Task InvokeAsync(HttpContext context)
-	{
-		await _next(context);
-
-		// Если статус 403 (Forbidden), перенаправляем на страницу AccessDenied
-		if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
-		{
-			context.Response.Redirect("/access-denied");
-		}
-	}
-}
-
-// Кастомный обработчик результата авторизации
 public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
-	public Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
+	public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
 	{
-		if (authorizeResult.Forbidden)
+		if (authorizeResult.Succeeded)
+		{
+			await next(context);
+		}
+		else if (authorizeResult.Forbidden)
 		{
 			context.Response.StatusCode = StatusCodes.Status403Forbidden;
-			return Task.CompletedTask; // Middleware выше перенаправит на /access-denied
 		}
-
-		return next(context);
+		else if (!context.User.Identity.IsAuthenticated)
+		{
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+		}
 	}
 }
