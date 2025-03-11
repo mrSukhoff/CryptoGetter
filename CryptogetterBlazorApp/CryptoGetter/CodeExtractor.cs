@@ -1,5 +1,4 @@
-﻿
-namespace CryptogetterBlazorApp.CryptoGetter
+﻿namespace CryptogetterBlazorApp.CryptoGetter
 {
 	public class CodeExtractor
 	{

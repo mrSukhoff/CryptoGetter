@@ -1,27 +1,24 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
 @attribute [Authorize(Policy = "GeneratorAccessPolicy")]
 
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-@rendermode InteractiveServer
-@using CryptoGetter
 @using ZXing
 @using ZXing.Common
 @using ZXing.Windows.Compatibility
 @using System.Drawing
 @using System.Drawing.Imaging
 @using System.IO
+@using CryptogetterBlazorApp.Models
+@using CryptogetterBlazorApp.CryptoGetter
 
 @inject IJSRuntime JSRuntime
 @inject CodeExtractor CodeExtractor
 @inject CryptogetterBlazorApp.Data.AppDbContext DbContext
-@using CryptogetterBlazorApp.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3 class="mb-4">Генератор кодов Datamatrix</h3>
-
-<p/>
 
 <div class="mb-3">
     <label for="kizInput" class="form-label">КИЗ:</label>
@@ -55,17 +52,13 @@
     private string ErrorMessage { get; set; } = "";
     private byte[]? ImageBytes { get; set; }
     private string? userName;
-    private bool isInGroup;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         userName = user.Identity?.Name ?? "Not authenticated";
-        isInGroup = user.IsInRole("PS\\dmx.generators");
-
         Console.WriteLine($"User: {userName}");
-        Console.WriteLine($"Is in dmx.generators: {isInGroup}");
     }
 
     private async Task GenerateImage()
