@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CryptogetterBlazorApp.Models;
 
-namespace CryptogetterBlazorApp.Data
+namespace CryptogetterBlazorApp.LogDb
 {
 	public class AppDbContext : DbContext
 	{

@@ -1,4 +1,4 @@
-﻿namespace CryptogetterBlazorApp.Models
+﻿namespace CryptogetterBlazorApp.LogDb
 {
 	public class CodeGenerationLog
 	{

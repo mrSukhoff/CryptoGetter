@@ -1,6 +1,6 @@
 using CryptogetterBlazorApp.Components;
 using CryptogetterBlazorApp.CryptoGetter;
-using CryptogetterBlazorApp.Data;
+using CryptogetterBlazorApp.LogDb;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;

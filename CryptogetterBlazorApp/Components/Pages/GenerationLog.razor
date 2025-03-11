@@ -1,9 +1,8 @@
 ﻿@page "/generationLog"
-@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Policy = "LogsReadPolicy")]
 
-@using CryptogetterBlazorApp.Data
-@using CryptogetterBlazorApp.Models
+@using CryptogetterBlazorApp.LogDb
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 
 @inject AppDbContext DbContext

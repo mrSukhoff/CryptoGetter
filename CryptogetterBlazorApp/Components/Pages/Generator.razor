@@ -2,20 +2,20 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Policy = "GeneratorAccessPolicy")]
 
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+@using CryptogetterBlazorApp.CryptoGetter
+@using CryptogetterBlazorApp.LogDb
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using ZXing
 @using ZXing.Common
 @using ZXing.Windows.Compatibility
-@using System.Drawing
-@using System.Drawing.Imaging
-@using System.IO
-@using CryptogetterBlazorApp.Models
-@using CryptogetterBlazorApp.CryptoGetter
 
 @inject IJSRuntime JSRuntime
 @inject CodeExtractor CodeExtractor
-@inject CryptogetterBlazorApp.Data.AppDbContext DbContext
+@inject CryptogetterBlazorApp.LogDb.AppDbContext DbContext
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3 class="mb-4">Генератор кодов Datamatrix</h3>
