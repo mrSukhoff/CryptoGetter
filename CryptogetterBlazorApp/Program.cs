@@ -18,16 +18,14 @@ builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("GeneratorAccessPolicy", policy =>
-		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"));
-	options.AddPolicy("LogsReadPolicy", policy =>
-		policy.RequireRole("PS\\dmx.logs.read"));
-	options.FallbackPolicy = new AuthorizationPolicyBuilder()
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy("GeneratorAccessPolicy", policy =>
+		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"))
+	.AddPolicy("LogsReadPolicy", policy =>
+		policy.RequireRole("PS\\dmx.logs.read"))
+	.SetFallbackPolicy(new AuthorizationPolicyBuilder()
 		.RequireAuthenticatedUser()
-		.Build();
-});
+		.Build());
 
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
