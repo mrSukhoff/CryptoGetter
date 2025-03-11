@@ -16,6 +16,8 @@
 
 @inject IJSRuntime JSRuntime
 @inject CodeExtractor CodeExtractor
+@inject CryptogetterBlazorApp.Data.AppDbContext DbContext
+@using CryptogetterBlazorApp.Models
 
 <h3>Генератор кодов Datamatrix</h3>
 
@@ -51,8 +53,7 @@
     private string ImageUrl { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
     private byte[]? ImageBytes { get; set; }
-    // на время разработки вывод пользователя и группы
-    private string userName;
+    private string? userName;
     private bool isInGroup;
 
     protected override async Task OnInitializedAsync()
@@ -65,7 +66,6 @@
         Console.WriteLine($"User: {userName}");
         Console.WriteLine($"Is in dmx.generators: {isInGroup}");
     }
-    //
 
     private async Task GenerateImage()
     {
@@ -88,22 +88,20 @@
                 return;
             }
 
-            // Асинхронный вызов ExtractCode
             string data = await CodeExtractor.ExtractCode(Kiz);
 
-            // Генерация изображения в фоновом потоке
             await Task.Run(() =>
             {
                 var writer = new BarcodeWriter<Bitmap>
+                {
+                    Format = BarcodeFormat.DATA_MATRIX,
+                    Options = new EncodingOptions
                     {
-                        Format = BarcodeFormat.DATA_MATRIX,
-                        Options = new EncodingOptions
-                        {
-                            Width = 300,
-                            Height = 300
-                        },
-                        Renderer = new BitmapRenderer()
-                    };
+                        Width = 300,
+                        Height = 300
+                    },
+                    Renderer = new BitmapRenderer()
+                };
 
                 using (var bitmap = writer.Write(data))
                 using (var stream = new MemoryStream())
@@ -113,6 +111,17 @@
                     ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
                 }
             });
+
+            // Логирование в базу данных
+            var logEntry = new CodeGenerationLog
+            {
+                    UserName = userName ?? "Unknown",
+                RequestDateTime = DateTime.UtcNow,
+                Kiz = Kiz,
+                Recipient = Recipient
+            };
+            DbContext.CodeGenerationLogs.Add(logEntry);
+            await DbContext.SaveChangesAsync();
 
             StateHasChanged();
         }

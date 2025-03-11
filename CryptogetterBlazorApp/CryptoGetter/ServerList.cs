@@ -15,7 +15,7 @@
             {
                 using (StreamReader sr = new(path))
                 {
-                    string line;
+                    string? line;
                     while ((line = sr.ReadLine()) != null)
                     {
                         string[] word = line.Split(',', ';');

@@ -2,7 +2,56 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Policy = "LogsReadPolicy")]
 
-<h3>Лог генерации кодов Datamatrix</h3>
-@code {
+@using CryptogetterBlazorApp.Data
+@using CryptogetterBlazorApp.Models
+@using Microsoft.EntityFrameworkCore
 
+@inject AppDbContext DbContext
+
+<h3>Лог генерации кодов Datamatrix</h3>
+
+@if (logs == null)
+{
+    <p>Загрузка...</p>
+}
+else if (!logs.Any())
+{
+    <p>Логов пока нет.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Пользователь</th>
+                <th>Дата и время (UTC)</th>
+                <th>КИЗ</th>
+                <th>Получатель</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in logs)
+            {
+                <tr>
+                    <td>@log.Id</td>
+                    <td>@log.UserName</td>
+                    <td>@log.RequestDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@log.Kiz</td>
+                    <td>@log.Recipient</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<CodeGenerationLog>? logs; // Измените на nullable
+
+    protected override async Task OnInitializedAsync()
+    {
+        logs = await DbContext.CodeGenerationLogs
+            .OrderByDescending(l => l.RequestDateTime)
+            .ToListAsync();
+    }
 }
