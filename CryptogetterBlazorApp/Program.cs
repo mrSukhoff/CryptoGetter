@@ -1,7 +1,6 @@
 using CryptogetterBlazorApp.Components;
 using CryptogetterBlazorApp.CryptoGetter;
 using CryptogetterBlazorApp.Data;
-using CryptogetterBlazorApp.Models;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -25,16 +24,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlite("Data Source=app.db")); // Файл базы данных будет в корне проекта
 
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("IndexAccessPolicy", policy =>
-		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"));
-	options.AddPolicy("LogsReadPolicy", policy =>
-		policy.RequireRole("PS\\dmx.logs.read"));
-	options.FallbackPolicy = new AuthorizationPolicyBuilder()
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy("GeneratorAccessPolicy", policy =>
+		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"))
+	.AddPolicy("LogsReadPolicy", policy =>
+		policy.RequireRole("PS\\dmx.logs.read"))
+	.SetFallbackPolicy(new AuthorizationPolicyBuilder()
 		.RequireAuthenticatedUser()
-		.Build();
-});
+		.Build());
 
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 

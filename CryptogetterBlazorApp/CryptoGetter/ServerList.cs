@@ -19,7 +19,11 @@
                     while ((line = sr.ReadLine()) != null)
                     {
                         string[] word = line.Split(',', ';');
-                        string name = word[0];
+						if (word.Length < 5)
+						{
+							throw new FormatException("Недостаточно данных в строке server.ini");
+						}
+						string name = word[0];
                         string fqn = word[1];
                         string dbname = word[2];
 						var serverType = word[3] switch
