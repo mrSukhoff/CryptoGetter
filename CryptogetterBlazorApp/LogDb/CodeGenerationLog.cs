@@ -7,6 +7,6 @@
 		public DateTime RequestDateTime { get; set; }
 		public string? Kiz { get; set; } // Nullable
 		public string? Recipient { get; set; } // Nullable
-		public string? ServerName { get; set; }
+		public string? City { get; set; }
 	}
 }

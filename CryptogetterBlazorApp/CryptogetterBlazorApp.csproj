@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<!-- Включение Windows Authentication -->
     <UseWindowsAuthentication>true</UseWindowsAuthentication>
+	<!-- Указываем только нужные культуры -->
+	<SatelliteResourceLanguages>en;ru</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
