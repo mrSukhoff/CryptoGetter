@@ -11,12 +11,12 @@
 			_dataMinerFactory = new DataMinerFactory();
 		}
 
-		public async Task<string> ExtractCode (string kiz)
+		public async Task<(string,string)> ExtractCode (string kiz)
 		{
 			Server server = DefineServer(kiz);
 			var dataMiner = _dataMinerFactory.GetDataMiner(server);
 			var (cryptoKey, cryptoCode) = await dataMiner.GetCrypto(kiz);
-			return $"01{kiz[..14]}21{kiz[14..]}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}";
+			return ($"01{kiz[..14]}21{kiz[14..]}{char.ConvertFromUtf32(29)}91{cryptoKey}{char.ConvertFromUtf32(29)}92{cryptoCode}", server.Name);
 		}
 
 		private Server DefineServer(string kiz)

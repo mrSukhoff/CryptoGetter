@@ -26,7 +26,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddAuthorizationBuilder()
 	.AddPolicy("GeneratorAccessPolicy", policy =>
-		policy.RequireRole("PS\\dmx.generators", "PS\\dmx.logs.read"))
+		policy.RequireRole("PS\\dmx.generators"))
 	.AddPolicy("LogsReadPolicy", policy =>
 		policy.RequireRole("PS\\dmx.logs.read"))
 	.SetFallbackPolicy(new AuthorizationPolicyBuilder()

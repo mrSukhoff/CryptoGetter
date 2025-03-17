@@ -52,7 +52,7 @@
     private string ErrorMessage { get; set; } = "";
     private byte[]? ImageBytes { get; set; }
     private string? userName;
-
+    
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -82,7 +82,7 @@
                 return;
             }
 
-            string data = await CodeExtractor.ExtractCode(Kiz);
+            (string data, string serverName) = await CodeExtractor.ExtractCode(Kiz);
 
             await Task.Run(() =>
             {
@@ -112,7 +112,8 @@
                 UserName = userName ?? "Unknown",
                 RequestDateTime = DateTime.UtcNow,
                 Kiz = Kiz,
-                Recipient = Recipient
+                Recipient = Recipient,
+                ServerName = serverName
             };
             DbContext.CodeGenerationLogs.Add(logEntry);
             await DbContext.SaveChangesAsync();

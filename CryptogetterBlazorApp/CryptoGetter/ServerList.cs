@@ -33,8 +33,8 @@
 							_ => throw new ArgumentException("Неверный формат типа сервера в файле server.ini"),
 						};
 						string gs1Prefix = word[4]; // Читаем префикс GS1
-						Server server = new Server
-                        {
+						Server server = new()
+						{
                             Name = name,
                             FQN = fqn,
                             DBName = dbname,

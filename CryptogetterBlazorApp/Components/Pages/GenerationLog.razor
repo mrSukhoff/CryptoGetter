@@ -27,6 +27,7 @@ else
                 <th>Дата и время (UTC)</th>
                 <th>КИЗ</th>
                 <th>Получатель</th>
+                <th>Сервер</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,7 @@ else
                     <td>@log.RequestDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
                     <td>@log.Kiz</td>
                     <td>@log.Recipient</td>
+                    <td>@log.ServerName</td>
                 </tr>
             }
         </tbody>
