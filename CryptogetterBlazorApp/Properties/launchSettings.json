@@ -4,7 +4,7 @@
     "windowsAuthentication": true,
     "anonymousAuthentication": false,
     "iisExpress": {
-      "applicationUrl": "http://10.1.4.12:1866", // Заменяем localhost на IP-адрес
+      "applicationUrl": "http://localhost:1866", // Заменяем localhost на IP-адрес
       "sslPort": 0
     }
   },
