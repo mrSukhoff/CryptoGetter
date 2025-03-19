@@ -5,7 +5,7 @@
     "anonymousAuthentication": false,
     "iisExpress": {
       "applicationUrl": "http://localhost:1866", // Заменяем localhost на IP-адрес
-      "sslPort": 0
+      "sslPort": 1
     }
   },
   "profiles": {
