@@ -1,4 +1,5 @@
 ﻿@page "/generationLog"
+@rendermode InteractiveServer
 @attribute [Authorize(Policy = "LogsReadPolicy")]
 
 @using CryptogetterBlazorApp.LogDb
@@ -7,52 +8,165 @@
 
 @inject AppDbContext DbContext
 
-<h3>Лог генерации кодов Datamatrix</h3>
+<div class="page">
+    <main>
+        <article>
+            <h3 class="mb-4">Лог генерации кодов Datamatrix</h3>
 
-@if (logs == null)
-{
-    <p>Загрузка...</p>
-}
-else if (!logs.Any())
-{
-    <p>Логов пока нет.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Пользователь</th>
-                <th>Дата и время (UTC)</th>
-                <th>КИЗ</th>
-                <th>Получатель</th>
-                <th>Город</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var log in logs)
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                <div>
+                    <label class="form-label">ID</label>
+                    <input type="number" class="form-control" @bind="idFilter" />
+                </div>
+                <div>
+                    <label class="form-label">Пользователь</label>
+                    <input type="text" class="form-control" @bind="userNameFilter" />
+                </div>
+                <div>
+                    <label class="form-label">Дата (UTC)</label>
+                    <input type="date" class="form-control" @bind="dateFilter" />
+                </div>
+                <div>
+                    <label class="form-label">КИЗ</label>
+                    <input type="text" class="form-control" @bind="kizFilter" />
+                </div>
+                <div>
+                    <label class="form-label">Город</label>
+                    <select class="form-control" @bind="cityFilter">
+                        <option value="">Все города</option>
+                        @foreach (var city in availableCities)
+                        {
+                            <option value="@city">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="align-self-end">
+                    <button class="btn btn-primary ms-2" @onclick="ApplyFilters">Применить</button>
+                    <button class="btn btn-primary ms-2" @onclick="ClearFilters">Очистить</button>
+                </div>
+            </div>
+
+            @if (logs == null)
             {
-                <tr>
-                    <td>@log.Id</td>
-                    <td>@log.UserName</td>
-                    <td>@log.RequestDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                    <td>@log.Kiz</td>
-                    <td>@log.Recipient</td>
-                    <td>@log.City</td>
-                </tr>
+                <p>Загрузка...</p>
             }
-        </tbody>
-    </table>
-}
+            else if (!logs.Any())
+            {
+                <p>Логов пока нет.</p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Пользователь</th>
+                            <th>Дата и время (UTC)</th>
+                            <th>КИЗ</th>
+                            <th>Получатель</th>
+                            <th>Город</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in logs)
+                        {
+                            <tr>
+                                <td>@log.Id</td>
+                                <td>@log.UserName</td>
+                                <td>@log.RequestDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td>@log.Kiz</td>
+                                <td>@log.Recipient</td>
+                                <td>@log.City</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </article>
+    </main>
+</div>
 
 @code {
-    private List<CodeGenerationLog>? logs; // Измените на nullable
+    private List<CodeGenerationLog>? logs;
+    private List<string> availableCities = new List<string>();
+
+    // Фильтры
+    private int? idFilter;
+    private string? userNameFilter;
+    private DateTime? dateFilter;
+    private string? kizFilter;
+    private string? cityFilter;
 
     protected override async Task OnInitializedAsync()
     {
-        logs = await DbContext.CodeGenerationLogs
-            .OrderByDescending(l => l.RequestDateTime)
-            .ToListAsync();
+        availableCities = (await DbContext.CodeGenerationLogs
+            .Select(l => l.City)
+            .Distinct()
+            .Where(c => !string.IsNullOrEmpty(c))
+            .OrderBy(c => c)
+            .ToListAsync())!;
+
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            var query = DbContext.CodeGenerationLogs.AsQueryable();
+
+            if (idFilter.HasValue)
+            {
+                query = query.Where(l => l.Id == idFilter.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(userNameFilter))
+            {
+                var trimmedUserName = userNameFilter.Trim();
+                query = query.Where(l => l.UserName != null && l.UserName.Contains(trimmedUserName));
+            }
+
+            if (dateFilter.HasValue)
+            {
+                query = query.Where(l => l.RequestDateTime.Date == dateFilter.Value.Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(kizFilter))
+            {
+                var trimmedKiz = kizFilter.Trim();
+                query = query.Where(l => l.Kiz != null && l.Kiz.Contains(trimmedKiz));
+            }
+
+            if (!string.IsNullOrWhiteSpace(cityFilter))
+            {
+                query = query.Where(l => l.City != null && l.City == cityFilter);
+            }
+
+            logs = await query
+                .OrderByDescending(l => l.RequestDateTime)
+                .ToListAsync();
+        }
+        catch (Exception)
+        {
+            logs = new List<CodeGenerationLog>();
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task ApplyFilters()
+    {
+        await LoadData();
+    }
+
+    private async Task ClearFilters()
+    {
+        idFilter = null;
+        userNameFilter = null;
+        dateFilter = null;
+        kizFilter = null;
+        cityFilter = null;
+
+        await LoadData();
     }
 }
