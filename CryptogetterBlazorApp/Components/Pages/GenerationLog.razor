@@ -9,6 +9,40 @@
 
 <h3>Лог генерации кодов Datamatrix</h3>
 
+<div class="filter-container">
+    <div class="filter-item">
+        <label>ID</label>
+        <input type="number" @bind="idFilter" />
+    </div>
+    <div class="filter-item">
+        <label>Пользователь</label>
+        <input type="text" @bind="userNameFilter" />
+    </div>
+    <div class="filter-item">
+        <label>Дата (UTC)</label>
+        <input type="date" @bind="dateFilter" />
+    </div>
+    <div class="filter-item">
+        <label>КИЗ</label>
+        <input type="text" @bind="kizFilter" />
+    </div>
+    <div class="filter-item">
+        <label>Получатель</label>
+        <input type="text" @bind="recipientFilter" />
+    </div>
+    <div class="filter-item">
+        <label>Город</label>
+        <select @bind="cityFilter">
+            <option value="">Все города</option>
+            @foreach (var city in availableCities)
+            {
+                <option value="@city">@city</option>
+            }
+        </select>
+    </div>
+    <button class="apply-button" @onclick="ApplyFilters">Применить</button>
+</div>
+
 @if (logs == null)
 {
     <p>Загрузка...</p>
@@ -47,12 +81,137 @@ else
 }
 
 @code {
-    private List<CodeGenerationLog>? logs; // Измените на nullable
+    private List<CodeGenerationLog>? logs;
+    private List<string> availableCities = new List<string>();
+
+    // Фильтры
+    private int? idFilter;
+    private string? userNameFilter;
+    private DateTime? dateFilter;
+    private string? kizFilter;
+    private string? recipientFilter;
+    private string? cityFilter;
 
     protected override async Task OnInitializedAsync()
     {
-        logs = await DbContext.CodeGenerationLogs
-            .OrderByDescending(l => l.RequestDateTime)
-            .ToListAsync();
+        Console.WriteLine("Компонент инициализируется...");
+        // Загружаем доступные города
+        availableCities = (await DbContext.CodeGenerationLogs
+            .Select(l => l.City)
+            .Distinct()
+            .Where(c => !string.IsNullOrEmpty(c))
+            .OrderBy(c => c)
+            .ToListAsync())!;
+        Console.WriteLine($"Загружено городов: {availableCities.Count}");
+
+        // Инициальная загрузка данных
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            Console.WriteLine("Загрузка данных началась...");
+            var query = DbContext.CodeGenerationLogs.AsQueryable();
+
+            // Применяем фильтры с отладкой
+            if (idFilter.HasValue)
+            {
+                Console.WriteLine($"Фильтр ID: {idFilter.Value}");
+                query = query.Where(l => l.Id == idFilter.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(userNameFilter))
+            {
+                var trimmedUserName = userNameFilter.Trim();
+                Console.WriteLine($"Фильтр UserName: {trimmedUserName}");
+                query = query.Where(l => l.UserName != null && l.UserName.Contains(trimmedUserName));
+            }
+
+            if (dateFilter.HasValue)
+            {
+                Console.WriteLine($"Фильтр Date: {dateFilter.Value.Date}");
+                query = query.Where(l => l.RequestDateTime.Date == dateFilter.Value.Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(kizFilter))
+            {
+                var trimmedKiz = kizFilter.Trim();
+                Console.WriteLine($"Фильтр Kiz: {trimmedKiz}");
+                query = query.Where(l => l.Kiz != null && l.Kiz.Contains(trimmedKiz));
+            }
+
+            if (!string.IsNullOrWhiteSpace(recipientFilter))
+            {
+                var trimmedRecipient = recipientFilter.Trim();
+                Console.WriteLine($"Фильтр Recipient: {trimmedRecipient}");
+                query = query.Where(l => l.Recipient != null && l.Recipient.Contains(trimmedRecipient));
+            }
+
+            if (!string.IsNullOrWhiteSpace(cityFilter))
+            {
+                Console.WriteLine($"Фильтр City: {cityFilter}");
+                query = query.Where(l => l.City != null && l.City == cityFilter);
+            }
+
+            // Выполняем запрос
+            logs = await query
+                .OrderByDescending(l => l.RequestDateTime)
+                .ToListAsync();
+
+            Console.WriteLine($"Загружено записей: {logs.Count}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при загрузке данных: {ex.Message}");
+            logs = new List<CodeGenerationLog>();
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task ApplyFilters()
+    {
+        Console.WriteLine("Кнопка 'Применить' нажата!");
+        Console.WriteLine($"Текущие значения фильтров: ID={idFilter}, User={userNameFilter}, Date={dateFilter}, Kiz={kizFilter}, Recipient={recipientFilter}, City={cityFilter}");
+        await LoadData();
     }
 }
+
+<style>
+    .filter-container {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .filter-item label {
+            margin-bottom: 5px;
+        }
+
+        .filter-item input, .filter-item select {
+            padding: 5px;
+            min-width: 150px;
+        }
+
+    .apply-button {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .apply-button:hover {
+            background-color: #0056b3;
+        }
+</style>
