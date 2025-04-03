@@ -31,12 +31,12 @@
                     <input type="text" class="form-control" @bind="kizFilter" />
                 </div>
                 <div>
-                    <label class="form-label">Город</label>
+                    <label class="form-label">Предприятие</label>
                     <select class="form-control" @bind="cityFilter">
-                        <option value="">Все города</option>
-                        @foreach (var city in availableCities)
+                        <option value="">Все предприятия</option>
+                        @foreach (var factory in availableCities)
                         {
-                            <option value="@city">@city</option>
+                            <option value="@factory">@factory</option>
                         }
                     </select>
                 </div>
@@ -64,7 +64,7 @@
                             <th>Дата и время (UTC)</th>
                             <th>КИЗ</th>
                             <th>Получатель</th>
-                            <th>Город</th>
+                            <th>Предприятие</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,7 +76,7 @@
                                 <td>@log.RequestDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                 <td>@log.Kiz</td>
                                 <td>@log.Recipient</td>
-                                <td>@log.City</td>
+                                <td>@log.Factory</td>
                             </tr>
                         }
                     </tbody>
@@ -100,7 +100,7 @@
     protected override async Task OnInitializedAsync()
     {
         availableCities = (await DbContext.CodeGenerationLogs
-            .Select(l => l.City)
+            .Select(l => l.Factory)
             .Distinct()
             .Where(c => !string.IsNullOrEmpty(c))
             .OrderBy(c => c)
@@ -139,7 +139,7 @@
 
             if (!string.IsNullOrWhiteSpace(cityFilter))
             {
-                query = query.Where(l => l.City != null && l.City == cityFilter);
+                query = query.Where(l => l.Factory != null && l.Factory == cityFilter);
             }
 
             logs = await query

@@ -7,6 +7,6 @@
 		public DateTime RequestDateTime { get; set; }
 		public string? Kiz { get; set; } // Nullable
 		public string? Recipient { get; set; } // Nullable
-		public string? City { get; set; }
+		public string? Factory { get; set; }
 	}
 }

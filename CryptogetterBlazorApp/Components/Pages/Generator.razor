@@ -83,7 +83,7 @@
             }
 
             (string data, string serverName) = await CodeExtractor.ExtractCode(Kiz);
-            string city = serverName.Split(" - ", StringSplitOptions.None)[1];
+            string factory = serverName.Split(" - ", StringSplitOptions.None)[1];
 
             await Task.Run(() =>
             {
@@ -114,7 +114,7 @@
                 RequestDateTime = DateTime.UtcNow,
                 Kiz = Kiz,
                 Recipient = Recipient,
-                City = city
+                Factory = factory
             };
             DbContext.CodeGenerationLogs.Add(logEntry);
             await DbContext.SaveChangesAsync();
