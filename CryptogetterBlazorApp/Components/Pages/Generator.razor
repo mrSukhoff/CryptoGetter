@@ -12,6 +12,8 @@
 @using ZXing
 @using ZXing.Common
 @using ZXing.Windows.Compatibility
+@using System.Security.Principal
+@using System.DirectoryServices.AccountManagement
 
 @inject IJSRuntime JSRuntime
 @inject CodeExtractor CodeExtractor
@@ -57,7 +59,30 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        userName = user.Identity?.Name ?? "Not authenticated";
+
+        if (user.Identity is WindowsIdentity windowsIdentity)
+        {
+            try
+            {
+                // Получаем ФИО из Active Directory
+                using (var context = new PrincipalContext(ContextType.Domain))
+                {
+                    var principal = UserPrincipal.FindByIdentity(context, windowsIdentity.Name);
+                    userName = principal?.DisplayName ?? windowsIdentity.Name ?? "Not authenticated";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Если AD недоступен, используем логин
+                userName = windowsIdentity.Name ?? "Not authenticated";
+                Console.WriteLine($"Ошибка получения ФИО: {ex.Message}");
+            }
+        }
+        else
+        {
+            userName = user.Identity?.Name ?? "Not authenticated";
+        }
+
         Console.WriteLine($"User: {userName}");
     }
 
@@ -88,15 +113,15 @@
             await Task.Run(() =>
             {
                 var writer = new BarcodeWriter<Bitmap>
-                {
-                    Format = BarcodeFormat.DATA_MATRIX,
-                    Options = new EncodingOptions
                     {
-                        Width = 300,
-                        Height = 300
-                    },
-                    Renderer = new BitmapRenderer()
-                };
+                        Format = BarcodeFormat.DATA_MATRIX,
+                        Options = new EncodingOptions
+                        {
+                            Width = 300,
+                            Height = 300
+                        },
+                        Renderer = new BitmapRenderer()
+                    };
 
                 using (var bitmap = writer.Write(data))
                 using (var stream = new MemoryStream())
@@ -109,13 +134,13 @@
 
             // Логирование в базу данных
             var logEntry = new CodeGenerationLog
-            {
-                UserName = userName ?? "Unknown",
-                RequestDateTime = DateTime.UtcNow,
-                Kiz = Kiz,
-                Recipient = Recipient,
-                Factory = factory
-            };
+                {
+                    UserName = userName ?? "Unknown",
+                    RequestDateTime = DateTime.UtcNow,
+                    Kiz = Kiz,
+                    Recipient = Recipient,
+                    Factory = factory
+                };
             DbContext.CodeGenerationLogs.Add(logEntry);
             await DbContext.SaveChangesAsync();
 
