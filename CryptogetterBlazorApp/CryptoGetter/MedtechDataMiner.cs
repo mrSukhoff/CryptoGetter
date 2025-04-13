@@ -31,6 +31,7 @@ namespace CryptogetterBlazorApp.CryptoGetter
 				Password = "NdVj4K?9",
 				Charset = "UTF8",
 				Role = "RDB$ADMIN",
+				ConnectionTimeout = 20
 			};
 
 			string connectionString = connectionStringBuilder.ToString();
