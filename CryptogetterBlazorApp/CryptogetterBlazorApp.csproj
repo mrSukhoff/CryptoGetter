@@ -8,6 +8,8 @@
     <UseWindowsAuthentication>true</UseWindowsAuthentication>
 	<!-- Указываем только нужные культуры -->
 	<SatelliteResourceLanguages>en;ru</SatelliteResourceLanguages>
+	<Platforms>AnyCPU;x64</Platforms>
+	<RunAOTCompilation>true</RunAOTCompilation>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +22,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.2" />
-    <PackageReference Include="ZXing.Net" Version="0.16.10" />
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.13" />
 	<None Include="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
