@@ -6,7 +6,7 @@ namespace CryptogetterBlazorApp;
 public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
 	private readonly ILogger<CustomAuthorizationMiddlewareResultHandler> _logger;
-	private static readonly Dictionary<AuthorizationPolicy, string> PolicyNames = new Dictionary<AuthorizationPolicy, string>();
+	private static readonly Dictionary<AuthorizationPolicy, string> PolicyNames = new();
 
 	public CustomAuthorizationMiddlewareResultHandler(ILogger<CustomAuthorizationMiddlewareResultHandler> logger)
 	{
@@ -23,20 +23,25 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
 	{
 		var userName = context.User.Identity?.IsAuthenticated == true ? context.User.Identity.Name : "Anonymous";
 		var policyName = PolicyNames.TryGetValue(policy, out var name) ? name : "Unknown";
+		var clientIp = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
 
 		if (authorizeResult.Succeeded)
 		{
+			_logger.LogInformation("Access granted for user {User} on policy {Policy}. Path: {Path}, Client IP: {ClientIp}",
+				userName, policyName, context.Request.Path, clientIp);
 			await next(context);
 		}
 		else if (authorizeResult.Forbidden)
 		{
-			_logger.LogWarning("Access denied for user {User} on policy {Policy}. Path: {Path}", userName, policyName, context.Request.Path);
+			_logger.LogWarning("Access denied for user {User} on policy {Policy}. Path: {Path}, Client IP: {ClientIp}",
+				userName, policyName, context.Request.Path, clientIp);
 			context.Response.StatusCode = StatusCodes.Status403Forbidden;
 			await context.Response.WriteAsync("Access denied. Insufficient permissions.");
 		}
 		else if (context.User.Identity?.IsAuthenticated != true)
 		{
-			_logger.LogWarning("Unauthorized access attempt by {User}. Path: {Path}", userName, context.Request.Path);
+			_logger.LogWarning("Unauthorized access attempt by {User}. Path: {Path}, Client IP: {ClientIp}",
+				userName, context.Request.Path, clientIp);
 			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 			await context.Response.WriteAsync("Unauthorized. Please log in.");
 		}
