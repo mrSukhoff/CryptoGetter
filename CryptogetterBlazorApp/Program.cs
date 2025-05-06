@@ -1,28 +1,43 @@
+using CryptogetterBlazorApp;
 using CryptogetterBlazorApp.Components;
 using CryptogetterBlazorApp.CryptoGetter;
 using CryptogetterBlazorApp.LogDb;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Настройка Serilog
+Log.Logger = new LoggerConfiguration()
+	.MinimumLevel.Information()
+	.MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+	.Enrich.FromLogContext()
+	.WriteTo.File(
+		path: "logs/app-.log",
+		rollingInterval: RollingInterval.Day,
+		outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+	.CreateLogger();
+
+builder.Host.UseSerilog();
+
+// Razor и Blazor
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 builder.Services.AddServerSideBlazor();
 
+// Сервисы
 builder.Services.AddSingleton<ServerList>();
 builder.Services.AddSingleton<CodeExtractor>();
 
+
+//Авторизация
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 	.AddNegotiate();
 
 builder.Services.AddHttpContextAccessor();
-
-// Настройка SQLite
-builder.Services.AddDbContext<AppDbContext>(options =>
-	options.UseSqlite("Data Source=app.db")); // Файл базы данных будет в корне проекта
 
 builder.Services.AddAuthorizationBuilder()
 	.AddPolicy("GeneratorAccessPolicy", policy =>
@@ -34,6 +49,10 @@ builder.Services.AddAuthorizationBuilder()
 		.Build());
 
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
+
+// Настройка SQLite
+builder.Services.AddDbContext<AppDbContext>(options =>
+	options.UseSqlite("Data Source=app.db")); // Файл базы данных будет в корне проекта
 
 var app = builder.Build();
 
@@ -70,22 +89,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
-{
-	public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
-	{
-		if (authorizeResult.Succeeded)
-		{
-			await next(context);
-		}
-		else if (authorizeResult.Forbidden)
-		{
-			context.Response.StatusCode = StatusCodes.Status403Forbidden;
-		}
-		else if (context.User.Identity?.IsAuthenticated != true) // Безопасная проверка
-		{
-			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-		}
-	}
-}
