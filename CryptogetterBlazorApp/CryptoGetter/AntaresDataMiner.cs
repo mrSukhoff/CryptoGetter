@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace CryptogetterBlazorApp.CryptoGetter
 {
