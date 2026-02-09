@@ -30,7 +30,7 @@ builder.Services.AddServerSideBlazor();
 
 // Сервисы
 builder.Services.AddSingleton<ServerList>();
-builder.Services.AddSingleton<CodeExtractor>();
+builder.Services.AddSingleton<CodeGenerationService>();
 
 //Авторизация
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)

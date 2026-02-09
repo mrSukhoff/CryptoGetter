@@ -12,19 +12,27 @@ namespace CryptogetterBlazorApp.CryptoGetter
 			_server = server;
 		}
 
-		public async Task<(string, string)> GetCrypto(string sGTIN)
+		public async Task<DataMinerResult> GetCodeAsync(string sgtin)
 		{
-			if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
+			// 1. Валидация входных данных
+			if (string.IsNullOrWhiteSpace(sgtin) || sgtin.Length != 27)
+			{
+				return DataMinerResult.Fail(DataMinerError.InvalidInput);
+			}
 
-			string gtin = sGTIN[..14];
-			string serial = sGTIN[14..];
+			string gtin = sgtin[..14];
+			string serial = sgtin[14..];
 
-			sGTIN = "01" + gtin + "21" + serial;
+			// Medtech хранит код в GS1-формате
+			string gs1Code = $"01{gtin}21{serial}";
 
-			string commanString = $"SELECT c.gs1field91, c.gs1field92 FROM mark_un_code_gs1 AS c JOIN mark_un_code AS g " +
-				$"ON c.unid = g.unid WHERE g.check_bar_code = '{sGTIN}'";
+			string commandString =
+				"SELECT c.gs1field91, c.gs1field92 " +
+				"FROM mark_un_code_gs1 AS c " +
+				"JOIN mark_un_code AS g ON c.unid = g.unid " +
+				"WHERE g.check_bar_code = @Gs1Code";
 
-			FbConnectionStringBuilder connectionStringBuilder = new()
+			var csb = new FbConnectionStringBuilder
 			{
 				Database = $"{_server.FQN}:{_server.DBName}",
 				UserID = "FS_ADMIN",
@@ -34,30 +42,41 @@ namespace CryptogetterBlazorApp.CryptoGetter
 				ConnectionTimeout = 20
 			};
 
-			string connectionString = connectionStringBuilder.ToString();
+			string cryptoKey = string.Empty;
+			string cryptoCode = string.Empty;
 
-			string cryptoKey = "", cryptoCode = "";
-
-			using (var connection = new FbConnection(connectionString))
+			try
 			{
-				await connection.OpenAsync(); // Асинхронное открытие соединения
-				using (FbCommand cmd = new FbCommand(commanString, connection) { CommandType = CommandType.Text })
+				using var connection = new FbConnection(csb.ToString());
+				await connection.OpenAsync();
+
+				using var cmd = new FbCommand(commandString, connection)
 				{
-					using (FbDataReader reader = await cmd.ExecuteReaderAsync()) // Асинхронное выполнение запроса
-					{
-						while (await reader.ReadAsync()) // Асинхронный перебор строк
-						{
-							cryptoKey = reader.GetString(0);
-							cryptoCode = reader.GetString(1);
-						}
-					}
+					CommandType = CommandType.Text
+				};
+				cmd.Parameters.AddWithValue("@Gs1Code", gs1Code);
+
+				using var reader = await cmd.ExecuteReaderAsync();
+				if (await reader.ReadAsync())
+				{
+					cryptoKey = reader.GetString(0);
+					cryptoCode = reader.GetString(1);
 				}
 			}
+			catch (FbException)
+			{
+				// Ошибка подключения / выполнения запроса
+				return DataMinerResult.Fail(DataMinerError.SourceUnavailable);
+			}
 
+			// 2. Проверка результата
 			if (string.IsNullOrEmpty(cryptoKey) || string.IsNullOrEmpty(cryptoCode))
-				throw new Exception($"Криптоданные для КИЗ {sGTIN} не найдены в базе {_server.DBName}");
+			{
+				return DataMinerResult.Fail(DataMinerError.NotFound);
+			}
 
-			return (cryptoKey, cryptoCode);
+			// 3. Успех
+			return DataMinerResult.Success($"{cryptoKey}:{cryptoCode}");
 		}
 	}
 }

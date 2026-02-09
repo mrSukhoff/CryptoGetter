@@ -1,12 +1,15 @@
 ﻿namespace CryptogetterBlazorApp.CryptoGetter
 {
-    internal class DataMinerFactory
+    public class DataMinerFactory
     {
-        public IDataMiner GetDataMiner(Server server)
+        public IDataMiner? TryGetDataMiner(Server server)
         {
-            if (server.Type == ServerType.Antares) return new AntaresDataMiner(server);
-            if (server.Type == ServerType.Medtech) return new MedtechDataMiner(server);
-            throw new Exception("Класс типа сервера не описан!");
-        }
+			return server.Type switch
+			{
+				ServerType.Antares => new AntaresDataMiner(server),
+				ServerType.Medtech => new MedtechDataMiner(server),
+				_ => null
+			};
+		}
     }
 }
