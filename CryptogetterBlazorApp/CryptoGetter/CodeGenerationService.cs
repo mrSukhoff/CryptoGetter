@@ -3,14 +3,14 @@
 public class CodeGenerationService
 {
 	private readonly ServerList _serverList;
-	private readonly DataMinerFactory _factory;
 	private readonly ILogger<CodeGenerationService> _logger;
+	private readonly DataMinerFactory _factory;
 
-	public CodeGenerationService(ServerList serverList, DataMinerFactory factory, ILogger<CodeGenerationService> logger)
+	public CodeGenerationService(ServerList serverList, ILogger<CodeGenerationService> logger)
 	{
 		_serverList = serverList;
-		_factory = factory;
 		_logger = logger;
+		_factory = new();
 	}
 
 	public async Task<CodeGenerationResult> GenerateAsync(string kiz)
