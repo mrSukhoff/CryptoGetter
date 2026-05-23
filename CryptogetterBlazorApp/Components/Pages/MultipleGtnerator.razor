@@ -1,0 +1,154 @@
+﻿@page "/multi"
+@rendermode InteractiveServer
+@@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
+
+@using System.IO.Compression
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IJSRuntime JSRuntime
+@inject CodeGenerationService CodeGenerator
+
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+@using CryptogetterBlazorApp.CryptoGetter
+@using CryptogetterBlazorApp.LogDb
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using ZXing
+@using ZXing.Common
+@using ZXing.Windows.Compatibility
+@using System.Security.Principal
+@using System.DirectoryServices.AccountManagement
+
+<h3>Генерация из файла</h3>
+
+<InputFile OnChange="HandleFileUpload" />
+
+<br />
+<br />
+
+<div class="mb-3">
+    
+    <label for="recipientInput" class="form-label">
+        Наименование организации запросившей код:
+    </label>
+
+    <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
+
+</div>
+
+<button @onclick="ProcessFile" disabled="@(_fileBytes == null)">
+    Сгенерировать
+</button>
+
+@if (_isProcessing)
+{
+    <p>Обработка...</p>
+}
+
+@code {
+    private byte[]? _fileBytes;
+    private bool _isProcessing = false;
+    private string? Recipient;
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        using var ms = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(ms);
+        _fileBytes = ms.ToArray();
+    }
+
+    private async Task ProcessFile()
+    {
+        if (_fileBytes == null)
+            return;
+
+        _isProcessing = true;
+
+        try
+        {
+            // 1. Читаем коды из файла
+            var text = System.Text.Encoding.UTF8.GetString(_fileBytes);
+            var codes = text
+                .Split(new[] { '\r', '\n', ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
+
+            // 2. Генерация GS1
+            var results = await CodeGenerator.GenerateMultipleAsync(codes);
+
+            // 3. Создание ZIP
+            using var zipStream = new MemoryStream();
+
+            using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+            {
+                for (int i = 0; i < results.Count; i++)
+                {
+                    var res = results[i];
+
+                    if (!res.IsSuccess)
+                        continue;
+
+                    var imageBytes = GenerateBarcode(res.Code!);
+
+                    var entry = archive.CreateEntry($"code_{i + 1}.png");
+
+                    using var entryStream = entry.Open();
+                    await entryStream.WriteAsync(imageBytes);
+                }
+            }
+
+            zipStream.Position = 0;
+
+            // 4. Скачать
+            await JSRuntime.InvokeVoidAsync(
+                "downloadFile",
+                "codes.zip",
+                Convert.ToBase64String(zipStream.ToArray())
+            );
+        }
+        finally
+        {
+            _isProcessing = false;
+        }
+    }
+
+    private byte[] GenerateBarcode(string content)
+    {
+        var writer = new BarcodeWriterPixelData
+        {
+            Format = BarcodeFormat.DATA_MATRIX,
+            Options = new EncodingOptions
+            {
+                Height = 200,
+                Width = 200,
+                Margin = 2
+            }
+        };
+
+        var pixelData = writer.Write(content);
+
+        using var bitmap = new Bitmap(pixelData.Width, pixelData.Height, PixelFormat.Format32bppRgb);
+        var bitmapData = bitmap.LockBits(
+            new Rectangle(0, 0, pixelData.Width, pixelData.Height),
+            ImageLockMode.WriteOnly,
+            PixelFormat.Format32bppRgb);
+
+        try
+        {
+            System.Runtime.InteropServices.Marshal.Copy(
+                pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
+        }
+        finally
+        {
+            bitmap.UnlockBits(bitmapData);
+        }
+
+        using var ms = new MemoryStream();
+        bitmap.Save(ms, ImageFormat.Png);
+        return ms.ToArray();
+    }
+}

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,12 +14,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Настройка Serilog
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Information()
-	.MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+	.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+	.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+	.MinimumLevel.Override("System", LogEventLevel.Warning)
+	// (опционально) ещё сильнее глушим роутинг
+	.MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Error)
 	.Enrich.FromLogContext()
 	.WriteTo.File(
 		path: "logs/app-.log",
 		rollingInterval: RollingInterval.Day,
-		outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+		outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] " +
+		"[User: {User}] [IP: {IP}] [Page: {Page}] " +
+		"{Message:lj} {Properties:j}{NewLine}{Exception}")
 	.CreateLogger();
 
 builder.Host.UseSerilog();
@@ -33,6 +40,7 @@ builder.Services.AddSingleton<ServerList>();
 builder.Services.AddSingleton<CodeGenerationService>();
 
 //Авторизация
+/*
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 	.AddNegotiate();
 
@@ -48,6 +56,7 @@ builder.Services.AddAuthorizationBuilder()
 		.Build());
 
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
+*/
 
 // Настройка SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -73,8 +82,8 @@ app.UseStatusCodePages(async context =>
 	}
 });
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

@@ -1,6 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
+@@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
 
 @using System.Drawing
 @using System.Drawing.Imaging
@@ -108,7 +108,17 @@
             }
 
             var result = await CodeGenerator.GenerateAsync(sgtin);
-            string factory = result.ServerName.Split(" - ", StringSplitOptions.None)[1];
+            string factory = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(result.ServerName))
+            {
+                var parts = result.ServerName.Split(" - ", StringSplitOptions.None);
+
+                if (parts.Length > 1)
+                {
+                    factory = parts[1];
+                }
+            }
 
             await Task.Run(() =>
             {

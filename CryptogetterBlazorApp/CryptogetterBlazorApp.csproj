@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\download.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="server.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

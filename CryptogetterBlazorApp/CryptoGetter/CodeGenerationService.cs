@@ -13,47 +13,81 @@ public class CodeGenerationService
 		_factory = new();
 	}
 
-	public async Task<CodeGenerationResult> GenerateAsync(string kiz)
+	public async Task<CodeGenerationResult> GenerateAsync(string ic)
 	{
 		// 1. Валидация
-		if (string.IsNullOrWhiteSpace(kiz) || kiz.Length != 27)
+		if (string.IsNullOrWhiteSpace(ic) || ic.Length != 27)
 		{
 			return CodeGenerationResult.Fail(CodeGenerationError.InvalidInput);
 		}
 
 		// 2. Определяем сервер
-		var server = DefineServer(kiz);
+		Server? server = DefineServer(ic);
 		if (server == null)
 		{
 			return CodeGenerationResult.Fail(CodeGenerationError.UnknownPrefix);
 		}
 
 		// 3. Получаем DataMiner
-		var miner = _factory.TryGetDataMiner(server);
+		IDataMiner? miner = _factory.TryGetDataMiner(server);
 		if (miner == null)
 		{
 			return CodeGenerationResult.Fail(CodeGenerationError.UnknownPrefix);
 		}
 
 		// 4. Запрашиваем код
-		var minerResult = await miner.GetCodeAsync(kiz);
+		DataMinerResult minerResult = await miner.GetCodeAsync(ic);
 		if (!minerResult.IsSuccess)
 		{
 			return MapMinerError(minerResult.Error);
 		}
 
 		// 5. Формируем GS1
-		string gs1 = BuildGs1(kiz, minerResult.Code!);
+		string gs1 = BuildGs1(ic, minerResult.Code!);
 
-		return CodeGenerationResult.Success(gs1,server.Name);
+		return CodeGenerationResult.Success(gs1, server.Name);
 	}
+
+	public async Task<List<CodeGenerationResult>> GenerateMultipleAsync(string[] iCs)
+	{
+		var results = new List<CodeGenerationResult>();
+
+		if (iCs == null || iCs.Length == 0)
+		{
+			results.Add(CodeGenerationResult.Fail(CodeGenerationError.InvalidInput));
+			return results;
+		}
+
+		foreach (var ic in iCs)
+		{
+			if (string.IsNullOrWhiteSpace(ic))
+			{
+				results.Add(CodeGenerationResult.Fail(CodeGenerationError.InvalidInput));
+				continue;
+			}
+
+			try
+			{
+				var result = await GenerateAsync(ic);
+				results.Add(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error while processing IC: {IC}", ic);
+				results.Add(CodeGenerationResult.Fail(CodeGenerationError.InternalError));
+			}
+		}
+
+		return results;
+	}
+
 
 	// ---------------- private helpers ----------------
 
-	private Server? DefineServer(string kiz)
+	private Server? DefineServer(string ic)
 	{
-		string gs1Prefix = kiz[..8];
-		string serial = kiz[14..];
+		string gs1Prefix = ic[..8];
+		string serial = ic[14..];
 		bool hasLetters = serial.Any(char.IsLetter);
 
 		var serverType = hasLetters
@@ -82,13 +116,13 @@ public class CodeGenerationService
 		};
 	}
 
-	private static string BuildGs1(string kiz, string cryptoData)
+	private static string BuildGs1(string ic, string cryptoData)
 	{
 		// cryptoData = "key:code"
 		var parts = cryptoData.Split(':', 2);
 
-		string gtin = kiz[..14];
-		string serial = kiz[14..];
+		string gtin = ic[..14];
+		string serial = ic[14..];
 		string gs = char.ConvertFromUtf32(29);
 
 		return $"01{gtin}21{serial}{gs}91{parts[0]}{gs}92{parts[1]}";
