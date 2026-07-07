@@ -18,34 +18,34 @@ public class CodeGenerationService
 		// 1. Валидация
 		if (string.IsNullOrWhiteSpace(ic) || ic.Length != 27)
 		{
-			return CodeGenerationResult.Fail(CodeGenerationError.InvalidInput);
+			return CodeGenerationResult.Fail(ic, CodeGenerationError.InvalidInput);
 		}
 
 		// 2. Определяем сервер
 		Server? server = DefineServer(ic);
 		if (server == null)
 		{
-			return CodeGenerationResult.Fail(CodeGenerationError.UnknownPrefix);
+			return CodeGenerationResult.Fail(ic, CodeGenerationError.UnknownPrefix);
 		}
 
 		// 3. Получаем DataMiner
 		IDataMiner? miner = _factory.TryGetDataMiner(server);
 		if (miner == null)
 		{
-			return CodeGenerationResult.Fail(CodeGenerationError.UnknownPrefix);
+			return CodeGenerationResult.Fail(ic, CodeGenerationError.UnknownPrefix);
 		}
 
 		// 4. Запрашиваем код
 		DataMinerResult minerResult = await miner.GetCodeAsync(ic);
 		if (!minerResult.IsSuccess)
 		{
-			return MapMinerError(minerResult.Error);
+			return MapMinerError(ic, minerResult.Error);
 		}
 
 		// 5. Формируем GS1
 		string gs1 = BuildGs1(ic, minerResult.Code!);
 
-		return CodeGenerationResult.Success(gs1, server.Name);
+		return CodeGenerationResult.Success(ic, gs1, server.Name);
 	}
 
 	public async Task<List<CodeGenerationResult>> GenerateMultipleAsync(string[] iCs)
@@ -54,7 +54,7 @@ public class CodeGenerationService
 
 		if (iCs == null || iCs.Length == 0)
 		{
-			results.Add(CodeGenerationResult.Fail(CodeGenerationError.InvalidInput));
+			results.Add(CodeGenerationResult.Fail("all", CodeGenerationError.InvalidInput));
 			return results;
 		}
 
@@ -62,7 +62,7 @@ public class CodeGenerationService
 		{
 			if (string.IsNullOrWhiteSpace(ic))
 			{
-				results.Add(CodeGenerationResult.Fail(CodeGenerationError.InvalidInput));
+				results.Add(CodeGenerationResult.Fail(ic, CodeGenerationError.InvalidInput));
 				continue;
 			}
 
@@ -73,8 +73,8 @@ public class CodeGenerationService
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Error while processing IC: {IC}", ic);
-				results.Add(CodeGenerationResult.Fail(CodeGenerationError.InternalError));
+				_logger.LogError(ex, "Error while processing OriginalIC: {OriginalIC}", ic);
+				results.Add(CodeGenerationResult.Fail(ic, CodeGenerationError.InternalError));
 			}
 		}
 
@@ -98,21 +98,21 @@ public class CodeGenerationService
 			s.GS1Prefix == gs1Prefix && s.Type == serverType);
 	}
 
-	private static CodeGenerationResult MapMinerError(DataMinerError? error)
+	private static CodeGenerationResult MapMinerError(string ic, DataMinerError? error)
 	{
 		return error switch
 		{
 			DataMinerError.NotFound =>
-				CodeGenerationResult.Fail(CodeGenerationError.NoCodesAvailable),
+				CodeGenerationResult.Fail(ic, CodeGenerationError.NoCodesAvailable),
 
 			DataMinerError.SourceUnavailable =>
-				CodeGenerationResult.Fail(CodeGenerationError.SourceUnavailable),
+				CodeGenerationResult.Fail(ic, CodeGenerationError.SourceUnavailable),
 
 			DataMinerError.InvalidInput =>
-				CodeGenerationResult.Fail(CodeGenerationError.InvalidInput),
+				CodeGenerationResult.Fail(ic, CodeGenerationError.InvalidInput),
 
 			_ =>
-				CodeGenerationResult.Fail(CodeGenerationError.InternalError)
+				CodeGenerationResult.Fail(ic, CodeGenerationError.InternalError)
 		};
 	}
 

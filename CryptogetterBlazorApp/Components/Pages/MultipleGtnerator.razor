@@ -94,7 +94,7 @@
 
                     var imageBytes = GenerateBarcode(res.Code!);
 
-                    var entry = archive.CreateEntry($"code_{i + 1}.png");
+                    var entry = archive.CreateEntry($"{res.OriginalIC}.png");
 
                     using var entryStream = entry.Open();
                     await entryStream.WriteAsync(imageBytes);
