@@ -41,7 +41,7 @@ builder.Services.AddSingleton<CodeGenerationService>();
 builder.Services.AddSingleton<DataMatrixImageService>();
 
 //Авторизация
-/*
+
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 	.AddNegotiate();
 
@@ -57,7 +57,6 @@ builder.Services.AddAuthorizationBuilder()
 		.Build());
 
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
-*/
 
 // Настройка SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -83,8 +82,8 @@ app.UseStatusCodePages(async context =>
 	}
 });
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
