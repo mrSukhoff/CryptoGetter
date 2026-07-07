@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace CryptogetterBlazorApp.CryptoGetter
 {
@@ -12,55 +11,66 @@ namespace CryptogetterBlazorApp.CryptoGetter
 			_server = server;
 		}
 
-		public async Task<(string, string)> GetCrypto(string sGTIN)
+		public async Task<DataMinerResult> GetCodeAsync(string sgtin)
 		{
-			if (sGTIN.Length != 27) throw new ArgumentException("Неверная длина SGTIN!");
+			// 1. Валидация входных данных (бизнес-ошибка, не exception)
+			if (string.IsNullOrWhiteSpace(sgtin) || sgtin.Length != 27)
+			{
+				return DataMinerResult.Fail(DataMinerError.InvalidInput);
+			}
 
-			string gtin = sGTIN[..14];
-			string serial = sGTIN[14..];
+			string gtin = sgtin[..14];
+			string serial = sgtin[14..];
 
-			string connectionString = $"Data Source={_server.FQN};Initial Catalog={_server.DBName};Persist Security Info=True;" +
-				$"User ID=tav;Password=tav;TrustServerCertificate=True";
+			string connectionString =
+				$"Data Source={_server.FQN};" +
+				$"Initial Catalog={_server.DBName};" +
+				$"Persist Security Info=True;" +
+				$"User ID=tav;Password=tav;" +
+				$"TrustServerCertificate=True";
 
-			string cmdString = $"SELECT i.VariableName, i.VariableValue FROM [{_server.DBName}].[dbo].[ItemDetails] AS i " +
+			string cmdString =
+				$"SELECT i.VariableName, i.VariableValue " +
+				$"FROM [{_server.DBName}].[dbo].[ItemDetails] AS i " +
 				$"JOIN [{_server.DBName}].[dbo].[NtinDefinition] AS n ON i.NtinId = n.Id " +
 				$"WHERE i.Serial = @Serial AND n.Ntin = @Ntin";
 
-			Dictionary<string, string> results = [];
+			var results = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-			using (var connection = new SqlConnection(connectionString))
+			try
 			{
-				await connection.OpenAsync(); // Асинхронное открытие соединения
-				using (SqlCommand cmd = new(cmdString, connection))
+				using var connection = new SqlConnection(connectionString);
+				await connection.OpenAsync();
+
+				using var cmd = new SqlCommand(cmdString, connection);
+				cmd.Parameters.AddWithValue("@Serial", serial);
+				cmd.Parameters.AddWithValue("@Ntin", gtin);
+
+				using var reader = await cmd.ExecuteReaderAsync();
+				while (await reader.ReadAsync())
 				{
-					cmd.Parameters.AddWithValue("@Serial", serial);
-					cmd.Parameters.AddWithValue("@Ntin", gtin);
-					using (SqlDataReader reader = await cmd.ExecuteReaderAsync()) // Асинхронное чтение
-					{
-						while (await reader.ReadAsync()) // Асинхронный перебор строк
-						{
-							string key = reader.GetValue(0)?.ToString() ?? throw new Exception("Поле VariableName не может быть NULL");
-							string value = reader.GetValue(1)?.ToString() ?? throw new Exception("Поле VariableValue не может быть NULL");
-							if (results.ContainsKey(key))
-								results[key] = value;
-							else
-								results.Add(key, value);
-						}
-					}
+					var key = reader.GetString(0);
+					var value = reader.GetString(1);
+
+					results[key] = value;
 				}
 			}
+			catch (SqlException)
+			{
+				// проблема с БД / сетью — инфраструктурная ошибка
+				return DataMinerResult.Fail(DataMinerError.SourceUnavailable);
+			}
 
-			string cryptoCode, cryptoKey;
-			if (results.Count >= 2 && results.ContainsKey("cryptokey") && results.ContainsKey("cryptocode"))
+			// 2. Проверка бизнес-результата
+			if (!results.TryGetValue("cryptokey", out var cryptoKey) ||
+				!results.TryGetValue("cryptocode", out var cryptoCode))
 			{
-				cryptoKey = results["cryptokey"];
-				cryptoCode = results["cryptocode"];
+				// данных нет — штатная бизнес-ситуация
+				return DataMinerResult.Fail(DataMinerError.NotFound);
 			}
-			else
-			{
-				throw new Exception($"Криптоданные для КИЗ {sGTIN} не найдены в базе {_server.DBName}");
-			}
-			return (cryptoKey, cryptoCode);
+
+			// 3. Успех
+			return DataMinerResult.Success($"{cryptoKey}:{cryptoCode}");
 		}
 	}
 }

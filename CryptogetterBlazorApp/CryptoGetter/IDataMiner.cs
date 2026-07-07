@@ -1,6 +1,7 @@
-﻿namespace CryptogetterBlazorApp.CryptoGetter;
-
+﻿namespace CryptogetterBlazorApp.CryptoGetter
+{
 	public interface IDataMiner
 	{
-		Task<(string, string)> GetCrypto(string sGTIN);
+		Task<DataMinerResult> GetCodeAsync(string sgtin);
 	}
+}

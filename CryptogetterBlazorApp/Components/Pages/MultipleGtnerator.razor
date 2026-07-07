@@ -1,0 +1,175 @@
+﻿@page "/multi"
+@rendermode InteractiveServer
+@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
+
+@using System.IO.Compression
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+@using CryptogetterBlazorApp.CryptoGetter
+@using CryptogetterBlazorApp.LogDb
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Principal
+@using System.DirectoryServices.AccountManagement
+
+@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CodeGenerationService CodeGenerator
+@inject CryptogetterBlazorApp.LogDb.AppDbContext DbContext
+@inject DataMatrixImageService DataMatrixImageService
+
+<h3>Генерация из файла</h3>
+
+<InputFile OnChange="HandleFileUpload" />
+
+<br />
+<br />
+
+<div class="mb-3">
+    
+    <label for="recipientInput" class="form-label">
+        Наименование организации запросившей коды:
+    </label>
+
+    <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
+
+</div>
+
+<button @onclick="ProcessFile" disabled="@(_fileBytes == null)">
+    Сгенерировать
+</button>
+
+@if (_isProcessing)
+{
+    <p>Обработка...</p>
+}
+
+@code {
+    private byte[]? _fileBytes;
+    private bool _isProcessing = false;
+    private string? Recipient;
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is WindowsIdentity windowsIdentity)
+        {
+            try
+            {
+                // Получаем ФИО из Active Directory
+                using (var context = new PrincipalContext(ContextType.Domain))
+                {
+                    var principal = UserPrincipal.FindByIdentity(context, windowsIdentity.Name);
+                    userName = principal?.DisplayName ?? windowsIdentity.Name ?? "Not authenticated";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Если AD недоступен, используем логин
+                userName = windowsIdentity.Name ?? "Not authenticated";
+                Console.WriteLine($"Ошибка получения ФИО: {ex.Message}");
+            }
+        }
+        else
+        {
+            userName = user.Identity?.Name ?? "Not authenticated";
+        }
+
+        Console.WriteLine($"User: {userName}");
+    }
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        using var ms = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(ms);
+        _fileBytes = ms.ToArray();
+    }
+
+    private async Task ProcessFile()
+    {
+        if (_fileBytes == null)
+            return;
+
+        _isProcessing = true;
+
+        try
+        {
+            // 1. Читаем коды из файла
+            var text = System.Text.Encoding.UTF8.GetString(_fileBytes);
+            var codes = text
+                .Split(new[] { '\r', '\n', ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
+
+            // 2. Генерация GS1
+            var results = await CodeGenerator.GenerateMultipleAsync(codes);
+
+            // 3. Создание ZIP
+            using var zipStream = new MemoryStream();
+
+            using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+            {
+                for (int i = 0; i < results.Count; i++)
+                {
+                    var res = results[i];
+
+                    if (!res.IsSuccess) continue;
+
+                    var png = DataMatrixImageService.GeneratePng(res.Code);
+
+                    var entry = archive.CreateEntry($"{res.OriginalIC}.png");
+
+                    using var entryStream = entry.Open();
+
+                    await entryStream.WriteAsync(png);
+
+                    // Логирование в базу данных
+                    await LogGenerationAsync(res.OriginalIC, GetFactoryName(res.ServerName));
+                }
+            }
+
+            // 4. Скачать
+            zipStream.Position = 0;
+
+            var zipBytes = zipStream.ToArray();
+
+            await JSRuntime.InvokeVoidAsync(
+                "downloadFile",
+                "DMcodes.zip",
+                Convert.ToBase64String(zipBytes));
+        }
+        finally
+        {
+            _isProcessing = false;
+        }
+    }
+
+    private static string GetFactoryName(string? serverName)
+    {
+        if (string.IsNullOrWhiteSpace(serverName))
+            return string.Empty;
+
+        var parts = serverName.Split(" - ", StringSplitOptions.None);
+
+        return parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    private async Task LogGenerationAsync(string kiz, string factory)
+    {
+        var logEntry = new CodeGenerationLog
+        {
+            UserName = userName,
+            RequestDateTime = DateTime.UtcNow,
+            Kiz = kiz,
+            Recipient = Recipient,
+            Factory = factory
+        };
+
+        DbContext.CodeGenerationLogs.Add(logEntry);
+        await DbContext.SaveChangesAsync();
+    }
+}
