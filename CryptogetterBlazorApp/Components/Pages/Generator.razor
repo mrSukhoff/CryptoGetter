@@ -2,23 +2,19 @@
 @rendermode InteractiveServer
 @@attribute [Authorize(Policy = "GeneratorAccessPolicy")]
 
-@using System.Drawing
-@using System.Drawing.Imaging
 @using System.IO
 @using CryptogetterBlazorApp.CryptoGetter
 @using CryptogetterBlazorApp.LogDb
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@using ZXing
-@using ZXing.Common
-@using ZXing.Windows.Compatibility
 @using System.Security.Principal
 @using System.DirectoryServices.AccountManagement
 
 @inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject CodeGenerationService CodeGenerator
 @inject CryptogetterBlazorApp.LogDb.AppDbContext DbContext
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject DataMatrixImageService DataMatrixImageService
 
 <h3 class="mb-4">Генератор кодов Datamatrix</h3>
 
@@ -108,103 +104,58 @@
             }
 
             var result = await CodeGenerator.GenerateAsync(sgtin);
-            string factory = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(result.ServerName))
+            
+            if (!result.IsSuccess || string.IsNullOrEmpty(result.Code))
             {
-                var parts = result.ServerName.Split(" - ", StringSplitOptions.None);
-
-                if (parts.Length > 1)
-                {
-                    factory = parts[1];
-                }
+                ErrorMessage = "Не удалось получить код Data Matrix.";
+                return;
             }
 
-            await Task.Run(() =>
-            {
-                var writer = new BarcodeWriter<Bitmap>
-                    {
-                        Format = BarcodeFormat.DATA_MATRIX,
-                        Options = new EncodingOptions
-                        {
-                            Width = 300,
-                            Height = 300
-                        },
-                        Renderer = new BitmapRenderer()
-                    };
+            ImageBytes = DataMatrixImageService.GeneratePng(result.Code);
+            var factory = GetFactoryName(result.ServerName);
 
-                using (var bitmap = writer.Write(result.Code))
-                using (var stream = new MemoryStream())
-                {
-                    bitmap.Save(stream, ImageFormat.Png);
-                    ImageBytes = stream.ToArray();
-                    ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
-                }
-            });
+            ImageBytes = DataMatrixImageService.GeneratePng(result.Code);
+
+            ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(ImageBytes)}";
 
             // Логирование в базу данных
-            var logEntry = new CodeGenerationLog
-                {
-                    UserName = userName ?? "Unknown",
-                    RequestDateTime = DateTime.UtcNow,
-                    Kiz = sgtin,
-                    Recipient = Recipient,
-                    Factory = factory
-                };
-            DbContext.CodeGenerationLogs.Add(logEntry);
-            await DbContext.SaveChangesAsync();
-
-            StateHasChanged();
+            await LogGenerationAsync(sgtin, GetFactoryName(result.ServerName));
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Ошибка: {ex.Message}";
-            StateHasChanged();
         }
     }
 
     private async Task SaveImage()
     {
-        if (ImageBytes == null)
-        {
-            ErrorMessage = "Сначала сгенерируйте изображение.";
-            StateHasChanged();
-            return;
-        }
+        if (ImageBytes == null) return;
 
-        try
+        await JSRuntime.InvokeVoidAsync("downloadFile", $"{sgtin}.png", Convert.ToBase64String(ImageBytes));
+    }
+
+    private static string GetFactoryName(string? serverName)
+    {
+        if (string.IsNullOrWhiteSpace(serverName))
+            return string.Empty;
+
+        var parts = serverName.Split(" - ", StringSplitOptions.None);
+
+        return parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    private async Task LogGenerationAsync(string kiz, string factory)
+    {
+        var logEntry = new CodeGenerationLog
         {
-            using (var ms = new MemoryStream(ImageBytes))
-            using (var bitmap = new Bitmap(ms))
-            using (var bmpStream = new MemoryStream())
-            {
-                bitmap.Save(bmpStream, ImageFormat.Bmp);
-                var bmpBytes = bmpStream.ToArray();
-                var base64String = Convert.ToBase64String(bmpBytes);
-                await JSRuntime.InvokeVoidAsync("saveAsFile", $"{sgtin}.bmp", base64String);
-            }
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Ошибка при сохранении: {ex.Message}";
-            StateHasChanged();
-        }
+            UserName = userName,
+            RequestDateTime = DateTime.UtcNow,
+            Kiz = kiz,
+            Recipient = Recipient,
+            Factory = factory
+        };
+
+        DbContext.CodeGenerationLogs.Add(logEntry);
+        await DbContext.SaveChangesAsync();
     }
 }
-
-<script>
-    window.saveAsFile = (filename, base64String) => {
-        const byteCharacters = atob(base64String);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/bmp' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    };
-</script>

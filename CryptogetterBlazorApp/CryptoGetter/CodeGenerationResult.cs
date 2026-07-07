@@ -1,4 +1,6 @@
-﻿namespace CryptogetterBlazorApp.CryptoGetter
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace CryptogetterBlazorApp.CryptoGetter
 {
 	public enum CodeGenerationError
 	{
@@ -13,6 +15,8 @@
 	public sealed class CodeGenerationResult
 	{
 		public string OriginalIC { get; }
+		
+		[MemberNotNullWhen(true, nameof(Code))]
 		public bool IsSuccess { get; }
 		public string? Code { get; }
 		public CodeGenerationError? Error { get; }

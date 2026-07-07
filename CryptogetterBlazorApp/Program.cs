@@ -38,6 +38,7 @@ builder.Services.AddServerSideBlazor();
 // Сервисы
 builder.Services.AddSingleton<ServerList>();
 builder.Services.AddSingleton<CodeGenerationService>();
+builder.Services.AddSingleton<DataMatrixImageService>();
 
 //Авторизация
 /*

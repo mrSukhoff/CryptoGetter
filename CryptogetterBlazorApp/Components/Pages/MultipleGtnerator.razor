@@ -4,22 +4,19 @@
 
 @using System.IO.Compression
 @using Microsoft.AspNetCore.Components.Forms
-
-@inject IJSRuntime JSRuntime
-@inject CodeGenerationService CodeGenerator
-
-@using System.Drawing
-@using System.Drawing.Imaging
 @using System.IO
 @using CryptogetterBlazorApp.CryptoGetter
 @using CryptogetterBlazorApp.LogDb
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@using ZXing
-@using ZXing.Common
-@using ZXing.Windows.Compatibility
 @using System.Security.Principal
 @using System.DirectoryServices.AccountManagement
+
+@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CodeGenerationService CodeGenerator
+@inject CryptogetterBlazorApp.LogDb.AppDbContext DbContext
+@inject DataMatrixImageService DataMatrixImageService
 
 <h3>Генерация из файла</h3>
 
@@ -31,7 +28,7 @@
 <div class="mb-3">
     
     <label for="recipientInput" class="form-label">
-        Наименование организации запросившей код:
+        Наименование организации запросившей коды:
     </label>
 
     <input id="recipientInput" class="form-control" @bind="Recipient" placeholder="Введите получателя" />
@@ -51,7 +48,38 @@
     private byte[]? _fileBytes;
     private bool _isProcessing = false;
     private string? Recipient;
+    private string? userName;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is WindowsIdentity windowsIdentity)
+        {
+            try
+            {
+                // Получаем ФИО из Active Directory
+                using (var context = new PrincipalContext(ContextType.Domain))
+                {
+                    var principal = UserPrincipal.FindByIdentity(context, windowsIdentity.Name);
+                    userName = principal?.DisplayName ?? windowsIdentity.Name ?? "Not authenticated";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Если AD недоступен, используем логин
+                userName = windowsIdentity.Name ?? "Not authenticated";
+                Console.WriteLine($"Ошибка получения ФИО: {ex.Message}");
+            }
+        }
+        else
+        {
+            userName = user.Identity?.Name ?? "Not authenticated";
+        }
+
+        Console.WriteLine($"User: {userName}");
+    }
     private async Task HandleFileUpload(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -89,26 +117,30 @@
                 {
                     var res = results[i];
 
-                    if (!res.IsSuccess)
-                        continue;
+                    if (!res.IsSuccess) continue;
 
-                    var imageBytes = GenerateBarcode(res.Code!);
+                    var png = DataMatrixImageService.GeneratePng(res.Code);
 
                     var entry = archive.CreateEntry($"{res.OriginalIC}.png");
 
                     using var entryStream = entry.Open();
-                    await entryStream.WriteAsync(imageBytes);
+
+                    await entryStream.WriteAsync(png);
+
+                    // Логирование в базу данных
+                    await LogGenerationAsync(res.OriginalIC, GetFactoryName(res.ServerName));
                 }
             }
 
+            // 4. Скачать
             zipStream.Position = 0;
 
-            // 4. Скачать
+            var zipBytes = zipStream.ToArray();
+
             await JSRuntime.InvokeVoidAsync(
                 "downloadFile",
-                "codes.zip",
-                Convert.ToBase64String(zipStream.ToArray())
-            );
+                "DMcodes.zip",
+                Convert.ToBase64String(zipBytes));
         }
         finally
         {
@@ -116,39 +148,28 @@
         }
     }
 
-    private byte[] GenerateBarcode(string content)
+    private static string GetFactoryName(string? serverName)
     {
-        var writer = new BarcodeWriterPixelData
+        if (string.IsNullOrWhiteSpace(serverName))
+            return string.Empty;
+
+        var parts = serverName.Split(" - ", StringSplitOptions.None);
+
+        return parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    private async Task LogGenerationAsync(string kiz, string factory)
+    {
+        var logEntry = new CodeGenerationLog
         {
-            Format = BarcodeFormat.DATA_MATRIX,
-            Options = new EncodingOptions
-            {
-                Height = 200,
-                Width = 200,
-                Margin = 2
-            }
+            UserName = userName,
+            RequestDateTime = DateTime.UtcNow,
+            Kiz = kiz,
+            Recipient = Recipient,
+            Factory = factory
         };
 
-        var pixelData = writer.Write(content);
-
-        using var bitmap = new Bitmap(pixelData.Width, pixelData.Height, PixelFormat.Format32bppRgb);
-        var bitmapData = bitmap.LockBits(
-            new Rectangle(0, 0, pixelData.Width, pixelData.Height),
-            ImageLockMode.WriteOnly,
-            PixelFormat.Format32bppRgb);
-
-        try
-        {
-            System.Runtime.InteropServices.Marshal.Copy(
-                pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
-        }
-        finally
-        {
-            bitmap.UnlockBits(bitmapData);
-        }
-
-        using var ms = new MemoryStream();
-        bitmap.Save(ms, ImageFormat.Png);
-        return ms.ToArray();
+        DbContext.CodeGenerationLogs.Add(logEntry);
+        await DbContext.SaveChangesAsync();
     }
 }
