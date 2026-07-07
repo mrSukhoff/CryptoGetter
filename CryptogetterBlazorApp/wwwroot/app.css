@@ -49,3 +49,46 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.sidebar {
+    width: 300px;
+    background: #16275d;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 4px 12px;
+    border-radius: 8px;
+    color: rgba(255,255,255,.85);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+}
+    
+    .nav-link .bi {
+        width: 20px;
+        margin-top: 2px;
+    }
+    
+    .nav-link:hover {
+        color: #fff;
+        background: rgba(255,255,255,.08);
+    }
+        .nav-link:hover:not(.active) {
+            background: rgba(255,255,255,.08);
+        }
+
+    .nav-link.active {
+        color: #fff;
+        background: rgba(255,255,255,.16);
+        font-weight: 600;
+    }
