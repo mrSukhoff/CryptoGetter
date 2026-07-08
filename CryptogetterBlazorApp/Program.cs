@@ -17,15 +17,13 @@ Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
 	.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
 	.MinimumLevel.Override("System", LogEventLevel.Warning)
-	// (опционально) ещё сильнее глушим роутинг
 	.MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Error)
 	.Enrich.FromLogContext()
 	.WriteTo.File(
 		path: "logs/app-.log",
 		rollingInterval: RollingInterval.Day,
 		outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] " +
-		"[User: {User}] [IP: {IP}] [Page: {Page}] " +
-		"{Message:lj} {Properties:j}{NewLine}{Exception}")
+		"[User: {User}] [IP: {IP}] [Path: {Path}] {NewLine}{Exception}")
 	.CreateLogger();
 
 builder.Host.UseSerilog();
@@ -88,6 +86,16 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
 	.AddInteractiveServerRenderMode();
+
+app.Use(async (context, next) =>
+{
+	using (Serilog.Context.LogContext.PushProperty("User", context.User.Identity?.Name))
+	using (Serilog.Context.LogContext.PushProperty("IP", context.Connection.RemoteIpAddress))
+	using (Serilog.Context.LogContext.PushProperty("Path", context.Request.Path))
+	{
+		await next();
+	}
+});
 
 // Инициализация базы данных
 using (var scope = app.Services.CreateScope())

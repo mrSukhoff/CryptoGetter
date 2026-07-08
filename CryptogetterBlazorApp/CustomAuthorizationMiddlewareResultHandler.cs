@@ -5,45 +5,40 @@ namespace CryptogetterBlazorApp;
 
 public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
+	private readonly AuthorizationMiddlewareResultHandler _defaultHandler = new();
 	private readonly ILogger<CustomAuthorizationMiddlewareResultHandler> _logger;
-	private static readonly Dictionary<AuthorizationPolicy, string> PolicyNames = new();
 
 	public CustomAuthorizationMiddlewareResultHandler(ILogger<CustomAuthorizationMiddlewareResultHandler> logger)
 	{
 		_logger = logger;
 	}
 
-	// Метод для регистрации политик (вызывать при конфигурации в Program.cs)
-	public static void RegisterPolicy(AuthorizationPolicy policy, string name)
+	public async Task HandleAsync(
+	RequestDelegate next,
+	HttpContext context,
+	AuthorizationPolicy policy,
+	PolicyAuthorizationResult authorizeResult)
 	{
-		PolicyNames[policy] = name;
-	}
+		var user = context.User.Identity?.Name ?? "Anonymous";
+		var ip = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
 
-	public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
-	{
-		var userName = context.User.Identity?.IsAuthenticated == true ? context.User.Identity.Name : "Anonymous";
-		var policyName = PolicyNames.TryGetValue(policy, out var name) ? name : "Unknown";
-		var clientIp = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+		if (authorizeResult.Forbidden)
+		{
+			_logger.LogWarning(
+				"Forbidden. User={User}, IP={IP}, Path={Path}",
+				user,
+				ip,
+				context.Request.Path);
+		}
+		else if (authorizeResult.Challenged)
+		{
+			_logger.LogWarning(
+				"Anonymous access. IP={IP}, Path={Path}",
+				ip,
+				context.Request.Path);
+		}
 
-		if (authorizeResult.Succeeded)
-		{
-			_logger.LogInformation("Access granted for user {User} on policy {Policy}. Path: {Path}, Client IP: {ClientIp}",
-				userName, policyName, context.Request.Path, clientIp);
-			await next(context);
-		}
-		else if (authorizeResult.Forbidden)
-		{
-			_logger.LogWarning("Access denied for user {User} on policy {Policy}. Path: {Path}, Client IP: {ClientIp}",
-				userName, policyName, context.Request.Path, clientIp);
-			context.Response.StatusCode = StatusCodes.Status403Forbidden;
-			await context.Response.WriteAsync("Access denied. Insufficient permissions.");
-		}
-		else if (context.User.Identity?.IsAuthenticated != true)
-		{
-			_logger.LogWarning("Unauthorized access attempt by {User}. Path: {Path}, Client IP: {ClientIp}",
-				userName, context.Request.Path, clientIp);
-			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-			await context.Response.WriteAsync("Unauthorized. Please log in.");
-		}
+		var defaultHandler = new AuthorizationMiddlewareResultHandler();
+		await defaultHandler.HandleAsync(next, context, policy, authorizeResult);
 	}
 }

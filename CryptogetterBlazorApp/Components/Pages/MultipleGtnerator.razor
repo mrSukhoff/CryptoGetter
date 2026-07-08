@@ -35,7 +35,7 @@
 
 </div>
 
-<button @onclick="ProcessFile" disabled="@(_fileBytes == null)">
+<button @onclick="ProcessFile" disabled="@(!CanProcess)">
     Сгенерировать
 </button>
 
@@ -49,6 +49,10 @@
     private bool _isProcessing = false;
     private string? Recipient;
     private string? userName;
+    
+    private bool CanProcess => _fileBytes != null &&
+                               !string.IsNullOrWhiteSpace(Recipient) &&
+                               Recipient.Length >= 5;
 
     protected override async Task OnInitializedAsync()
     {
