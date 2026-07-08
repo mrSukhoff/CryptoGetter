@@ -55,6 +55,13 @@
 
                 <div>
 
+                    <label class="form-label">Получатель</label>
+                    <input type="text" class="form-control" @bind="recipientFilter" />
+
+                </div>
+
+                <div>
+
                     <label class="form-label">Предприятие</label>
                     <select class="form-control" @bind="cityFilter">
                         <option value="">Все предприятия</option>
@@ -93,7 +100,7 @@
                             <th>Дата и время (UTC)</th>
                             <th>КИЗ</th>
                             <th>Получатель</th>
-                            <th class ="w-25">Предприятие</th>
+                            <th class ="w-13">Предприятие</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,6 +134,7 @@
     private DateTime? dateFromFilter;
     private DateTime? dateToFilter;
     private string? kizFilter;
+    private string? recipientFilter;
     private string? cityFilter;
 
     protected override async Task OnInitializedAsync()
@@ -176,6 +184,12 @@
                 query = query.Where(l => l.Kiz != null && l.Kiz.Contains(trimmedKiz));
             }
 
+            if (!string.IsNullOrWhiteSpace(recipientFilter))
+            {
+                var trimmedRecipient = recipientFilter.Trim();
+                query = query.Where(l => l.Recipient != null && l.Recipient.Contains(trimmedRecipient));
+            }
+
             if (!string.IsNullOrWhiteSpace(cityFilter))
             {
                 query = query.Where(l => l.Factory != null && l.Factory == cityFilter);
@@ -205,6 +219,7 @@
         dateFromFilter = null;
         dateToFilter = null;
         kizFilter = null;
+        recipientFilter = null;
         cityFilter = null;
 
         await LoadData();
