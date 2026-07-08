@@ -9,28 +9,52 @@
 @inject AppDbContext DbContext
 
 <div class="page">
+
     <main>
+
         <article>
+
             <h3 class="mb-4">Лог генерации кодов Datamatrix</h3>
 
             <div class="d-flex flex-wrap gap-3 mb-4">
+                
                 <div>
+
                     <label class="form-label">ID</label>
                     <input type="number" class="form-control" @bind="idFilter" />
+
                 </div>
+
                 <div>
+
                     <label class="form-label">Пользователь</label>
                     <input type="text" class="form-control" @bind="userNameFilter" />
+                
                 </div>
+                
                 <div>
-                    <label class="form-label">Дата (UTC)</label>
-                    <input type="date" class="form-control" @bind="dateFilter" />
+
+                    <label class="form-label">Дата с (UTC)</label>
+                    <input type="date" class="form-control" @bind="dateFromFilter" />
+                
                 </div>
+
                 <div>
+
+                    <label class="form-label">Дата по (UTC)</label>
+                    <input type="date" class="form-control" @bind="dateToFilter" />
+                
+                </div>
+
+                <div>
+
                     <label class="form-label">КИЗ</label>
                     <input type="text" class="form-control" @bind="kizFilter" />
+                
                 </div>
+
                 <div>
+
                     <label class="form-label">Предприятие</label>
                     <select class="form-control" @bind="cityFilter">
                         <option value="">Все предприятия</option>
@@ -39,11 +63,16 @@
                             <option value="@factory">@factory</option>
                         }
                     </select>
+                
                 </div>
+
                 <div class="align-self-end">
+
                     <button class="btn btn-primary ms-2" @onclick="ApplyFilters">Применить</button>
                     <button class="btn btn-primary ms-2" @onclick="ClearFilters">Очистить</button>
+                
                 </div>
+            
             </div>
 
             @if (logs == null)
@@ -64,7 +93,7 @@
                             <th>Дата и время (UTC)</th>
                             <th>КИЗ</th>
                             <th>Получатель</th>
-                            <th>Предприятие</th>
+                            <th class ="w-25">Предприятие</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +112,9 @@
                 </table>
             }
         </article>
+
     </main>
+
 </div>
 
 @code {
@@ -93,7 +124,8 @@
     // Фильтры
     private int? idFilter;
     private string? userNameFilter;
-    private DateTime? dateFilter;
+    private DateTime? dateFromFilter;
+    private DateTime? dateToFilter;
     private string? kizFilter;
     private string? cityFilter;
 
@@ -126,9 +158,16 @@
                 query = query.Where(l => l.UserName != null && l.UserName.Contains(trimmedUserName));
             }
 
-            if (dateFilter.HasValue)
+            if (dateFromFilter.HasValue)
             {
-                query = query.Where(l => l.RequestDateTime.Date == dateFilter.Value.Date);
+                query = query.Where(l =>
+                    l.RequestDateTime >= dateFromFilter.Value.Date);
+            }
+
+            if (dateToFilter.HasValue)
+            {
+                query = query.Where(l =>
+                    l.RequestDateTime < dateToFilter.Value.Date.AddDays(1));
             }
 
             if (!string.IsNullOrWhiteSpace(kizFilter))
@@ -163,7 +202,8 @@
     {
         idFilter = null;
         userNameFilter = null;
-        dateFilter = null;
+        dateFromFilter = null;
+        dateToFilter = null;
         kizFilter = null;
         cityFilter = null;
 
